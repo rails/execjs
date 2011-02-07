@@ -1,5 +1,6 @@
 module ExecJS
   module Runtimes
+    autoload :JSC,  "execjs/runtimes/jsc"
     autoload :Node, "execjs/runtimes/node"
     autoload :V8,   "execjs/runtimes/v8"
 

@@ -39,6 +39,14 @@ module TestRuntime
   end
 end
 
+class TestJSCRuntime < Test::Unit::TestCase
+  include TestRuntime
+
+  def setup
+    @runtime = ExecJS::Runtimes::JSC.new
+  end
+end
+
 class TestNodeRuntime < Test::Unit::TestCase
   include TestRuntime
 
