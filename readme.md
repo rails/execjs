@@ -13,8 +13,8 @@ ExecJS supports these runtimes:
 * [Node.js](http://nodejs.org/)
 * Apple JavaScriptCore
 * [Mozilla Spidermonkey](http://www.mozilla.org/js/spidermonkey/)
-* [Mozilla Rhino](http://www.mozilla.org/rhino/)
-* [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
+* TODO [Mozilla Rhino](http://www.mozilla.org/rhino/)
+* TODO [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
 
 A short example:
 
