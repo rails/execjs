@@ -5,6 +5,7 @@ module ExecJS
 
   autoload :ExternalRuntime, "execjs/external_runtime"
   autoload :Runtimes,        "execjs/runtimes"
+  autoload :V8Runtime,       "execjs/v8_runtime"
 
   def self.exec(source)
     runtime.exec(source)

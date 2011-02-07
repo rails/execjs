@@ -24,10 +24,10 @@ module ExecJS
 
     def available?
       command = @command.split(/\s+/).first
-      binary = `which #{command}`
+      binary = `which #{command}`.strip
       if $? == 0
         if @test_args
-          output = "#{binary} #{@test_args} 2>&1"
+          output = `#{binary} #{@test_args} 2>&1`
           output.match(@test_match)
         else
           true

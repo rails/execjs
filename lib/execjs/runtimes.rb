@@ -19,6 +19,9 @@ module ExecJS
     end
 
     define_runtime :V8,
+      :as => V8Runtime
+
+    define_runtime :ExternalV8,
       :command => "v8",
       :test_args => "--help",
       :test_match => /--crankshaft/,
