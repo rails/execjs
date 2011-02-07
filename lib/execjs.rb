@@ -3,6 +3,7 @@ module ExecJS
   class RuntimeError    < Error; end
   class ProgramError    < Error; end
 
+  autoload :Runtime,  "execjs/runtime"
   autoload :Runtimes, "execjs/runtimes"
 
   def self.exec(source)
@@ -14,6 +15,6 @@ module ExecJS
   end
 
   def self.runtime
-    @runtime ||= Runtimes::Node
+    @runtime ||= Runtimes::Node.new
   end
 end

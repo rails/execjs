@@ -3,7 +3,7 @@ require "test/unit"
 
 class TestNodeRuntime < Test::Unit::TestCase
   def setup
-    @runtime = ExecJS::Runtimes::Node
+    @runtime = ExecJS::Runtimes::Node.new
   end
 
   def test_exec
