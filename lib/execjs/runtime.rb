@@ -20,6 +20,12 @@ module ExecJS
       end
     end
 
+    def available?
+      command = @command.split(/\s+/).first
+      `which #{command}`
+      $? == 0
+    end
+
     protected
       def compile(source)
         runner_source.sub('#{source}', source)

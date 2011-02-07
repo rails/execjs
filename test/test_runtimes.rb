@@ -39,34 +39,26 @@ module TestRuntime
   end
 end
 
-class TestJSCRuntime < Test::Unit::TestCase
-  include TestRuntime
+def test_runtime(name)
+  runtime = ExecJS::Runtimes.const_get(name)
+  if runtime.available?
+    Class.new(Test::Unit::TestCase) do
+      (class << self; self end).send(:define_method, :name) do
+        "#{name}Test"
+      end
 
-  def setup
-    @runtime = ExecJS::Runtimes::JSC
+      include TestRuntime
+
+      define_method(:setup) do
+        instance_variable_set(:@runtime, runtime)
+      end
+    end
+  else
+    warn "#{name} runtime is unavailable, skipping"
   end
 end
 
-class TestNodeRuntime < Test::Unit::TestCase
-  include TestRuntime
-
-  def setup
-    @runtime = ExecJS::Runtimes::Node
-  end
-end
-
-class TestSpidermonkeyRuntime < Test::Unit::TestCase
-  include TestRuntime
-
-  def setup
-    @runtime = ExecJS::Runtimes::Spidermonkey
-  end
-end
-
-class TestV8Runtime < Test::Unit::TestCase
-  include TestRuntime
-
-  def setup
-    @runtime = ExecJS::Runtimes::V8
-  end
-end
+test_runtime :JSC
+test_runtime :Node
+test_runtime :Spidermonkey
+test_runtime :V8
