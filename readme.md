@@ -19,5 +19,5 @@ ExecJS supports these runtimes:
 A short example:
 
     require "execjs"
-    ExecJS.exec "'red yellow blue'.split('')"
+    ExecJS.eval "'red yellow blue'.split('')"
     # => ["red", "yellow", "blue"]
