@@ -41,6 +41,7 @@ module ExecJS
 
       def which(command)
         Array(command).find do |name|
+          name = name.split(/\s+/).first
           result = if ExecJS.windows?
             `#{ExecJS.root}/support/which.bat #{name}`
           else
@@ -51,7 +52,12 @@ module ExecJS
       end
 
       def compile(source)
-        runner_source.sub('#{source}', source)
+        runner_source.dup.tap do |output|
+          output.sub!('#{source}', source)
+          output.sub!('#{json2_source}') do
+            IO.read(ExecJS.root + "/support/json2.js")
+          end
+        end
       end
 
       def runner_source

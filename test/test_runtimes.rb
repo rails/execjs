@@ -59,8 +59,9 @@ def test_runtime(name)
 end
 
 test_runtime :V8
+test_runtime :Rhino
 test_runtime :ExternalV8
 test_runtime :Node
 test_runtime :JSC
 test_runtime :Spidermonkey
-test_runtime :Rhino
+test_runtime :JScript

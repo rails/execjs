@@ -37,5 +37,9 @@ module ExecJS
     define_runtime :Spidermonkey,
       :command => "js",
       :runner_path => ExecJS.root + "/support/basic_runner.js"
+
+    define_runtime :JScript,
+      :command => "cscript //E:jscript //Nologo",
+      :runner_path => ExecJS.root + "/support/jscript_runner.js"
   end
 end
