@@ -20,6 +20,8 @@ module ExecJS
 
     define_runtime :V8,
       :command => "v8",
+      :test_args => "--help",
+      :test_match => /--crankshaft/,
       :runner_path => runner_path("basic.js")
 
     define_runtime :Node,

@@ -6,6 +6,8 @@ module ExecJS
     def initialize(options)
       @command     = options[:command]
       @runner_path = options[:runner_path]
+      @test_args   = options[:test_args]
+      @test_match  = options[:test_match]
     end
 
     def eval(source)
@@ -22,8 +24,15 @@ module ExecJS
 
     def available?
       command = @command.split(/\s+/).first
-      `which #{command}`
-      $? == 0
+      binary = `which #{command}`
+      if $? == 0
+        if @test_args
+          output = "#{binary} #{@test_args} 2>&1"
+          output.match(@test_match)
+        else
+          true
+        end
+      end
     end
 
     protected
