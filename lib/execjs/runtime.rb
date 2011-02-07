@@ -3,6 +3,11 @@ require "tempfile"
 
 module ExecJS
   class Runtime
+    def initialize(options)
+      @command     = options[:command]
+      @runner_path = options[:runner_path]
+    end
+
     def exec(source)
       compile_to_tempfile(source) do |file|
         extract_result(exec_runtime(file.path))
@@ -21,7 +26,7 @@ module ExecJS
       end
 
       def runner_source
-        @runner_source ||= IO.read(runner_path)
+        @runner_source ||= IO.read(@runner_path)
       end
 
       def compile_to_tempfile(source)
@@ -34,7 +39,7 @@ module ExecJS
       end
 
       def exec_runtime(filename)
-        output = `#{command(filename)} 2>&1`
+        output = `#{@command} #{filename} 2>&1`
         if $?.success?
           output
         else

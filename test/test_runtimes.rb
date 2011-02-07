@@ -43,7 +43,7 @@ class TestJSCRuntime < Test::Unit::TestCase
   include TestRuntime
 
   def setup
-    @runtime = ExecJS::Runtimes::JSC.new
+    @runtime = ExecJS::Runtimes::JSC
   end
 end
 
@@ -51,7 +51,7 @@ class TestNodeRuntime < Test::Unit::TestCase
   include TestRuntime
 
   def setup
-    @runtime = ExecJS::Runtimes::Node.new
+    @runtime = ExecJS::Runtimes::Node
   end
 end
 
@@ -59,6 +59,6 @@ class TestV8Runtime < Test::Unit::TestCase
   include TestRuntime
 
   def setup
-    @runtime = ExecJS::Runtimes::V8.new
+    @runtime = ExecJS::Runtimes::V8
   end
 end
