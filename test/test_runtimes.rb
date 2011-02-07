@@ -55,6 +55,14 @@ class TestNodeRuntime < Test::Unit::TestCase
   end
 end
 
+class TestSpidermonkeyRuntime < Test::Unit::TestCase
+  include TestRuntime
+
+  def setup
+    @runtime = ExecJS::Runtimes::Spidermonkey
+  end
+end
+
 class TestV8Runtime < Test::Unit::TestCase
   include TestRuntime
 

@@ -17,6 +17,10 @@ module ExecJS
       :command => "node",
       :runner_path => runner_path("node.js")
     )
+
+    Spidermonkey = Runtime.new(
+      :command => "js",
+      :runner_path => runner_path("spidermonkey.js")
     )
 
     V8 = Runtime.new(
