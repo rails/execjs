@@ -29,14 +29,24 @@ module ExecJS
 
     protected
       def locate_binary
-        @command = @command.join(" ") if @command.is_a?(Array)
-        if binary = `which #{@command}`.split("\n").first
+        if binary = which(@command)
           if @test_args
             output = `#{binary} #{@test_args} 2>&1`
             binary if output.match(@test_match)
           else
             binary
           end
+        end
+      end
+
+      def which(command)
+        Array(command).find do |name|
+          result = if ExecJS.windows?
+            `#{ExecJS.root}/support/which.bat #{name}`
+          else
+            `which #{name} 2>&1`
+          end
+          result.strip.split("\n").first
         end
       end
 

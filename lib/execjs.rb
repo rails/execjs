@@ -1,3 +1,5 @@
+require "rbconfig"
+
 module ExecJS
   class Error < ::StandardError; end
   class RuntimeError    < Error; end
@@ -22,5 +24,9 @@ module ExecJS
 
   def self.root
     @root ||= File.expand_path("../execjs", __FILE__)
+  end
+
+  def self.windows?
+    @windows ||= RbConfig::CONFIG["host_os"] =~ /mswin|mingw/
   end
 end
