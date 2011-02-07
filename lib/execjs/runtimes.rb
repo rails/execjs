@@ -14,10 +14,6 @@ module ExecJS
       const_set(name, runtime)
     end
 
-    def self.runner_path(path)
-      File.expand_path("../runners/#{path}", __FILE__)
-    end
-
     define_runtime :V8,
       :as => V8Runtime
 
@@ -28,18 +24,18 @@ module ExecJS
       :command => "v8",
       :test_args => "--help",
       :test_match => /--crankshaft/,
-      :runner_path => runner_path("basic.js")
+      :runner_path => ExecJS.root + "/support/basic_runner.js"
 
     define_runtime :Node,
       :command => ["nodejs", "node"],
-      :runner_path => runner_path("node.js")
+      :runner_path => ExecJS.root + "/support/node_runner.js"
 
     define_runtime :JSC,
       :command => "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc",
-      :runner_path => runner_path("basic.js")
+      :runner_path => ExecJS.root + "/support/basic_runner.js"
 
     define_runtime :Spidermonkey,
       :command => "js",
-      :runner_path => runner_path("basic.js")
+      :runner_path => ExecJS.root + "/support/basic_runner.js"
   end
 end

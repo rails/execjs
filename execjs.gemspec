@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
     "lib/execjs.rb",
     "lib/execjs/external_runtime.rb",
     "lib/execjs/rhino_runtime.rb",
-    "lib/execjs/runners",
-    "lib/execjs/runners/basic.js",
-    "lib/execjs/runners/node.js",
     "lib/execjs/runtimes.rb",
+    "lib/execjs/support",
+    "lib/execjs/support/basic_runner.js",
+    "lib/execjs/support/node_runner.js",
     "lib/execjs/v8_runtime.rb"
   ]
 

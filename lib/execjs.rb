@@ -19,4 +19,8 @@ module ExecJS
   def self.runtime
     @runtime ||= Runtimes.best_available
   end
+
+  def self.root
+    @root ||= File.expand_path("../execjs", __FILE__)
+  end
 end
