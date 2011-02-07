@@ -1,11 +1,7 @@
 require "execjs"
 require "test/unit"
 
-class TestNodeRuntime < Test::Unit::TestCase
-  def setup
-    @runtime = ExecJS::Runtimes::Node.new
-  end
-
+module TestRuntime
   def test_exec
     assert_nil @runtime.exec("1")
     assert_nil @runtime.exec("return")
@@ -40,5 +36,21 @@ class TestNodeRuntime < Test::Unit::TestCase
     assert_raise ExecJS::ProgramError do
       @runtime.exec("throw 'hello'")
     end
+  end
+end
+
+class TestNodeRuntime < Test::Unit::TestCase
+  include TestRuntime
+
+  def setup
+    @runtime = ExecJS::Runtimes::Node.new
+  end
+end
+
+class TestV8Runtime < Test::Unit::TestCase
+  include TestRuntime
+
+  def setup
+    @runtime = ExecJS::Runtimes::V8.new
   end
 end

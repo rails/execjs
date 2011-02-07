@@ -15,6 +15,6 @@ module ExecJS
   end
 
   def self.runtime
-    @runtime ||= Runtimes::Node.new
+    @runtime ||= Runtimes.runtime
   end
 end

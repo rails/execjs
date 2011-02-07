@@ -9,8 +9,8 @@ ExecJS supports these runtimes:
 
 * [therubyracer](https://github.com/cowboyd/therubyracer) - Google V8
   embedded within Ruby for exceptional performance
-* [Node.js](http://nodejs.org/)
 * [Google V8](http://code.google.com/p/v8/)
+* [Node.js](http://nodejs.org/)
 * Apple JavaScriptCore
 * [Mozilla Spidermonkey](http://www.mozilla.org/js/spidermonkey/)
 * [Mozilla Rhino](http://www.mozilla.org/rhino/)
