@@ -21,6 +21,9 @@ module ExecJS
     define_runtime :V8,
       :as => V8Runtime
 
+    define_runtime :Rhino,
+      :as => RhinoRuntime
+
     define_runtime :ExternalV8,
       :command => "v8",
       :test_args => "--help",
@@ -38,8 +41,5 @@ module ExecJS
     define_runtime :Spidermonkey,
       :command => "js",
       :runner_path => runner_path("basic.js")
-
-    define_runtime :Rhino,
-      :as => RhinoRuntime
   end
 end
