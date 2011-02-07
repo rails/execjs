@@ -38,5 +38,8 @@ module ExecJS
     define_runtime :Spidermonkey,
       :command => "js",
       :runner_path => runner_path("basic.js")
+
+    define_runtime :Rhino,
+      :as => RhinoRuntime
   end
 end

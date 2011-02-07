@@ -10,17 +10,18 @@ Gem::Specification.new do |s|
   EOS
 
   s.files = [
-    "lib/execjs",
+    "lib/execjs.rb",
     "lib/execjs/external_runtime.rb",
+    "lib/execjs/rhino_runtime.rb",
     "lib/execjs/runners",
     "lib/execjs/runners/basic.js",
     "lib/execjs/runners/node.js",
     "lib/execjs/runtimes.rb",
-    "lib/execjs/v8_runtime.rb",
-    "lib/execjs.rb"
+    "lib/execjs/v8_runtime.rb"
   ]
 
   s.add_development_dependency "therubyracer"
+  s.add_development_dependency "therubyrhino"
 
   s.authors           = ["Sam Stephenson"]
   s.email             = "sstephenson@gmail.com"
