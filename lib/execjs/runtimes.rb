@@ -14,7 +14,7 @@ module ExecJS
     end
 
     def self.runner_path(path)
-      File.expand_path("../runtimes/#{path}", __FILE__)
+      File.expand_path("../runners/#{path}", __FILE__)
     end
 
     define_runtime :V8,
