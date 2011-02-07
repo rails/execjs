@@ -19,7 +19,7 @@ module ExecJS
 
     define_runtime :V8,
       :command => "v8",
-      :runner_path => runner_path("v8.js")
+      :runner_path => runner_path("basic.js")
 
     define_runtime :Node,
       :command => "node",
@@ -27,10 +27,10 @@ module ExecJS
 
     define_runtime :JSC,
       :command => "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc",
-      :runner_path => runner_path("jsc.js")
+      :runner_path => runner_path("basic.js")
 
     define_runtime :Spidermonkey,
       :command => "js",
-      :runner_path => runner_path("spidermonkey.js")
+      :runner_path => runner_path("basic.js")
   end
 end
