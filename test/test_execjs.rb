@@ -11,10 +11,10 @@ class TestExecJS < Test::Unit::TestCase
   end
 
   def test_runtime_available
-    runtime = ExecJS::Runtime.new(:command => "nonexistent")
+    runtime = ExecJS::ExternalRuntime.new(:command => "nonexistent")
     assert_equal false, runtime.available?
 
-    runtime = ExecJS::Runtime.new(:command => "ruby")
+    runtime = ExecJS::ExternalRuntime.new(:command => "ruby")
     assert_equal true, runtime.available?
   end
 end

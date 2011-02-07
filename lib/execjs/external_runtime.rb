@@ -2,21 +2,21 @@ require "json"
 require "tempfile"
 
 module ExecJS
-  class Runtime
+  class ExternalRuntime
     def initialize(options)
       @command     = options[:command]
       @runner_path = options[:runner_path]
     end
 
-    def exec(source)
-      compile_to_tempfile(source) do |file|
-        extract_result(exec_runtime(file.path))
-      end
-    end
-
     def eval(source)
       if /\S/ =~ source
         exec("return eval(#{"(#{source})".to_json})")
+      end
+    end
+
+    def exec(source)
+      compile_to_tempfile(source) do |file|
+        extract_result(exec_runtime(file.path))
       end
     end
 

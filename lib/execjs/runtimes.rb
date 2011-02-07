@@ -9,7 +9,8 @@ module ExecJS
     end
 
     def self.define_runtime(name, options)
-      runtimes.push runtime = Runtime.new(options)
+      klass = options[:as] || ExternalRuntime
+      runtimes.push runtime = klass.new(options)
       const_set(name, runtime)
     end
 

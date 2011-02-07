@@ -3,8 +3,8 @@ module ExecJS
   class RuntimeError    < Error; end
   class ProgramError    < Error; end
 
-  autoload :Runtime,  "execjs/runtime"
-  autoload :Runtimes, "execjs/runtimes"
+  autoload :ExternalRuntime, "execjs/external_runtime"
+  autoload :Runtimes,        "execjs/runtimes"
 
   def self.exec(source)
     runtime.exec(source)
