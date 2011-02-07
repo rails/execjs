@@ -28,7 +28,7 @@ module ExecJS
       :runner_path => runner_path("basic.js")
 
     define_runtime :Node,
-      :command => "node",
+      :command => ["nodejs", "node"],
       :runner_path => runner_path("node.js")
 
     define_runtime :JSC,

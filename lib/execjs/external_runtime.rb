@@ -8,6 +8,7 @@ module ExecJS
       @runner_path = options[:runner_path]
       @test_args   = options[:test_args]
       @test_match  = options[:test_match]
+      @binary      = locate_binary
     end
 
     def eval(source)
@@ -23,19 +24,22 @@ module ExecJS
     end
 
     def available?
-      command = @command.split(/\s+/).first
-      binary = `which #{command}`.strip
-      if $? == 0
-        if @test_args
-          output = `#{binary} #{@test_args} 2>&1`
-          output.match(@test_match)
-        else
-          true
-        end
-      end
+      @binary ? true : false
     end
 
     protected
+      def locate_binary
+        @command = @command.join(" ") if @command.is_a?(Array)
+        if binary = `which #{@command}`.split("\n").first
+          if @test_args
+            output = `#{binary} #{@test_args} 2>&1`
+            binary if output.match(@test_match)
+          else
+            binary
+          end
+        end
+      end
+
       def compile(source)
         runner_source.sub('#{source}', source)
       end
@@ -54,7 +58,7 @@ module ExecJS
       end
 
       def exec_runtime(filename)
-        output = `#{@command} #{filename} 2>&1`
+        output = `#{@binary} #{filename} 2>&1`
         if $?.success?
           output
         else
