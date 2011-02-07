@@ -1,31 +1,36 @@
 module ExecJS
   module Runtimes
-    def self.runtime
-      V8
+    def self.best_available
+      runtimes.find(&:available?)
+    end
+
+    def self.runtimes
+      @runtimes ||= []
+    end
+
+    def self.define_runtime(name, options)
+      runtimes.push runtime = Runtime.new(options)
+      const_set(name, runtime)
     end
 
     def self.runner_path(path)
       File.expand_path("../runtimes/#{path}", __FILE__)
     end
 
-    JSC = Runtime.new(
-      :command => "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc",
-      :runner_path => runner_path("jsc.js")
-    )
-
-    Node = Runtime.new(
-      :command => "node",
-      :runner_path => runner_path("node.js")
-    )
-
-    Spidermonkey = Runtime.new(
-      :command => "js",
-      :runner_path => runner_path("spidermonkey.js")
-    )
-
-    V8 = Runtime.new(
+    define_runtime :V8,
       :command => "v8",
       :runner_path => runner_path("v8.js")
-    )
+
+    define_runtime :Node,
+      :command => "node",
+      :runner_path => runner_path("node.js")
+
+    define_runtime :JSC,
+      :command => "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc",
+      :runner_path => runner_path("jsc.js")
+
+    define_runtime :Spidermonkey,
+      :command => "js",
+      :runner_path => runner_path("spidermonkey.js")
   end
 end

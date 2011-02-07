@@ -15,6 +15,6 @@ module ExecJS
   end
 
   def self.runtime
-    @runtime ||= Runtimes.runtime
+    @runtime ||= Runtimes.best_available
   end
 end
