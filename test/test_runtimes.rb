@@ -27,6 +27,11 @@ module TestRuntime
     assert_equal({"a"=>1,"b"=>2}, @runtime.eval("{a:1,b:2}"))
   end
 
+  def test_this_is_global_scope
+    assert_equal true, @runtime.eval("this === (function() {return this})()")
+    assert_equal true, @runtime.exec("return this === (function() {return this})()")
+  end
+
   def test_syntax_error
     assert_raise ExecJS::RuntimeError do
       @runtime.exec(")")
