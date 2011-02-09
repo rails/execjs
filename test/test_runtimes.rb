@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require "execjs"
 require "test/unit"
 
@@ -41,7 +42,16 @@ end
 
 def test_runtime(name)
   runtime = ExecJS::Runtimes.const_get(name)
-  if runtime.available?
+  ok = runtime.available?
+
+  warn "%s %-14s %s" %
+    if ok
+      ["✓", name, "Found"]
+    else
+      [" ", name, "Not found"]
+    end
+
+  if ok
     Class.new(Test::Unit::TestCase) do
       (class << self; self end).send(:define_method, :name) do
         "#{name}Test"
@@ -53,11 +63,10 @@ def test_runtime(name)
         instance_variable_set(:@runtime, runtime)
       end
     end
-  else
-    warn "#{name} runtime is unavailable, skipping"
   end
 end
 
+warn "Runtime support:"
 test_runtime :V8
 test_runtime :Rhino
 test_runtime :ExternalV8
@@ -65,3 +74,4 @@ test_runtime :Node
 test_runtime :JSC
 test_runtime :Spidermonkey
 test_runtime :JScript
+warn ""
