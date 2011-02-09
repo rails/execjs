@@ -1,5 +1,5 @@
 module ExecJS
-  class V8Runtime
+  class RubyRhinoRuntime
     def initialize(options)
     end
 
@@ -11,11 +11,11 @@ module ExecJS
 
     def eval(source)
       if /\S/ =~ source
-        context = ::V8::Context.new
+        context = ::Rhino::Context.new
         unbox context.eval("(#{source})")
       end
-    rescue ::V8::JSError => e
-      if e.value["name"] == "SyntaxError"
+    rescue ::Rhino::JavascriptError => e
+      if e.message == "syntax error"
         raise RuntimeError, e
       else
         raise ProgramError, e
@@ -23,7 +23,7 @@ module ExecJS
     end
 
     def available?
-      require "v8"
+      require "rhino"
       true
     rescue LoadError
       false
@@ -31,13 +31,11 @@ module ExecJS
 
     def unbox(value)
       case value
-      when ::V8::Function
+      when ::Rhino::NativeFunction
         nil
-      when ::V8::Array
-        value.map { |v| unbox(v) }
-      when ::V8::Object
+      when ::Rhino::NativeObject
         value.inject({}) do |vs, (k, v)|
-          vs[k] = unbox(v) unless v.is_a?(::V8::Function)
+          vs[k] = unbox(v) unless v.is_a?(::Rhino::NativeFunction)
           vs
         end
       else

@@ -14,13 +14,13 @@ module ExecJS
       const_set(name, runtime)
     end
 
+    define_runtime :RubyRacer,
+      :as => RubyRacerRuntime
+
+    define_runtime :RubyRhino,
+      :as => RubyRhinoRuntime
+
     define_runtime :V8,
-      :as => V8Runtime
-
-    define_runtime :Rhino,
-      :as => RhinoRuntime
-
-    define_runtime :ExternalV8,
       :command => "v8",
       :test_args => "--help",
       :test_match => /--crankshaft/,
@@ -30,7 +30,7 @@ module ExecJS
       :command => ["nodejs", "node"],
       :runner_path => ExecJS.root + "/support/node_runner.js"
 
-    define_runtime :JSC,
+    define_runtime :JavaScriptCore,
       :command => "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc",
       :runner_path => ExecJS.root + "/support/basic_runner.js"
 

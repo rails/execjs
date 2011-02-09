@@ -1,5 +1,5 @@
 module ExecJS
-  class RhinoRuntime
+  class RubyRacerRuntime
     def initialize(options)
     end
 
@@ -11,11 +11,11 @@ module ExecJS
 
     def eval(source)
       if /\S/ =~ source
-        context = ::Rhino::Context.new
+        context = ::V8::Context.new
         unbox context.eval("(#{source})")
       end
-    rescue ::Rhino::JavascriptError => e
-      if e.message == "syntax error"
+    rescue ::V8::JSError => e
+      if e.value["name"] == "SyntaxError"
         raise RuntimeError, e
       else
         raise ProgramError, e
@@ -23,7 +23,7 @@ module ExecJS
     end
 
     def available?
-      require "rhino"
+      require "v8"
       true
     rescue LoadError
       false
@@ -31,11 +31,13 @@ module ExecJS
 
     def unbox(value)
       case value
-      when ::Rhino::NativeFunction
+      when ::V8::Function
         nil
-      when ::Rhino::NativeObject
+      when ::V8::Array
+        value.map { |v| unbox(v) }
+      when ::V8::Object
         value.inject({}) do |vs, (k, v)|
-          vs[k] = unbox(v) unless v.is_a?(::Rhino::NativeFunction)
+          vs[k] = unbox(v) unless v.is_a?(::V8::Function)
           vs
         end
       else

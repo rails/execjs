@@ -45,15 +45,16 @@ module TestRuntime
   end
 end
 
-def test_runtime(name)
+def test_runtime(name, description = nil)
   runtime = ExecJS::Runtimes.const_get(name)
+  title = [name, description].join(" ")
   ok = runtime.available?
 
-  warn "%s %-14s %s" %
+  warn "%s %-16s %s" %
     if ok
-      ["✓", name, "Found"]
+      ["✓", title, "Found"]
     else
-      [" ", name, "Not found"]
+      [" ", title, "Not found"]
     end
 
   if ok
@@ -72,11 +73,11 @@ def test_runtime(name)
 end
 
 warn "Runtime support:"
+test_runtime :RubyRacer, "(V8)"
+test_runtime :RubyRhino
 test_runtime :V8
-test_runtime :Rhino
-test_runtime :ExternalV8
-test_runtime :Node
-test_runtime :JSC
+test_runtime :Node, "(V8)"
+test_runtime :JavaScriptCore
 test_runtime :Spidermonkey
 test_runtime :JScript
 warn ""
