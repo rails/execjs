@@ -1,3 +1,4 @@
+
 module ExecJS
   module Runtimes
     def self.best_available
@@ -32,7 +33,8 @@ module ExecJS
 
     define_runtime :JavaScriptCore,
       :command => "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc",
-      :runner_path => ExecJS.root + "/support/basic_runner.js"
+      :runner_path => ExecJS.root + "/support/basic_runner.js",
+      :conversion => { :from => "ISO8859-1", :to => "UTF-8" }
 
     define_runtime :Spidermonkey,
       :command => "js",

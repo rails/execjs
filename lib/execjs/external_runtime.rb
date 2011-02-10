@@ -8,6 +8,7 @@ module ExecJS
       @runner_path = options[:runner_path]
       @test_args   = options[:test_args]
       @test_match  = options[:test_match]
+      @conversion  = options[:conversion]
       @binary      = locate_binary
     end
 
@@ -74,11 +75,34 @@ module ExecJS
       end
 
       def exec_runtime(filename)
-        output = `#{@binary} #{filename} 2>&1`
+        output = sh("#{@binary} #{filename} 2>&1")
         if $?.success?
           output
         else
           raise RuntimeError, output
+        end
+      end
+
+      if "".respond_to?(:force_encoding)
+        def sh(command)
+          output, options = nil, {}
+          options[:internal_encoding] = @conversion[:from] if @conversion
+          IO.popen(command, options) { |f| output = f.read }
+          output.force_encoding(@conversion[:to]) if @conversion
+          output
+        end
+      else
+        require "iconv"
+
+        def sh(command)
+          output = nil
+          IO.popen(command) { |f| output = f.read }
+
+          if @conversion
+            Iconv.iconv(@conversion[:from], @conversion[:to], output).first
+          else
+            output
+          end
         end
       end
 
