@@ -13,6 +13,7 @@ module TestRuntime
     assert_equal [1, 2], @runtime.exec("return [1, 2]")
     assert_equal "hello", @runtime.exec("return 'hello'")
     assert_equal({"a"=>1,"b"=>2}, @runtime.exec("return {a:1,b:2}"))
+    assert_equal "café", @runtime.exec("return 'café'")
   end
 
   def test_eval
@@ -25,6 +26,7 @@ module TestRuntime
     assert_equal [1, 2], @runtime.eval("[1, 2]")
     assert_equal "hello", @runtime.eval("'hello'")
     assert_equal({"a"=>1,"b"=>2}, @runtime.eval("{a:1,b:2}"))
+    assert_equal "café", @runtime.eval("'café'")
   end
 
   def test_this_is_global_scope
