@@ -1,4 +1,3 @@
-
 module ExecJS
   module Runtimes
     RubyRacer = RubyRacerRuntime.new
