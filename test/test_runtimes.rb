@@ -47,8 +47,18 @@ module TestRuntime
   end
 end
 
+runtimes = [
+  "RubyRacer",
+  "RubyRhino",
+  "V8",
+  "Node",
+  "JavaScriptCore",
+  "Spidermonkey",
+ "JScript"]
+
 warn "Runtime Support:"
-ExecJS.runtimes.each do |runtime|
+runtimes.each do |name|
+  runtime = ExecJS::Runtimes.const_get(name)
   ok = runtime.available?
 
   warn " %s %-21s %s" %
@@ -59,7 +69,11 @@ ExecJS.runtimes.each do |runtime|
     end
 
   if ok
-    Class.new(Test::Unit::TestCase) do
+    klass_name = "Test#{name}"
+    instance_eval "class ::#{klass_name} < Test::Unit::TestCase; end"
+    test_suite = Kernel.const_get(klass_name)
+
+    test_suite.instance_eval do
       include TestRuntime
 
       instance_exec do
