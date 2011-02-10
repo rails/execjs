@@ -3,7 +3,10 @@ require "tempfile"
 
 module ExecJS
   class ExternalRuntime
+    attr_reader :name
+
     def initialize(options)
+      @name        = options[:name]
       @command     = options[:command]
       @runner_path = options[:runner_path]
       @test_args   = options[:test_args]

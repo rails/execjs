@@ -45,25 +45,26 @@ module TestRuntime
   end
 end
 
-def test_runtime(name, description = nil)
-  runtime = ExecJS::Runtimes.const_get(name)
-  title = [name, description].join(" ")
+warn "Runtime Support:"
+ExecJS.runtimes.each do |runtime|
   ok = runtime.available?
 
-  warn "%s %-16s %s" %
+  warn " %s %-21s %s" %
     if ok
-      ["✓", title, "Found"]
+      ["✓", runtime.name, "Found"]
     else
-      [" ", title, "Not found"]
+      [" ", runtime.name, "Not found"]
     end
 
   if ok
     Class.new(Test::Unit::TestCase) do
-      (class << self; self end).send(:define_method, :name) do
-        "#{name}Test"
-      end
-
       include TestRuntime
+
+      instance_exec do
+        define_method(:name) do
+          runtime.name
+        end
+      end
 
       define_method(:setup) do
         instance_variable_set(:@runtime, runtime)
@@ -71,13 +72,4 @@ def test_runtime(name, description = nil)
     end
   end
 end
-
-warn "Runtime support:"
-test_runtime :RubyRacer, "(V8)"
-test_runtime :RubyRhino
-test_runtime :V8
-test_runtime :Node, "(V8)"
-test_runtime :JavaScriptCore
-test_runtime :Spidermonkey
-test_runtime :JScript
 warn ""

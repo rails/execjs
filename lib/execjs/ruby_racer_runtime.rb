@@ -1,6 +1,7 @@
 module ExecJS
   class RubyRacerRuntime
-    def initialize(options)
+    def name
+      "therubyracer (V8)"
     end
 
     def exec(source)

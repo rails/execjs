@@ -1,6 +1,7 @@
 module ExecJS
   class RubyRhinoRuntime
-    def initialize(options)
+    def name
+      "therubyrhino (Rhino)"
     end
 
     def exec(source)

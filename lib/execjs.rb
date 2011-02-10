@@ -18,6 +18,10 @@ module ExecJS
     runtime.eval(source)
   end
 
+  def self.runtimes
+    Runtimes.runtimes
+  end
+
   def self.runtime
     @runtime ||= Runtimes.best_available
   end
