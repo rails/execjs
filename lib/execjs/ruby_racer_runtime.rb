@@ -5,13 +5,13 @@ module ExecJS
         @v8_context = ::V8::Context.new
       end
 
-      def exec(source)
+      def exec(source, options = {})
         if /\S/ =~ source
-          eval "(function(){#{source}})()"
+          eval "(function(){#{source}})()", options
         end
       end
 
-      def eval(source)
+      def eval(source, options = {})
         if /\S/ =~ source
           unbox @v8_context.eval("(#{source})")
         end
@@ -46,12 +46,12 @@ module ExecJS
 
     def exec(source)
       context = Context.new
-      context.exec(source)
+      context.exec(source, :pure => true)
     end
 
     def eval(source)
       context = Context.new
-      context.eval(source)
+      context.eval(source, :pure => true)
     end
 
     def compile(source)
