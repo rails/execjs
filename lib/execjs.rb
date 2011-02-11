@@ -18,6 +18,10 @@ module ExecJS
     runtime.eval(source)
   end
 
+  def self.compile(source)
+    runtime.compile(source)
+  end
+
   def self.runtimes
     Runtimes.runtimes
   end

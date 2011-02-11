@@ -29,6 +29,12 @@ module TestRuntime
     assert_equal "café", @runtime.eval("'café'")
   end
 
+  def test_compile
+    context = @runtime.compile("foo = function() { return \"bar\"; }")
+    assert_equal "bar", context.exec("return foo()")
+    assert_equal "bar", context.eval("foo()")
+  end
+
   def test_this_is_global_scope
     assert_equal true, @runtime.eval("this === (function() {return this})()")
     assert_equal true, @runtime.exec("return this === (function() {return this})()")

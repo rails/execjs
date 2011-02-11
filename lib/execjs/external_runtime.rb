@@ -3,6 +3,56 @@ require "tempfile"
 
 module ExecJS
   class ExternalRuntime
+    class Context
+      def initialize(runtime)
+        @runtime = runtime
+        @script  = ""
+      end
+
+      def eval(source)
+        if /\S/ =~ source
+          exec("return eval(#{"(#{source})".to_json})")
+        end
+      end
+
+      def exec(source)
+        @script << source
+        @script << "\n"
+
+        compile_to_tempfile(@script) do |file|
+          extract_result(@runtime.exec_runtime(file.path))
+        end
+      end
+
+      protected
+        def compile_to_tempfile(source)
+          tempfile = Tempfile.open("execjs")
+          tempfile.write compile(source)
+          tempfile.close
+          yield tempfile
+        ensure
+          tempfile.close!
+        end
+
+        def compile(source)
+          @runtime.runner_source.dup.tap do |output|
+            output.sub!('#{source}', source)
+            output.sub!('#{json2_source}') do
+              IO.read(ExecJS.root + "/support/json2.js")
+            end
+          end
+        end
+
+        def extract_result(output)
+          status, value = output.empty? ? [] : JSON.parse(output)
+          if status == "ok"
+            value
+          else
+            raise ProgramError, value
+          end
+        end
+    end
+
     attr_reader :name
 
     def initialize(options)
@@ -15,20 +65,37 @@ module ExecJS
       @binary      = locate_binary
     end
 
-    def eval(source)
-      if /\S/ =~ source
-        exec("return eval(#{"(#{source})".to_json})")
-      end
+    def exec(source)
+      context = Context.new(self)
+      context.exec(source)
     end
 
-    def exec(source)
-      compile_to_tempfile(source) do |file|
-        extract_result(exec_runtime(file.path))
-      end
+    def eval(source)
+      context = Context.new(self)
+      context.eval(source)
+    end
+
+    def compile(source)
+      context = Context.new(self)
+      context.exec(source)
+      context
     end
 
     def available?
       @binary ? true : false
+    end
+
+    def runner_source
+      @runner_source ||= IO.read(@runner_path)
+    end
+
+    def exec_runtime(filename)
+      output = sh("#{@binary} #{filename} 2>&1")
+      if $?.success?
+        output
+      else
+        raise RuntimeError, output
+      end
     end
 
     protected
@@ -55,37 +122,6 @@ module ExecJS
         end
       end
 
-      def compile(source)
-        runner_source.dup.tap do |output|
-          output.sub!('#{source}', source)
-          output.sub!('#{json2_source}') do
-            IO.read(ExecJS.root + "/support/json2.js")
-          end
-        end
-      end
-
-      def runner_source
-        @runner_source ||= IO.read(@runner_path)
-      end
-
-      def compile_to_tempfile(source)
-        tempfile = Tempfile.open("execjs")
-        tempfile.write compile(source)
-        tempfile.close
-        yield tempfile
-      ensure
-        tempfile.close!
-      end
-
-      def exec_runtime(filename)
-        output = sh("#{@binary} #{filename} 2>&1")
-        if $?.success?
-          output
-        else
-          raise RuntimeError, output
-        end
-      end
-
       if "".respond_to?(:force_encoding)
         def sh(command)
           output, options = nil, {}
@@ -106,15 +142,6 @@ module ExecJS
           else
             output
           end
-        end
-      end
-
-      def extract_result(output)
-        status, value = output.empty? ? [] : JSON.parse(output)
-        if status == "ok"
-          value
-        else
-          raise ProgramError, value
         end
       end
   end

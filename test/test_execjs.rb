@@ -17,4 +17,10 @@ class TestExecJS < Test::Unit::TestCase
     runtime = ExecJS::ExternalRuntime.new(:command => "ruby")
     assert runtime.available?
   end
+
+  def test_compile
+    context = ExecJS.compile("foo = function() { return \"bar\"; }")
+    assert_equal "bar", context.exec("return foo()")
+    assert_equal "bar", context.eval("foo()")
+  end
 end
