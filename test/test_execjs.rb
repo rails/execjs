@@ -28,4 +28,21 @@ class TestExecJS < Test::Unit::TestCase
     context = ExecJS.compile("foo = function() { return \"bar\"; }")
     assert_equal "bar", context.eval("foo()", :pure => true)
   end
+
+  def test_context_call
+    context = ExecJS.compile("id = function(v) { return v; }")
+    assert_equal "bar", context.call("id", "bar")
+  end
+
+  def test_nested_context_call
+    context = ExecJS.compile("a = {}; a.b = {}; a.b.id = function(v) { return v; }")
+    assert_equal "bar", context.call("a.b.id", "bar")
+  end
+
+  def test_context_call_missing_function
+    context = ExecJS.compile("")
+    assert_raises ExecJS::ProgramError do
+      context.call("missing")
+    end
+  end
 end

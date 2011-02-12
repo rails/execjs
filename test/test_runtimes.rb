@@ -33,6 +33,7 @@ module TestRuntime
     context = @runtime.compile("foo = function() { return \"bar\"; }")
     assert_equal "bar", context.exec("return foo()")
     assert_equal "bar", context.eval("foo()")
+    assert_equal "bar", context.call("foo")
   end
 
   def test_this_is_global_scope

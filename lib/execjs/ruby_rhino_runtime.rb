@@ -23,6 +23,16 @@ module ExecJS
         end
       end
 
+      def call(properties, *args)
+        unbox @rhino_context.eval(properties).call(*args)
+      rescue ::Rhino::JavascriptError => e
+        if e.message == "syntax error"
+          raise RuntimeError, e
+        else
+          raise ProgramError, e
+        end
+      end
+
       def unbox(value)
         case value
         when ::Rhino::NativeFunction

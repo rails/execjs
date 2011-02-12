@@ -9,6 +9,12 @@ module ExecJS
         @script  = ""
       end
 
+      def <<(script)
+        @script << script
+        @script << "\n"
+        self
+      end
+
       def eval(source, options = {})
         if /\S/ =~ source
           exec("return eval(#{"(#{source})".to_json})")
@@ -16,15 +22,20 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        if !options[:pure]
-          @script << source
-          @script << "\n"
+        if options[:pure]
+          source = @script + source
+        else
+          self << source
           source = @script
         end
 
         compile_to_tempfile(source) do |file|
           extract_result(@runtime.exec_runtime(file.path))
         end
+      end
+
+      def call(properties, *args)
+        eval "#{properties}.apply(this, #{args.to_json})"
       end
 
       protected

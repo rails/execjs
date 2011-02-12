@@ -23,6 +23,16 @@ module ExecJS
         end
       end
 
+      def call(properties, *args)
+        unbox @v8_context.eval(properties).call(*args)
+      rescue ::V8::JSError => e
+        if e.value["name"] == "SyntaxError"
+          raise RuntimeError, e
+        else
+          raise ProgramError, e
+        end
+      end
+
       def unbox(value)
         case value
         when ::V8::Function
