@@ -35,7 +35,7 @@ module ExecJS
       end
 
       def call(properties, *args)
-        eval "#{properties}.apply(this, #{args.to_json})"
+        eval "#{properties}.apply(this, #{args.to_json})", :pure => true
       end
 
       protected
