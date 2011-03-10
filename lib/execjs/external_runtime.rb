@@ -37,7 +37,9 @@ module ExecJS
 
         def compile(source)
           @runtime.send(:runner_source).dup.tap do |output|
-            output.sub!('#{source}', source)
+            output.sub!('#{source}') do
+              source
+            end
             output.sub!('#{json2_source}') do
               IO.read(ExecJS.root + "/support/json2.js")
             end
