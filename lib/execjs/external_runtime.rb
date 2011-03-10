@@ -21,8 +21,8 @@ module ExecJS
         end
       end
 
-      def call(properties, *args)
-        eval "#{properties}.apply(this, #{args.to_json})"
+      def call(identifier, *args)
+        eval "#{identifier}.apply(this, #{args.to_json})"
       end
 
       protected
