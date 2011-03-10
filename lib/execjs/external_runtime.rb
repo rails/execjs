@@ -4,15 +4,9 @@ require "tempfile"
 module ExecJS
   class ExternalRuntime
     class Context
-      def initialize(runtime)
+      def initialize(runtime, source = "")
         @runtime = runtime
-        @script  = ""
-      end
-
-      def <<(script)
-        @script << script
-        @script << "\n"
-        self
+        @source  = source
       end
 
       def eval(source, options = {})
@@ -22,20 +16,13 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        if options[:pure]
-          source = @script + source
-        else
-          self << source
-          source = @script
-        end
-
-        compile_to_tempfile(source) do |file|
+        compile_to_tempfile([@source, source].join("\n")) do |file|
           extract_result(@runtime.exec_runtime(file.path))
         end
       end
 
       def call(properties, *args)
-        eval "#{properties}.apply(this, #{args.to_json})", :pure => true
+        eval "#{properties}.apply(this, #{args.to_json})"
       end
 
       protected
@@ -81,18 +68,16 @@ module ExecJS
 
     def exec(source)
       context = Context.new(self)
-      context.exec(source, :pure => true)
+      context.exec(source)
     end
 
     def eval(source)
       context = Context.new(self)
-      context.eval(source, :pure => true)
+      context.eval(source)
     end
 
     def compile(source)
-      context = Context.new(self)
-      context.exec(source)
-      context
+      Context.new(self, source)
     end
 
     def available?

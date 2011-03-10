@@ -1,8 +1,9 @@
 module ExecJS
   class RubyRhinoRuntime
     class Context
-      def initialize
+      def initialize(source = "")
         @rhino_context = ::Rhino::Context.new
+        @rhino_context.eval(source)
       end
 
       def exec(source, options = {})
@@ -54,18 +55,16 @@ module ExecJS
 
     def exec(source)
       context = Context.new
-      context.exec(source, :pure => true)
+      context.exec(source)
     end
 
     def eval(source)
       context = Context.new
-      context.eval(source, :pure => true)
+      context.eval(source)
     end
 
     def compile(source)
-      context = Context.new
-      context.exec(source)
-      context
+      Context.new(source)
     end
 
     def available?

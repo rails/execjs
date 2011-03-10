@@ -24,11 +24,6 @@ class TestExecJS < Test::Unit::TestCase
     assert_equal "bar", context.eval("foo()")
   end
 
-  def test_pure_evaluation
-    context = ExecJS.compile("foo = function() { return \"bar\"; }")
-    assert_equal "bar", context.eval("foo()", :pure => true)
-  end
-
   def test_context_call
     context = ExecJS.compile("id = function(v) { return v; }")
     assert_equal "bar", context.call("id", "bar")
