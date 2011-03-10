@@ -21,3 +21,13 @@ A short example:
     require "execjs"
     ExecJS.eval "'red yellow blue'.split(' ')"
     # => ["red", "yellow", "blue"]
+
+A longer example, demonstrating how to invoke the CoffeeScript compiler:
+
+    require "execjs"
+    require "open-uri"
+    source = open("http://jashkenas.github.com/coffee-script/extras/coffee-script.js").read
+
+    context = ExecJS.compile(source)
+    context.call("CoffeeScript.compile", "square = (x) -> x * x", :bare => true)
+    # => var square;\nsquare = function(x) {\n  return x * x;\n};"
