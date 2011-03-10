@@ -17,7 +17,7 @@ module ExecJS
 
       def exec(source, options = {})
         compile_to_tempfile([@source, source].join("\n")) do |file|
-          extract_result(@runtime.exec_runtime(file.path))
+          extract_result(@runtime.send(:exec_runtime, file.path))
         end
       end
 
@@ -36,7 +36,7 @@ module ExecJS
         end
 
         def compile(source)
-          @runtime.runner_source.dup.tap do |output|
+          @runtime.send(:runner_source).dup.tap do |output|
             output.sub!('#{source}', source)
             output.sub!('#{json2_source}') do
               IO.read(ExecJS.root + "/support/json2.js")
@@ -84,20 +84,20 @@ module ExecJS
       @binary ? true : false
     end
 
-    def runner_source
-      @runner_source ||= IO.read(@runner_path)
-    end
-
-    def exec_runtime(filename)
-      output = sh("#{@binary} #{filename} 2>&1")
-      if $?.success?
-        output
-      else
-        raise RuntimeError, output
-      end
-    end
-
     protected
+      def runner_source
+        @runner_source ||= IO.read(@runner_path)
+      end
+
+      def exec_runtime(filename)
+        output = sh("#{@binary} #{filename} 2>&1")
+        if $?.success?
+          output
+        else
+          raise RuntimeError, output
+        end
+      end
+
       def locate_binary
         if binary = which(@command)
           if @test_args
