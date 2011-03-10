@@ -30,4 +30,14 @@ A longer example, demonstrating how to invoke the CoffeeScript compiler:
 
     context = ExecJS.compile(source)
     context.call("CoffeeScript.compile", "square = (x) -> x * x", :bare => true)
-    # => var square;\nsquare = function(x) {\n  return x * x;\n};"
+    # => "var square;\nsquare = function(x) {\n  return x * x;\n};"
+
+# Installation
+
+    $ gem install execjs
+
+# License
+
+Copyright (c) 2011 Sam Stephenson and Josh Peek.
+
+Released under the MIT license. See `LICENSE` for details.
