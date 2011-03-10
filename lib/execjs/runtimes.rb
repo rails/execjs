@@ -4,14 +4,6 @@ module ExecJS
 
     RubyRhino = RubyRhinoRuntime.new
 
-    V8 = ExternalRuntime.new(
-      :name        => "V8",
-      :command     => "v8",
-      :test_args   => "--help",
-      :test_match  => /--crankshaft/,
-      :runner_path => ExecJS.root + "/support/basic_runner.js"
-    )
-
     Node = ExternalRuntime.new(
       :name        => "Node.js (V8)",
       :command     => ["nodejs", "node"],
@@ -46,7 +38,6 @@ module ExecJS
       @runtimes ||= [
         RubyRacer,
         RubyRhino,
-        V8,
         Node,
         JavaScriptCore,
         Spidermonkey,

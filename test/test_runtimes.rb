@@ -57,7 +57,6 @@ end
 runtimes = [
   "RubyRacer",
   "RubyRhino",
-  "V8",
   "Node",
   "JavaScriptCore",
   "Spidermonkey",
