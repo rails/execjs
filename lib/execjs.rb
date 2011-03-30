@@ -27,7 +27,8 @@ module ExecJS
   end
 
   def self.runtime
-    @runtime ||= Runtimes.best_available
+    @runtime ||= Runtimes.best_available ||
+      raise(ExecJS::RuntimeError, "Could not find a JavaScript runtime")
   end
 
   def self.root

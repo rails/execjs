@@ -31,7 +31,7 @@ module ExecJS
 
 
     def self.best_available
-      runtimes.find(&:available?) or raise(ExecJS::RuntimeError, 'Could not find any JavaScript runtime!')
+      runtimes.find(&:available?)
     end
 
     def self.runtimes
