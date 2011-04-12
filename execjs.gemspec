@@ -10,17 +10,17 @@ Gem::Specification.new do |s|
   EOS
 
   s.files = [
-    "lib/execjs/support",
+    "lib/execjs.rb",
+    "lib/execjs/external_runtime.rb",
+    "lib/execjs/mustang_runtime.rb",
+    "lib/execjs/ruby_racer_runtime.rb",
+    "lib/execjs/ruby_rhino_runtime.rb",
+    "lib/execjs/runtimes.rb",
     "lib/execjs/support/basic_runner.js",
     "lib/execjs/support/jscript_runner.js",
     "lib/execjs/support/json2.js",
     "lib/execjs/support/node_runner.js",
     "lib/execjs/support/which.bat",
-    "lib/execjs/external_runtime.rb",
-    "lib/execjs/ruby_racer_runtime.rb",
-    "lib/execjs/ruby_rhino_runtime.rb",
-    "lib/execjs/runtimes.rb",
-    "lib/execjs.rb",
     "LICENSE",
     "README.md"
   ]
