@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
     "README.md"
   ]
 
+  s.add_development_dependency "mustang"
   s.add_development_dependency "therubyracer"
   s.add_development_dependency "therubyrhino"
 
