@@ -7,6 +7,7 @@ module ExecJS
 
   autoload :ExternalRuntime,  "execjs/external_runtime"
   autoload :RubyRacerRuntime, "execjs/ruby_racer_runtime"
+  autoload :MustangRuntime,   "execjs/mustang_runtime"
   autoload :RubyRhinoRuntime, "execjs/ruby_rhino_runtime"
   autoload :Runtimes,         "execjs/runtimes"
 
