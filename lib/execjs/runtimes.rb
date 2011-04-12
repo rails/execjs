@@ -4,6 +4,8 @@ module ExecJS
 
     RubyRhino = RubyRhinoRuntime.new
 
+    Mustang = MustangRuntime.new
+
     Node = ExternalRuntime.new(
       :name        => "Node.js (V8)",
       :command     => ["nodejs", "node"],
@@ -38,6 +40,7 @@ module ExecJS
       @runtimes ||= [
         RubyRacer,
         RubyRhino,
+        Mustang,
         Node,
         JavaScriptCore,
         Spidermonkey,
