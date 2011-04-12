@@ -20,20 +20,24 @@ module ExecJS
 
       def call(properties, *args)
         unbox @v8_context.eval(properties).call(*args)
-      rescue NoMethodError
-        raise ProgramError
+      rescue NoMethodError => e
+        raise ProgramError, e.message
       end
 
       def unbox(value)
         case value
-        when Mustang::V8::NullClass, Mustang::V8::UndefinedClass, Mustang::V8::Function
-          nil
         when Mustang::V8::Array
           value.map { |v| unbox(v) }
+        when Mustang::V8::Boolean
+          value.to_bool
+        when Mustang::V8::NullClass, Mustang::V8::UndefinedClass
+          nil
+        when Mustang::V8::Function
+          nil
         when Mustang::V8::SyntaxError
-          raise RuntimeError
+          raise RuntimeError, value.message
         when Mustang::V8::Error
-          raise ProgramError
+          raise ProgramError, value.message
         else
           value.respond_to?(:delegate) ? value.delegate : value
         end
