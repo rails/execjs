@@ -7,12 +7,12 @@ returns the result to you as a Ruby object.
 
 ExecJS supports these runtimes:
 
-* [Mustang](https://github.com/nu7hatch/mustang) - Mustang V8
-  embedded within Ruby
 * [therubyracer](https://github.com/cowboyd/therubyracer) - Google V8
   embedded within MRI Ruby
 * [therubyrhino](https://github.com/cowboyd/therubyrhino) - Mozilla
   Rhino embedded within JRuby
+* [Mustang](https://github.com/nu7hatch/mustang) - Mustang V8
+  embedded within Ruby
 * [Node.js](http://nodejs.org/)
 * Apple JavaScriptCore - Included with Mac OS X
 * [Mozilla Spidermonkey](http://www.mozilla.org/js/spidermonkey/)

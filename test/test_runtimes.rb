@@ -57,9 +57,9 @@ module TestRuntime
 end
 
 runtimes = [
-  "Mustang",
   "RubyRacer",
   "RubyRhino",
+  "Mustang",
   "Node",
   "JavaScriptCore",
   "Spidermonkey",
