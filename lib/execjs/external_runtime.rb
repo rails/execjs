@@ -112,15 +112,19 @@ module ExecJS
       end
 
       def which(command)
-        Array(command).find do |name|
+        Array(command).each do |name|
           name = name.split(/\s+/).first
           result = if ExecJS.windows?
             `#{ExecJS.root}/support/which.bat #{name}`
           else
             `which #{name} 2>&1`
           end
-          result.strip.split("\n").first
+
+          if path = result.strip.split("\n").first
+            return path
+          end
         end
+        nil
       end
 
       if "".respond_to?(:force_encoding)
