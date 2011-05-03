@@ -39,4 +39,7 @@ module ExecJS
   def self.windows?
     @windows ||= RbConfig::CONFIG["host_os"] =~ /mswin|mingw/
   end
+
+  # Eager detect runtime
+  self.runtime
 end
