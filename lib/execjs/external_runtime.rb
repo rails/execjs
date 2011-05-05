@@ -113,7 +113,7 @@ module ExecJS
 
       def which(command)
         Array(command).each do |name|
-          name = name.split(/\s+/).first
+          name, args = name.split(/\s+/, 2)
           result = if ExecJS.windows?
             `#{ExecJS.root}/support/which.bat #{name}`
           else
@@ -121,7 +121,7 @@ module ExecJS
           end
 
           if path = result.strip.split("\n").first
-            return path
+            return args ? "#{path} #{args}" : path
           end
         end
         nil
