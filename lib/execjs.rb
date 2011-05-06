@@ -29,7 +29,7 @@ module ExecJS
 
   def self.runtime
     @runtime ||= Runtimes.best_available ||
-      raise(ExecJS::RuntimeError, "Could not find a JavaScript runtime")
+      raise(ExecJS::RuntimeError, "Could not find a JavaScript runtime. See https://github.com/sstephenson/execjs for a list of available runtimes.")
   end
 
   def self.root
