@@ -14,6 +14,7 @@ module TestRuntime
     assert_equal "hello", @runtime.exec("return 'hello'")
     assert_equal({"a"=>1,"b"=>2}, @runtime.exec("return {a:1,b:2}"))
     assert_equal "café", @runtime.exec("return 'café'")
+    assert_equal "☃", @runtime.exec('return "☃"')
     assert_equal "\\", @runtime.exec('return "\\\\"')
   end
 
@@ -28,6 +29,7 @@ module TestRuntime
     assert_equal "hello", @runtime.eval("'hello'")
     assert_equal({"a"=>1,"b"=>2}, @runtime.eval("{a:1,b:2}"))
     assert_equal "café", @runtime.eval("'café'")
+    assert_equal "☃", @runtime.eval('"☃"')
     assert_equal "\\", @runtime.eval('"\\\\"')
   end
 
