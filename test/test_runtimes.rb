@@ -33,6 +33,14 @@ module TestRuntime
     assert_equal "\\", @runtime.eval('"\\\\"')
   end
 
+  if defined? Encoding
+    def test_encoding
+      utf8 = Encoding.find('UTF-8')
+      assert_equal utf8, @runtime.exec("return 'hello'").encoding
+      assert_equal utf8, @runtime.eval("'☃'").encoding
+    end
+  end
+
   def test_compile
     context = @runtime.compile("foo = function() { return \"bar\"; }")
     assert_equal "bar", context.exec("return foo()")

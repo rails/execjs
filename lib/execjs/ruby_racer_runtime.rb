@@ -45,6 +45,10 @@ module ExecJS
             vs[k] = unbox(v) unless v.is_a?(::V8::Function)
             vs
           end
+        when String
+          value.respond_to?(:force_encoding) ?
+            value.force_encoding('UTF-8') :
+            value
         else
           value
         end
