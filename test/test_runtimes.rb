@@ -36,8 +36,19 @@ module TestRuntime
   if defined? Encoding
     def test_encoding
       utf8 = Encoding.find('UTF-8')
+
       assert_equal utf8, @runtime.exec("return 'hello'").encoding
       assert_equal utf8, @runtime.eval("'☃'").encoding
+
+      ascii = "'hello'".encode('US-ASCII')
+      result = @runtime.eval(ascii)
+      assert_equal "hello", result
+      assert_equal utf8, result.encoding
+
+      assert_raise Encoding::UndefinedConversionError do
+        binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
+        @runtime.eval(binary)
+      end
     end
   end
 

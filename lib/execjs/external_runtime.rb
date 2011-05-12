@@ -9,12 +9,16 @@ module ExecJS
       end
 
       def eval(source, options = {})
+        souce = source.encode('UTF-8') if source.respond_to?(:encode)
+
         if /\S/ =~ source
           exec("return eval(#{MultiJson.encode("(#{source})")})")
         end
       end
 
       def exec(source, options = {})
+        souce = source.encode('UTF-8') if source.respond_to?(:encode)
+
         compile_to_tempfile([@source, source].join("\n")) do |file|
           extract_result(@runtime.send(:exec_runtime, file.path))
         end
