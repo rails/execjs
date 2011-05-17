@@ -1,9 +1,10 @@
 require "rbconfig"
 
 module ExecJS
-  class Error < ::StandardError; end
-  class RuntimeError    < Error; end
-  class ProgramError    < Error; end
+  class Error           < ::StandardError; end
+  class RuntimeError              < Error; end
+  class ProgramError              < Error; end
+  class RuntimeUnavailable < RuntimeError; end
 
   autoload :ExternalRuntime,  "execjs/external_runtime"
   autoload :MustangRuntime,   "execjs/mustang_runtime"
@@ -11,35 +12,40 @@ module ExecJS
   autoload :RubyRhinoRuntime, "execjs/ruby_rhino_runtime"
   autoload :Runtimes,         "execjs/runtimes"
 
-  def self.exec(source)
-    runtime.exec(source)
+  class << self
+    attr_reader :runtime
+
+    def exec(source)
+      runtime.exec(source)
+    end
+
+    def eval(source)
+      runtime.eval(source)
+    end
+
+    def compile(source)
+      runtime.compile(source)
+    end
+
+    def runtimes
+      Runtimes.runtimes
+    end
+
+    def runtime=(runtime)
+      raise RuntimeUnavailable, "#{runtime.name} is unavailable on this system" unless runtime.available?
+      @runtime = runtime
+    end
+
+    def root
+      @root ||= File.expand_path("../execjs", __FILE__)
+    end
+
+    def windows?
+      @windows ||= RbConfig::CONFIG["host_os"] =~ /mswin|mingw/
+    end
   end
 
-  def self.eval(source)
-    runtime.eval(source)
-  end
-
-  def self.compile(source)
-    runtime.compile(source)
-  end
-
-  def self.runtimes
-    Runtimes.runtimes
-  end
-
-  def self.runtime
-    @runtime ||= Runtimes.best_available ||
-      raise(ExecJS::RuntimeError, "Could not find a JavaScript runtime. See https://github.com/sstephenson/execjs for a list of available runtimes.")
-  end
-
-  def self.root
-    @root ||= File.expand_path("../execjs", __FILE__)
-  end
-
-  def self.windows?
-    @windows ||= RbConfig::CONFIG["host_os"] =~ /mswin|mingw/
-  end
-
-  # Eager detect runtime
-  self.runtime
+  # Eagerly detect runtime
+  self.runtime ||= Runtimes.best_available ||
+    raise(RuntimeUnavailable, "Could not find a JavaScript runtime. See https://github.com/sstephenson/execjs for a list of available runtimes.")
 end
