@@ -134,6 +134,7 @@ module ExecJS
       if "".respond_to?(:force_encoding)
         def sh(command)
           output, options = nil, {}
+          options[:external_encoding] = 'UTF-8'
           options[:internal_encoding] = @conversion[:from] if @conversion
           IO.popen(command, options) { |f| output = f.read }
           output.force_encoding(@conversion[:to]) if @conversion
