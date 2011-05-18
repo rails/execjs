@@ -22,9 +22,9 @@ module ExecJS
         end
       rescue ::V8::JSError => e
         if e.value["name"] == "SyntaxError"
-          raise RuntimeError, e
+          raise RuntimeError, e.message
         else
-          raise ProgramError, e
+          raise ProgramError, e.message
         end
       end
 
@@ -32,9 +32,9 @@ module ExecJS
         unbox @v8_context.eval(properties).call(*args)
       rescue ::V8::JSError => e
         if e.value["name"] == "SyntaxError"
-          raise RuntimeError, e
+          raise RuntimeError, e.message
         else
-          raise ProgramError, e
+          raise ProgramError, e.message
         end
       end
 
