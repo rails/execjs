@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-require "execjs"
-require "test/unit"
+require "execjs_test"
 
-module TestRuntime
+class TestRuntime < Test::Unit::TestCase
+  def setup
+    @runtime = ExecJS::Runtimes.autodetect
+  end
+
   def test_exec
     assert_nil @runtime.exec("1")
     assert_nil @runtime.exec("return")
@@ -76,46 +79,3 @@ module TestRuntime
     end
   end
 end
-
-runtimes = [
-  "RubyRacer",
-  "RubyRhino",
-  "Mustang",
-  "Node",
-  "JavaScriptCore",
-  "Spidermonkey",
- "JScript"]
-
-warn "Runtime Support:"
-runtimes.each do |name|
-  runtime = ExecJS::Runtimes.const_get(name)
-  ok = runtime.available?
-
-  warn " %s %-21s %s" %
-    if ok
-      ["✓", runtime.name, "Found"]
-    else
-      [" ", runtime.name, "Not found"]
-    end
-
-  if ok
-    klass_name = "Test#{name}"
-    instance_eval "class ::#{klass_name} < Test::Unit::TestCase; end"
-    test_suite = Kernel.const_get(klass_name)
-
-    test_suite.instance_eval do
-      include TestRuntime
-
-      instance_exec do
-        define_method(:name) do
-          runtime.name
-        end
-      end
-
-      define_method(:setup) do
-        instance_variable_set(:@runtime, runtime)
-      end
-    end
-  end
-end
-warn ""

@@ -1,5 +1,4 @@
-require "execjs"
-require "test/unit"
+require "execjs_test"
 
 class TestExecJS < Test::Unit::TestCase
   def test_exec
