@@ -1,3 +1,9 @@
+require "execjs/module"
+require "execjs/external_runtime"
+require "execjs/mustang_runtime"
+require "execjs/ruby_racer_runtime"
+require "execjs/ruby_rhino_runtime"
+
 module ExecJS
   module Runtimes
     RubyRacer = RubyRacerRuntime.new
@@ -32,8 +38,32 @@ module ExecJS
     )
 
 
+    def self.autodetect
+      from_environment || best_available ||
+        raise(RuntimeUnavailable, "Could not find a JavaScript runtime. " +
+          "See https://github.com/sstephenson/execjs for a list of available runtimes.")
+    end
+
     def self.best_available
       runtimes.find(&:available?)
+    end
+
+    def self.from_environment
+      if name = ENV["EXECJS_RUNTIME"]
+        if runtime = const_get(name)
+          if runtime.available?
+            runtime if runtime.available?
+          else
+            raise RuntimeUnavailable, "#{name} runtime is not available on this system"
+          end
+        elsif !name.empty?
+          raise RuntimeUnavailable, "#{name} runtime is not defined"
+        end
+      end
+    end
+
+    def self.names
+      constants
     end
 
     def self.runtimes
@@ -47,5 +77,9 @@ module ExecJS
         JScript
       ]
     end
+  end
+
+  def self.runtimes
+    Runtimes.runtimes
   end
 end
