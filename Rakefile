@@ -8,7 +8,7 @@ require "execjs/runtimes"
 tests = namespace :test do |tests|
   ExecJS::Runtimes.names.each do |name|
     task(name.downcase) do
-      ENV["EXECJS_RUNTIME"] = name
+      ENV["EXECJS_RUNTIME"] = name.to_s
     end
 
     Rake::TestTask.new(name.downcase) do |t|
