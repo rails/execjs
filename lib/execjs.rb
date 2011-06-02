@@ -1,3 +1,4 @@
+require "execjs/module"
 require "execjs/runtimes"
 
 module ExecJS
