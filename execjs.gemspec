@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.files = [
     "lib/execjs.rb",
     "lib/execjs/external_runtime.rb",
+    "lib/execjs/module.rb",
     "lib/execjs/mustang_runtime.rb",
     "lib/execjs/ruby_racer_runtime.rb",
     "lib/execjs/ruby_rhino_runtime.rb",
