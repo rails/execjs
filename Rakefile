@@ -48,9 +48,9 @@ task :test do
     end
   end
 
-  messages = ["PASSED: #{passed.join(", ")}"]
-  messages << "FAILURES: #{failed.join(", ")}" if failed.any?
+  messages = ["PASSED:  #{passed.join(", ")}"]
   messages << "SKIPPED: #{skipped.join(", ")}" if skipped.any?
+  messages << "FAILED:  #{failed.join(", ")}" if failed.any?
   banner messages.join("\n")
 
   raise "test failures" if failed.any?
