@@ -1,7 +1,7 @@
 require "rbconfig"
 
 module ExecJS
-  VERSION = "1.0.0"
+  VERSION = "1.1.0"
 
   class Error           < ::StandardError; end
   class RuntimeError              < Error; end
