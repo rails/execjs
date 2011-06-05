@@ -5,7 +5,7 @@ module ExecJS
     class Context
       def initialize(runtime, source = "")
         @runtime = runtime
-        @source  = source
+        @source  = source.respond_to?(:encode) ? source.encode("UTF-8") : source
       end
 
       def eval(source, options = {})
