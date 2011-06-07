@@ -27,9 +27,7 @@ Gem::Specification.new do |s|
   ]
 
   s.add_dependency "multi_json", "~>1.0"
-  s.add_development_dependency "mustang"
-  s.add_development_dependency "therubyracer"
-  s.add_development_dependency "therubyrhino"
+  s.add_development_dependency "rake"
 
   s.authors           = ["Sam Stephenson", "Josh Peek"]
   s.email             = ["sstephenson@gmail.com", "josh@joshpeek.com"]
