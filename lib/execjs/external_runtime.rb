@@ -4,8 +4,10 @@ module ExecJS
   class ExternalRuntime
     class Context
       def initialize(runtime, source = "")
+        source = source.encode('UTF-8') if source.respond_to?(:encode)
+
         @runtime = runtime
-        @source  = source.respond_to?(:encode) ? source.encode("UTF-8") : source
+        @source  = source
       end
 
       def eval(source, options = {})

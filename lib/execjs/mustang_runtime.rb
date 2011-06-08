@@ -2,6 +2,8 @@ module ExecJS
   class MustangRuntime
     class Context
       def initialize(source = "")
+        source = source.encode('UTF-8') if source.respond_to?(:encode)
+
         @v8_context = ::Mustang::Context.new
         @v8_context.eval(source)
       end

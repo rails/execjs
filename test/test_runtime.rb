@@ -69,7 +69,7 @@ class TestRuntime < Test::Unit::TestCase
 
       assert_raise Encoding::UndefinedConversionError do
         binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
-        @runtime.eval(binary)
+        context.eval(binary)
       end
     end
   end

@@ -2,6 +2,8 @@ module ExecJS
   class RubyRhinoRuntime
     class Context
       def initialize(source = "")
+        source = source.encode('UTF-8') if source.respond_to?(:encode)
+
         @rhino_context = ::Rhino::Context.new
         @rhino_context.eval(source)
       end

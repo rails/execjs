@@ -2,6 +2,8 @@ module ExecJS
   class RubyRacerRuntime
     class Context
       def initialize(source = "")
+        source = source.encode('UTF-8') if source.respond_to?(:encode)
+
         @v8_context = ::V8::Context.new
         @v8_context.eval(source)
       end
