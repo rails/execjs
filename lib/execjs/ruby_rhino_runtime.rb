@@ -5,6 +5,7 @@ module ExecJS
         source = source.encode('UTF-8') if source.respond_to?(:encode)
 
         @rhino_context = ::Rhino::Context.new
+        fix_memory_limit! @rhino_context
         @rhino_context.eval(source)
       end
 
@@ -53,6 +54,16 @@ module ExecJS
           value
         end
       end
+
+      private
+        # Disables bytecode compiling which limits you to 64K scripts
+        def fix_memory_limit!(context)
+          if context.respond_to?(:optimization_level=)
+            context.optimization_level = -1
+          else
+            context.instance_eval { @native.setOptimizationLevel(-1) }
+          end
+        end
     end
 
     def name

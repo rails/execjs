@@ -86,6 +86,11 @@ class TestRuntime < Test::Unit::TestCase
     assert_equal true, @runtime.exec("return this === (function() {return this})()")
   end
 
+  def test_compile_large_scripts
+    body = "var foo = 'bar';\n" * 100_000
+    assert @runtime.exec("function foo() {\n#{body}\n};\nreturn true")
+  end
+
   def test_syntax_error
     assert_raise ExecJS::RuntimeError do
       @runtime.exec(")")
