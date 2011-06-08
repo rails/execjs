@@ -4,8 +4,10 @@ module ExecJS
       def initialize(source = "")
         source = source.encode('UTF-8') if source.respond_to?(:encode)
 
-        @v8_context = ::V8::Context.new
-        @v8_context.eval(source)
+        lock do
+          @v8_context = ::V8::Context.new
+          @v8_context.eval(source)
+        end
       end
 
       def exec(source, options = {})
@@ -20,7 +22,9 @@ module ExecJS
         source = source.encode('UTF-8') if source.respond_to?(:encode)
 
         if /\S/ =~ source
-          unbox @v8_context.eval("(#{source})")
+          lock do
+            unbox @v8_context.eval("(#{source})")
+          end
         end
       rescue ::V8::JSError => e
         if e.value["name"] == "SyntaxError"
@@ -31,7 +35,9 @@ module ExecJS
       end
 
       def call(properties, *args)
-        unbox @v8_context.eval(properties).call(*args)
+        lock do
+          unbox @v8_context.eval(properties).call(*args)
+        end
       rescue ::V8::JSError => e
         if e.value["name"] == "SyntaxError"
           raise RuntimeError, e.message
@@ -59,6 +65,24 @@ module ExecJS
           value
         end
       end
+
+      private
+        def lock
+          result, exception = nil, nil
+          V8::C::Locker() do
+            begin
+              result = yield
+            rescue Exception => e
+              exception = e
+            end
+          end
+
+          if exception
+            raise exception
+          else
+            result
+          end
+        end
     end
 
     def name
