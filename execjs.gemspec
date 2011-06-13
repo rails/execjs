@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency "multi_json", "~>1.0"
   s.add_development_dependency "rake"
 
-  s.authors           = ["Sam Stephenson", "Josh Peek"]
-  s.email             = ["sstephenson@gmail.com", "josh@joshpeek.com"]
-  s.rubyforge_project = "execjs"
+  s.authors = ["Sam Stephenson", "Josh Peek"]
+  s.email   = ["sstephenson@gmail.com", "josh@joshpeek.com"]
 end
