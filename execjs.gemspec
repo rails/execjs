@@ -1,6 +1,8 @@
+require File.expand_path("../lib/execjs/version.rb", __FILE__)
+
 Gem::Specification.new do |s|
   s.name    = "execjs"
-  s.version = "1.1.3"
+  s.version = ExecJS::VERSION
 
   s.homepage    = "https://github.com/sstephenson/execjs"
   s.summary     = "Run JavaScript code from Ruby"
@@ -12,6 +14,7 @@ Gem::Specification.new do |s|
     "lib/execjs.rb",
     "lib/execjs/external_runtime.rb",
     "lib/execjs/module.rb",
+    "lib/execjs/version.rb",
     "lib/execjs/mustang_runtime.rb",
     "lib/execjs/ruby_racer_runtime.rb",
     "lib/execjs/ruby_rhino_runtime.rb",
