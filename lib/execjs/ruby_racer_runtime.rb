@@ -23,26 +23,30 @@ module ExecJS
 
         if /\S/ =~ source
           lock do
-            unbox @v8_context.eval("(#{source})")
+            begin
+              unbox @v8_context.eval("(#{source})")
+            rescue ::V8::JSError => e
+              if e.value["name"] == "SyntaxError"
+                raise RuntimeError, e.message
+              else
+                raise ProgramError, e.message
+              end
+            end
           end
-        end
-      rescue ::V8::JSError => e
-        if e.value["name"] == "SyntaxError"
-          raise RuntimeError, e.message
-        else
-          raise ProgramError, e.message
         end
       end
 
       def call(properties, *args)
         lock do
-          unbox @v8_context.eval(properties).call(*args)
-        end
-      rescue ::V8::JSError => e
-        if e.value["name"] == "SyntaxError"
-          raise RuntimeError, e.message
-        else
-          raise ProgramError, e.message
+          begin
+            unbox @v8_context.eval(properties).call(*args)
+          rescue ::V8::JSError => e
+            if e.value["name"] == "SyntaxError"
+              raise RuntimeError, e.message
+            else
+              raise ProgramError, e.message
+            end
+          end
         end
       end
 
