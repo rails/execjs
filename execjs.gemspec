@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
   s.files = [
     "lib/execjs.rb",
     "lib/execjs/external_runtime.rb",
+    "lib/execjs/johnson_runtime.rb",
     "lib/execjs/module.rb",
     "lib/execjs/version.rb",
     "lib/execjs/mustang_runtime.rb",
@@ -29,7 +30,11 @@ Gem::Specification.new do |s|
   ]
 
   s.add_dependency "multi_json", "~>1.0"
+  s.add_development_dependency "johnson"
+  s.add_development_dependency "mustang"
   s.add_development_dependency "rake"
+  s.add_development_dependency "therubyracer"
+  s.add_development_dependency "therubyrhino"
 
   s.authors = ["Sam Stephenson", "Josh Peek"]
   s.email   = ["sstephenson@gmail.com", "josh@joshpeek.com"]
