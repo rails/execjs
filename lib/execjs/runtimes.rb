@@ -28,8 +28,8 @@ module ExecJS
       :conversion => { :from => "ISO8859-1", :to => "UTF-8" }
     )
 
-    Spidermonkey = ExternalRuntime.new(
-      :name        => "Spidermonkey",
+    SpiderMonkey = Spidermonkey = ExternalRuntime.new(
+      :name        => "SpiderMonkey",
       :command     => "js",
       :runner_path => ExecJS.root + "/support/basic_runner.js"
     )
@@ -57,7 +57,7 @@ module ExecJS
           if runtime.available?
             runtime if runtime.available?
           else
-            raise RuntimeUnavailable, "#{name} runtime is not available on this system"
+            raise RuntimeUnavailable, "#{runtime.name} runtime is not available on this system"
           end
         elsif !name.empty?
           raise RuntimeUnavailable, "#{name} runtime is not defined"
@@ -66,7 +66,7 @@ module ExecJS
     end
 
     def self.names
-      constants
+      @names ||= constants.inject({}) { |h, name| h.merge(const_get(name) => name) }.values
     end
 
     def self.runtimes
@@ -77,7 +77,7 @@ module ExecJS
         Mustang,
         Node,
         JavaScriptCore,
-        Spidermonkey,
+        SpiderMonkey,
         JScript
       ]
     end

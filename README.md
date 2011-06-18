@@ -17,7 +17,7 @@ ExecJS supports these runtimes:
   embedded within Ruby
 * [Node.js](http://nodejs.org/)
 * Apple JavaScriptCore - Included with Mac OS X
-* [Mozilla Spidermonkey](http://www.mozilla.org/js/spidermonkey/)
+* [Mozilla SpiderMonkey](http://www.mozilla.org/js/spidermonkey/)
 * [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
 
 A short example:
