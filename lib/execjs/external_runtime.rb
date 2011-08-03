@@ -117,7 +117,8 @@ module ExecJS
       end
 
       def exec_runtime(filename)
-        output = sh("#{@binary} #{filename} 2>&1")
+        output = nil
+        IO.popen("#{@binary} #{filename} 2>&1") { |f| output = f.read }
         if $?.success?
           output
         else
@@ -150,12 +151,6 @@ module ExecJS
           end
         end
         nil
-      end
-
-      def sh(command)
-        output = nil
-        IO.popen(command) { |f| output = f.read }
-        output
       end
   end
 end
