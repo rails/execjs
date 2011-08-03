@@ -42,14 +42,21 @@ module ExecJS
       end
 
       def unbox(value)
-        case value
+        case value = ::Rhino::To.ruby(value)
         when ::Rhino::NativeFunction
           nil
         when ::Rhino::NativeObject
           value.inject({}) do |vs, (k, v)|
-            vs[k] = unbox(v) unless v.is_a?(::Rhino::NativeFunction)
+            case v
+            when ::Rhino::NativeFunction, ::Rhino::J::Function
+              nil
+            else
+              vs[k] = unbox(v)
+            end
             vs
           end
+        when Array
+          value.map { |v| unbox(v) }
         else
           value
         end
