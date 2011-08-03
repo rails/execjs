@@ -75,11 +75,7 @@ module ExecJS
         else
           def encode_unicode_codepoints(str)
             str.unpack("U*").map { |b|
-              if b >= 128
-                "\\u%04x" % b
-              else
-                [b].pack("C")
-              end
+              b >= 128 ? "\\u%04x" % b : b.chr
             }.join("")
           end
         end
