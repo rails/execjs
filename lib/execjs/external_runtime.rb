@@ -45,6 +45,10 @@ module ExecJS
             output.sub!('#{source}') do
               source
             end
+            output.sub!('#{encoded_source}') do
+              encoded_source = encode_unicode_codepoints(source)
+              MultiJson.encode("(function(){ #{encoded_source} })()")
+            end
             output.sub!('#{json2_source}') do
               IO.read(ExecJS.root + "/support/json2.js")
             end
@@ -55,8 +59,28 @@ module ExecJS
           status, value = output.empty? ? [] : MultiJson.decode(output)
           if status == "ok"
             value
+          elsif value == "SyntaxError: Parse error"
+            raise RuntimeError, value
           else
             raise ProgramError, value
+          end
+        end
+
+        if "".respond_to?(:codepoints)
+          def encode_unicode_codepoints(str)
+            str.gsub(/[\u0080-\uffff]/) do |ch|
+              "\\u%04x" % ch.codepoints.to_a
+            end
+          end
+        else
+          def encode_unicode_codepoints(str)
+            str.unpack("U*").map { |b|
+              if b >= 128
+                "\\u%04x" % b
+              else
+                [b].pack("C")
+              end
+            }.join("")
           end
         end
     end
@@ -69,7 +93,6 @@ module ExecJS
       @runner_path = options[:runner_path]
       @test_args   = options[:test_args]
       @test_match  = options[:test_match]
-      @conversion  = options[:conversion]
       @binary      = locate_binary
     end
 
@@ -133,28 +156,10 @@ module ExecJS
         nil
       end
 
-      if "".respond_to?(:force_encoding)
-        def sh(command)
-          output, options = nil, {}
-          options[:external_encoding] = 'UTF-8'
-          options[:internal_encoding] = @conversion[:from] if @conversion
-          IO.popen(command, options) { |f| output = f.read }
-          output.force_encoding(@conversion[:to]) if @conversion
-          output
-        end
-      else
-        require "iconv"
-
-        def sh(command)
-          output = nil
-          IO.popen(command) { |f| output = f.read }
-
-          if @conversion
-            Iconv.iconv(@conversion[:from], @conversion[:to], output).first
-          else
-            output
-          end
-        end
+      def sh(command)
+        output = nil
+        IO.popen(command) { |f| output = f.read }
+        output
       end
   end
 end
