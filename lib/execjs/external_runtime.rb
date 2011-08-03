@@ -74,9 +74,11 @@ module ExecJS
           end
         else
           def encode_unicode_codepoints(str)
-            str.unpack("U*").map { |b|
-              b >= 128 ? "\\u%04x" % b : b.chr
-            }.join("")
+            str.gsub(/([\xC0-\xDF][\x80-\xBF]|
+                       [\xE0-\xEF][\x80-\xBF]{2}|
+                       [\xF0-\xF7][\x80-\xBF]{3})+/nx) do |ch|
+              "\\u%04x" % ch.unpack("U*")
+            end
           end
         end
     end
