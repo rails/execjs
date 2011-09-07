@@ -121,7 +121,25 @@ module ExecJS
 
       def exec_runtime(filename)
         output = nil
-        IO.popen("#{@binary} #{filename} 2>&1") { |f| output = fix_encoding(f.read) }
+
+        cmd = "#{@binary} #{filename} 2>&1"
+
+        if @encoding
+          if "".respond_to?(:encode)
+            IO.popen(cmd, :internal_encoding => 'UTF-8', :external_encoding => @encoding) do |f|
+              output = f.read
+            end
+          else
+            require 'iconv'
+            IO.popen(cmd) do |f|
+              ic = Iconv.new('UTF-8', @encoding)
+              output = ic.iconv(f.read)
+            end
+          end
+        else
+          IO.popen(cmd){|f| output = f.read }
+        end
+
         if $?.success?
           output
         else
@@ -154,20 +172,6 @@ module ExecJS
           end
         end
         nil
-      end
-
-    private
-
-      def fix_encoding(data)
-        return data unless @encoding
-
-        if data.respond_to?(:encode)
-          data.force_encoding(@encoding).encode('UTF-8')
-        else
-          require 'iconv'
-          ic = Iconv.new('UTF-8', @encoding)
-          ic.iconv(data)
-        end
       end
 
   end
