@@ -159,6 +159,7 @@ module ExecJS
         def sh(command)
           output, options = nil, {}
           options[:external_encoding] = @encoding if @encoding
+          options[:internal_encoding] = Encoding.default_internal || 'UTF-8'
           IO.popen(command, options) { |f| output = f.read }
           output
         end
