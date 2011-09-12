@@ -8,3 +8,6 @@ rvm:
   - rbx
   - ree
   - ruby-head
+
+notifications:
+  disabled: true
