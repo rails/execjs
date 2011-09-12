@@ -90,6 +90,12 @@ class TestRuntime < Test::Unit::TestCase
     assert_equal true, @runtime.exec("return this === (function() {return this})()")
   end
 
+  def test_commonjs_vars_are_undefined
+    assert @runtime.eval("typeof module == 'undefined'")
+    assert @runtime.eval("typeof exports == 'undefined'")
+    assert @runtime.eval("typeof require == 'undefined'")
+  end
+
   def test_compile_large_scripts
     body = "var foo = 'bar';\n" * 100_000
     assert @runtime.exec("function foo() {\n#{body}\n};\nreturn true")
