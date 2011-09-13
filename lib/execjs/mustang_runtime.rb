@@ -44,6 +44,12 @@ module ExecJS
           raise RuntimeError, value.message
         when Mustang::V8::Error
           raise ProgramError, value.message
+        when Mustang::V8::Object
+          value.inject({}) { |h, (k, v)|
+            v = unbox(v)
+            h[k] = v if v
+            h
+          }
         else
           value.respond_to?(:delegate) ? value.delegate : value
         end
