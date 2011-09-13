@@ -59,7 +59,7 @@ module ExecJS
           status, value = output.empty? ? [] : MultiJson.decode(output)
           if status == "ok"
             value
-          elsif value == "SyntaxError: Parse error"
+          elsif value =~ /SyntaxError:/
             raise RuntimeError, value
           else
             raise ProgramError, value
