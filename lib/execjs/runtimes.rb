@@ -30,7 +30,7 @@ module ExecJS
     SpiderMonkey = Spidermonkey = ExternalRuntime.new(
       :name        => "SpiderMonkey",
       :command     => "js",
-      :runner_path => ExecJS.root + "/support/basic_runner.js"
+      :runner_path => ExecJS.root + "/support/spidermonkey_runner.js"
     )
 
     JScript = ExternalRuntime.new(
