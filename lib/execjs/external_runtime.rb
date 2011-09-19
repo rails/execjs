@@ -1,3 +1,4 @@
+require "shellwords"
 require "tempfile"
 
 module ExecJS
@@ -120,7 +121,7 @@ module ExecJS
       end
 
       def exec_runtime(filename)
-        output = sh("#{@binary} #{filename} 2>&1")
+        output = sh("#{Shellwords.join([@binary, filename])} 2>&1")
         if $?.success?
           output
         else
@@ -131,7 +132,7 @@ module ExecJS
       def locate_binary
         if binary = which(@command)
           if @test_args
-            output = `#{binary} #{@test_args} 2>&1`
+            output = `#{Shellwords.join([binary, @test_args])} 2>&1`
             binary if output.match(@test_match)
           else
             binary
@@ -143,9 +144,9 @@ module ExecJS
         Array(command).each do |name|
           name, args = name.split(/\s+/, 2)
           result = if ExecJS.windows?
-            `"#{ExecJS.root}/support/which.bat" #{name}`
+            `#{Shellwords.join(["#{ExecJS.root}/support/which.bat", name])}`
           else
-            `command -v #{name} 2>/dev/null`
+            `#{Shellwords.join(['command', '-v', name])} 2>/dev/null`
           end
 
           if path = result.strip.split("\n").first
