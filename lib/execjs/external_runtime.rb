@@ -21,8 +21,9 @@ module ExecJS
 
       def exec(source, options = {})
         source = source.encode('UTF-8') if source.respond_to?(:encode)
+        source = "#{@source}\n#{source}" if @source
 
-        compile_to_tempfile([@source, source].join("\n")) do |file|
+        compile_to_tempfile(source) do |file|
           extract_result(@runtime.send(:exec_runtime, file.path))
         end
       end
