@@ -181,9 +181,8 @@ module ExecJS
       end
 
       if ExecJS.windows?
-        # FIXME
         def shell_escape(*args)
-          Shellwords.join(args)
+          args.map { |arg| arg.inspect }.join(" ")
         end
       else
         def shell_escape(*args)
