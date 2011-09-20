@@ -122,7 +122,7 @@ module ExecJS
       end
 
       def exec_runtime(filename)
-        output = sh("#{Shellwords.join([@binary, filename])} 2>&1")
+        output = sh("#{shell_escape(@binary, filename)} 2>&1")
         if $?.success?
           output
         else
@@ -133,7 +133,7 @@ module ExecJS
       def locate_binary
         if binary = which(@command)
           if @test_args
-            output = `#{Shellwords.join([binary, @test_args])} 2>&1`
+            output = `#{shell_escape(binary, @test_args)} 2>&1`
             binary if output.match(@test_match)
           else
             binary
@@ -145,9 +145,9 @@ module ExecJS
         Array(command).each do |name|
           name, args = name.split(/\s+/, 2)
           result = if ExecJS.windows?
-            `#{Shellwords.join(["#{ExecJS.root}/support/which.bat", name])}`
+            `#{shell_escape("#{ExecJS.root}/support/which.bat", name)}`
           else
-            `#{Shellwords.join(['command', '-v', name])} 2>/dev/null`
+            `#{shell_escape('command', '-v', name)} 2>/dev/null`
           end
 
           if path = result.strip.split("\n").first
@@ -177,6 +177,17 @@ module ExecJS
           else
             output
           end
+        end
+      end
+
+      if ExecJS.windows?
+        # FIXME
+        def shell_escape(*args)
+          Shellwords.join(args)
+        end
+      else
+        def shell_escape(*args)
+          Shellwords.join(args)
         end
       end
   end
