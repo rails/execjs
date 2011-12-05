@@ -94,7 +94,7 @@ module ExecJS
       @test_args   = options[:test_args]
       @test_match  = options[:test_match]
       @encoding    = options[:encoding]
-      @binary      = locate_binary
+      @binary      = nil
     end
 
     def exec(source)
@@ -113,8 +113,13 @@ module ExecJS
 
     def available?
       require "multi_json"
-      @binary ? true : false
+      binary ? true : false
     end
+
+    private
+      def binary
+        @binary ||= locate_binary
+      end
 
     protected
       def runner_source
@@ -122,7 +127,7 @@ module ExecJS
       end
 
       def exec_runtime(filename)
-        output = sh("#{shell_escape(*(@binary.split(' ') << filename))} 2>&1")
+        output = sh("#{shell_escape(*(binary.split(' ') << filename))} 2>&1")
         if $?.success?
           output
         else
