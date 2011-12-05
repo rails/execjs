@@ -126,12 +126,12 @@ module ExecJS
         result.strip.split("\n").first
       end
 
-      def which_unix(name)
+      def which_unix(cmd)
         if File.executable? cmd
           cmd
         else
-          path = ENV['PATH'].split(File::PATH_SEPARATOR).find { |path|
-            File.executable? File.join(path, cmd)
+          path = ENV['PATH'].split(File::PATH_SEPARATOR).find { |p|
+            File.executable? File.join(p, cmd)
           }
           path && File.expand_path(cmd, path)
         end
