@@ -1,4 +1,5 @@
 require "execjs/module"
+require "execjs/disabled_runtime"
 require "execjs/external_runtime"
 require "execjs/johnson_runtime"
 require "execjs/mustang_runtime"
@@ -7,6 +8,8 @@ require "execjs/ruby_rhino_runtime"
 
 module ExecJS
   module Runtimes
+    Disabled = DisabledRuntime.new
+
     RubyRacer = RubyRacerRuntime.new
 
     RubyRhino = RubyRhinoRuntime.new
