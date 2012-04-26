@@ -1,3 +1,4 @@
+require "multi_json"
 require "shellwords"
 require "tempfile"
 
@@ -15,7 +16,7 @@ module ExecJS
         source = source.encode('UTF-8') if source.respond_to?(:encode)
 
         if /\S/ =~ source
-          exec("return eval(#{MultiJson.encode("(#{source})")})")
+          exec("return eval(#{json_encode("(#{source})")})")
         end
       end
 
@@ -29,7 +30,7 @@ module ExecJS
       end
 
       def call(identifier, *args)
-        eval "#{identifier}.apply(this, #{MultiJson.encode(args)})"
+        eval "#{identifier}.apply(this, #{json_encode(args)})"
       end
 
       protected
@@ -49,7 +50,7 @@ module ExecJS
             end
             output.sub!('#{encoded_source}') do
               encoded_source = encode_unicode_codepoints(source)
-              MultiJson.encode("(function(){ #{encoded_source} })()")
+              json_encode("(function(){ #{encoded_source} })()")
             end
             output.sub!('#{json2_source}') do
               IO.read(ExecJS.root + "/support/json2.js")
@@ -58,7 +59,7 @@ module ExecJS
         end
 
         def extract_result(output)
-          status, value = output.empty? ? [] : MultiJson.decode(output)
+          status, value = output.empty? ? [] : json_decode(output)
           if status == "ok"
             value
           elsif value =~ /SyntaxError:/
@@ -81,6 +82,26 @@ module ExecJS
                        [\xF0-\xF7][\x80-\xBF]{3})+/nx) do |ch|
               "\\u%04x" % ch.unpack("U*")
             end
+          end
+        end
+
+        if MultiJson.respond_to?(:load)
+          def json_decode(obj)
+            MultiJson.load(obj)
+          end
+        else
+          def json_decode(obj)
+          MultiJson.decode(obj)
+          end
+        end
+
+        if MultiJson.respond_to?(:dump)
+          def json_encode(obj)
+            MultiJson.dump(obj)
+          end
+        else
+          def json_encode(obj)
+            MultiJson.encode(obj)
           end
         end
     end
@@ -112,7 +133,6 @@ module ExecJS
     end
 
     def available?
-      require "multi_json"
       binary ? true : false
     end
 
