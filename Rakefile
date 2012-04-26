@@ -7,6 +7,8 @@ require "execjs/runtimes"
 
 tests = namespace :test do |tests|
   ExecJS::Runtimes.names.each do |name|
+    next if name == :Disabled
+
     task(name.downcase) do
       ENV["EXECJS_RUNTIME"] = name.to_s
     end
