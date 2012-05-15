@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency "mustang"
     s.add_development_dependency "therubyracer"
   else
-    s.add_development_dependency "therubyrhino"
+    s.add_development_dependency "therubyrhino", ">=1.73.3"
   end
 
   s.authors = ["Sam Stephenson", "Josh Peek"]
