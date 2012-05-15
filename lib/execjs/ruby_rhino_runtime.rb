@@ -24,7 +24,7 @@ module ExecJS
           unbox @rhino_context.eval("(#{source})")
         end
       rescue ::Rhino::JSError => e
-        if e.message == "syntax error"
+        if e.message =~ /^syntax error/
           raise RuntimeError, e.message
         else
           raise ProgramError, e.message
