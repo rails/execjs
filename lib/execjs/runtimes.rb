@@ -113,6 +113,10 @@ module ExecJS
         data
       end
     end
+  else
+    # Define no-op on 1.8
+    def self.encode(string)
+      string
+    end
   end
-
 end

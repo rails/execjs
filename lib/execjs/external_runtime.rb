@@ -6,14 +6,14 @@ module ExecJS
   class ExternalRuntime
     class Context
       def initialize(runtime, source = "")
-        source = ExecJS::encode(source) if source.respond_to?(:encode)
+        source = ExecJS.encode(source)
 
         @runtime = runtime
         @source  = source
       end
 
       def eval(source, options = {})
-        source = ExecJS::encode(source) if source.respond_to?(:encode)
+        source = ExecJS.encode(source)
 
         if /\S/ =~ source
           exec("return eval(#{json_encode("(#{source})")})")
@@ -21,7 +21,7 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        source = ExecJS::encode(source) if source.respond_to?(:encode)
+        source = ExecJS.encode(source)
         source = "#{@source}\n#{source}" if @source
 
         compile_to_tempfile(source) do |file|
