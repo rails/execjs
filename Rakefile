@@ -56,4 +56,5 @@ task :test do
   banner messages.join("\n")
 
   raise "test failures" if failed.any?
+  raise "all tests skipped" if !passed.any?
 end

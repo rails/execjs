@@ -92,12 +92,13 @@ module ExecJS
   end
 
   if defined? Encoding
-    if (!defined?(RUBY_ENGINE) || RUBY_ENGINE != "jruby")
+    if (!defined?(RUBY_ENGINE) || (RUBY_ENGINE != "jruby" && RUBY_ENGINE != "rbx"))
       def self.encode(string)
         string.encode('UTF-8')
       end
     else
       # workaround for jruby bug http://jira.codehaus.org/browse/JRUBY-6588
+      # workaround for rbx bug https://github.com/rubinius/rubinius/issues/1729
       def self.encode(string)
         if string.encoding.name == 'ASCII-8BIT'
           data = string.dup
