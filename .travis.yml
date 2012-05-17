@@ -9,6 +9,3 @@ rvm:
   - rbx-19mode
   - ree
   - ruby-head
-
-notifications:
-  disabled: true
