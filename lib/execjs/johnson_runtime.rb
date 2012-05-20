@@ -98,5 +98,9 @@ module ExecJS
     rescue LoadError
       false
     end
+
+    def deprecated?
+      true
+    end
   end
 end
