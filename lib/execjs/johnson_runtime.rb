@@ -1,13 +1,17 @@
+require "execjs/runtime"
+
 module ExecJS
-  class JohnsonRuntime
-    class Context
-      def initialize(source = "")
+  class JohnsonRuntime < Runtime
+    class Context < Runtime::Context
+      def initialize(runtime, source = "")
+        source = encode(source)
+        
         @runtime = Johnson::Runtime.new
         @runtime.evaluate(source)
       end
 
       def exec(source, options = {})
-        source = source.encode('UTF-8') if source.respond_to?(:encode)
+        source = encode(source)
 
         if /\S/ =~ source
           eval "(function(){#{source}})()", options
@@ -15,7 +19,7 @@ module ExecJS
       end
 
       def eval(source, options = {})
-        source = source.encode('UTF-8') if source.respond_to?(:encode)
+        source = encode(source)
 
         if /\S/ =~ source
           unbox @runtime.evaluate("(#{source})")
@@ -86,20 +90,6 @@ module ExecJS
 
     def name
       "Johnson (SpiderMonkey)"
-    end
-
-    def exec(source)
-      context = Context.new
-      context.exec(source)
-    end
-
-    def eval(source)
-      context = Context.new
-      context.eval(source)
-    end
-
-    def compile(source)
-      Context.new(source)
     end
 
     def available?

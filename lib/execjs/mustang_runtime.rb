@@ -1,15 +1,17 @@
+require "execjs/runtime"
+
 module ExecJS
-  class MustangRuntime
-    class Context
-      def initialize(source = "")
-        source = ExecJS.encode(source)
+  class MustangRuntime < Runtime
+    class Context < Runtime::Context
+      def initialize(runtime, source = "")
+        source = encode(source)
 
         @v8_context = ::Mustang::Context.new
         @v8_context.eval(source)
       end
 
       def exec(source, options = {})
-        source = ExecJS.encode(source)
+        source = encode(source)
 
         if /\S/ =~ source
           eval "(function(){#{source}})()", options
@@ -17,7 +19,7 @@ module ExecJS
       end
 
       def eval(source, options = {})
-        source = ExecJS.encode(source)
+        source = encode(source)
 
         if /\S/ =~ source
           unbox @v8_context.eval("(#{source})")
@@ -58,20 +60,6 @@ module ExecJS
 
     def name
       "Mustang (V8)"
-    end
-
-    def exec(source)
-      context = Context.new
-      context.exec(source)
-    end
-
-    def eval(source)
-      context = Context.new
-      context.eval(source)
-    end
-
-    def compile(source)
-      Context.new(source)
     end
 
     def available?

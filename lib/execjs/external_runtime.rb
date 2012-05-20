@@ -1,19 +1,20 @@
 require "multi_json"
 require "shellwords"
 require "tempfile"
+require "execjs/runtime"
 
 module ExecJS
-  class ExternalRuntime
-    class Context
+  class ExternalRuntime < Runtime
+    class Context < Runtime::Context
       def initialize(runtime, source = "")
-        source = ExecJS.encode(source)
+        source = encode(source)
 
         @runtime = runtime
         @source  = source
       end
 
       def eval(source, options = {})
-        source = ExecJS.encode(source)
+        source = encode(source)
 
         if /\S/ =~ source
           exec("return eval(#{json_encode("(#{source})")})")
@@ -21,7 +22,7 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        source = ExecJS.encode(source)
+        source = encode(source)
         source = "#{@source}\n#{source}" if @source
 
         compile_to_tempfile(source) do |file|
@@ -116,20 +117,6 @@ module ExecJS
       @binary      = nil
     end
 
-    def exec(source)
-      context = Context.new(self)
-      context.exec(source)
-    end
-
-    def eval(source)
-      context = Context.new(self)
-      context.eval(source)
-    end
-
-    def compile(source)
-      Context.new(self, source)
-    end
-
     def available?
       binary ? true : false
     end
@@ -195,7 +182,7 @@ module ExecJS
         def sh(command)
           output, options = nil, {}
           options[:external_encoding] = @encoding if @encoding
-          options[:internal_encoding] = Encoding.default_internal || 'UTF-8'
+          options[:internal_encoding] = ::Encoding.default_internal || 'UTF-8'
           IO.popen(command, options) { |f| output = f.read }
           output
         end

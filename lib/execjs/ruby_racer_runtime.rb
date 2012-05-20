@@ -1,8 +1,10 @@
+require "execjs/runtime"
+
 module ExecJS
-  class RubyRacerRuntime
-    class Context
-      def initialize(source = "")
-        source = source.encode('UTF-8') if source.respond_to?(:encode)
+  class RubyRacerRuntime < Runtime
+    class Context < Runtime::Context
+      def initialize(runtime, source = "")
+        source = encode(source)
 
         lock do
           @v8_context = ::V8::Context.new
@@ -11,7 +13,7 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        source = source.encode('UTF-8') if source.respond_to?(:encode)
+        source = encode(source)
 
         if /\S/ =~ source
           eval "(function(){#{source}})()", options
@@ -19,7 +21,7 @@ module ExecJS
       end
 
       def eval(source, options = {})
-        source = source.encode('UTF-8') if source.respond_to?(:encode)
+        source = encode(source)
 
         if /\S/ =~ source
           lock do
@@ -92,21 +94,7 @@ module ExecJS
     def name
       "therubyracer (V8)"
     end
-
-    def exec(source)
-      context = Context.new
-      context.exec(source)
-    end
-
-    def eval(source)
-      context = Context.new
-      context.eval(source)
-    end
-
-    def compile(source)
-      Context.new(source)
-    end
-
+    
     def available?
       require "v8"
       true

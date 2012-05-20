@@ -1,5 +1,7 @@
+require "execjs/runtime"
+
 module ExecJS
-  class DisabledRuntime
+  class DisabledRuntime < Runtime
     def name
       "Disabled"
     end
