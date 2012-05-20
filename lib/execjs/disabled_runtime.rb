@@ -18,6 +18,10 @@ module ExecJS
       raise Error, "ExecJS disabled"
     end
 
+    def deprecated?
+      true
+    end
+
     def available?
       true
     end

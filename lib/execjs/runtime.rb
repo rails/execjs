@@ -44,6 +44,10 @@ module ExecJS
       context_class.new(self, source)
     end
 
+    def deprecated?
+      false
+    end
+
     def available?
       raise NotImplementedError
     end

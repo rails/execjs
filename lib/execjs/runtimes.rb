@@ -52,7 +52,7 @@ module ExecJS
     end
 
     def self.best_available
-      runtimes.find(&:available?)
+      runtimes.reject(&:deprecated?).find(&:available?)
     end
 
     def self.from_environment

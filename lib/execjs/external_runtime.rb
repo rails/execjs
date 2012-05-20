@@ -95,12 +95,17 @@ module ExecJS
       @test_args   = options[:test_args]
       @test_match  = options[:test_match]
       @encoding    = options[:encoding]
+      @deprecated  = !!options[:deprecated]
       @binary      = nil
     end
 
     def available?
       require "execjs/json"
       binary ? true : false
+    end
+
+    def deprecated?
+      @deprecated
     end
 
     private

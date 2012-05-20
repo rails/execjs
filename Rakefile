@@ -7,7 +7,7 @@ require "execjs/runtimes"
 
 tests = namespace :test do |tests|
   ExecJS::Runtimes.names.each do |name|
-    next if name.to_s == "Disabled"
+    next if ExecJS::Runtimes.const_get(name).deprecated?
 
     task(name.downcase) do
       ENV["EXECJS_RUNTIME"] = name.to_s
