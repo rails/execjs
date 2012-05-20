@@ -159,4 +159,11 @@ class TestExecJS < Test::Unit::TestCase
       ExecJS.exec("throw 'hello'")
     end
   end
+
+  def test_coffeescript
+    require "open-uri"
+    assert source = open("http://jashkenas.github.com/coffee-script/extras/coffee-script.js").read
+    context = ExecJS.compile(source)
+    assert_equal 64, context.call("CoffeeScript.eval", "((x) -> x * x)(8)")
+  end
 end
