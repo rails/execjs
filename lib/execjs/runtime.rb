@@ -12,7 +12,7 @@ module ExecJS
       def exec(source, options = {})
         raise NotImplementedError
       end
-      
+
       def eval(source, options = {})
         raise NotImplementedError
       end
@@ -25,7 +25,7 @@ module ExecJS
     def name
       raise NotImplementedError
     end
-    
+
     def context_class
       self.class::Context
     end

@@ -94,7 +94,7 @@ module ExecJS
     def name
       "therubyracer (V8)"
     end
-    
+
     def available?
       require "v8"
       true

@@ -5,7 +5,7 @@ module ExecJS
     class Context < Runtime::Context
       def initialize(runtime, source = "")
         source = encode(source)
-        
+
         @runtime = Johnson::Runtime.new
         @runtime.evaluate(source)
       end

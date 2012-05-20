@@ -78,7 +78,7 @@ module ExecJS
     def name
       "therubyrhino (Rhino)"
     end
-    
+
     def available?
       require "rhino"
       true
