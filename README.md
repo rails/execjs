@@ -13,8 +13,6 @@ ExecJS supports these runtimes:
   Rhino embedded within JRuby
 * [Johnson](https://github.com/jbarnette/johnson) - Mozilla
   SpiderMonkey embedded within Ruby
-* [Mustang](https://github.com/nu7hatch/mustang) - Mustang V8
-  embedded within Ruby
 * [Node.js](http://nodejs.org/)
 * Apple JavaScriptCore - Included with Mac OS X
 * [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
