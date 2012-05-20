@@ -139,6 +139,10 @@ class TestExecJS < Test::Unit::TestCase
     assert ExecJS.eval("typeof require == 'undefined'")
   end
 
+  def test_console_is_undefined
+    assert ExecJS.eval("typeof console == 'undefined'")
+  end
+
   def test_compile_large_scripts
     body = "var foo = 'bar';\n" * 100_000
     assert ExecJS.exec("function foo() {\n#{body}\n};\nreturn true")
