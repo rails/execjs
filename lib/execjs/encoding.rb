@@ -1,7 +1,7 @@
 module ExecJS
   # Encodes strings as UTF-8
   module Encoding
-    if defined? "".respond_to?(:encode)
+    if "".respond_to?(:encode)
       if defined?(RUBY_ENGINE) && (RUBY_ENGINE == 'jruby' || RUBY_ENGINE == 'rbx')
         # workaround for jruby bug http://jira.codehaus.org/browse/JRUBY-6588
         # workaround for rbx bug https://github.com/rubinius/rubinius/issues/1729
