@@ -1,4 +1,3 @@
-require "multi_json"
 require "shellwords"
 require "tempfile"
 require "execjs/runtime"
@@ -17,7 +16,7 @@ module ExecJS
         source = encode(source)
 
         if /\S/ =~ source
-          exec("return eval(#{json_encode("(#{source})")})")
+          exec("return eval(#{JSON.encode("(#{source})")})")
         end
       end
 
@@ -31,7 +30,7 @@ module ExecJS
       end
 
       def call(identifier, *args)
-        eval "#{identifier}.apply(this, #{json_encode(args)})"
+        eval "#{identifier}.apply(this, #{JSON.encode(args)})"
       end
 
       protected
@@ -51,7 +50,7 @@ module ExecJS
             end
             output.sub!('#{encoded_source}') do
               encoded_source = encode_unicode_codepoints(source)
-              json_encode("(function(){ #{encoded_source} })()")
+              JSON.encode("(function(){ #{encoded_source} })()")
             end
             output.sub!('#{json2_source}') do
               IO.read(ExecJS.root + "/support/json2.js")
@@ -60,7 +59,7 @@ module ExecJS
         end
 
         def extract_result(output)
-          status, value = output.empty? ? [] : json_decode(output)
+          status, value = output.empty? ? [] : JSON.decode(output)
           if status == "ok"
             value
           elsif value =~ /SyntaxError:/
@@ -85,24 +84,6 @@ module ExecJS
             end
           end
         end
-
-        if MultiJson.respond_to?(:dump)
-          def json_decode(obj)
-            MultiJson.load(obj)
-          end
-
-          def json_encode(obj)
-            MultiJson.dump(obj)
-          end
-        else
-          def json_decode(obj)
-            MultiJson.decode(obj)
-          end
-
-          def json_encode(obj)
-            MultiJson.encode(obj)
-          end
-        end
     end
 
     attr_reader :name
@@ -118,6 +99,7 @@ module ExecJS
     end
 
     def available?
+      require "execjs/json"
       binary ? true : false
     end
 
