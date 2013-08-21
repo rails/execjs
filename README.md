@@ -37,6 +37,6 @@ A longer example, demonstrating how to invoke the CoffeeScript compiler:
 
 # License
 
-Copyright (c) 2011 Sam Stephenson and Josh Peek.
+Copyright (c) 2013 Sam Stephenson and Josh Peek.
 
 Released under the MIT license. See `LICENSE` for details.
