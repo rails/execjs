@@ -30,7 +30,7 @@ module ExecJS
       end
 
       def call(identifier, *args)
-        eval "#{identifier}.apply(this, #{::JSON.dump(args)})"
+        eval "#{identifier}.apply(this, #{::JSON.generate(args)})"
       end
 
       protected
@@ -50,7 +50,7 @@ module ExecJS
             end
             output.sub!('#{encoded_source}') do
               encoded_source = encode_unicode_codepoints(source)
-              ::JSON.dump("(function(){ #{encoded_source} })()")
+              ::JSON.generate("(function(){ #{encoded_source} })()", :quirks_mode => true)
             end
             output.sub!('#{json2_source}') do
               IO.read(ExecJS.root + "/support/json2.js")
