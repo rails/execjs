@@ -59,7 +59,7 @@ module ExecJS
         end
 
         def extract_result(output)
-          status, value = output.empty? ? [] : ::JSON.load(output)
+          status, value = output.empty? ? [] : ::JSON.parse(output, :create_additions => false)
           if status == "ok"
             value
           elsif value =~ /SyntaxError:/
