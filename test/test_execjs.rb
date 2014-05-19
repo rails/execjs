@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-require "test/unit"
+require "minitest/autorun"
 require "execjs/module"
 
 begin
@@ -9,7 +9,13 @@ rescue ExecJS::RuntimeUnavailable => e
   exit 2
 end
 
-class TestExecJS < Test::Unit::TestCase
+if defined? Minitest::Test
+  Test = Minitest::Test
+elsif defined? MiniTest::Unit::TestCase
+  Test = MiniTest::Unit::TestCase
+end
+
+class TestExecJS < Test
   def test_runtime_available
     runtime = ExecJS::ExternalRuntime.new(:command => "nonexistent")
     assert !runtime.available?
@@ -94,7 +100,7 @@ class TestExecJS < Test::Unit::TestCase
     assert_equal "hello", result
     assert_equal utf8, result.encoding
 
-    assert_raise Encoding::UndefinedConversionError do
+    assert_raises Encoding::UndefinedConversionError do
       binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
       ExecJS.eval(binary)
     end
@@ -113,7 +119,7 @@ class TestExecJS < Test::Unit::TestCase
     assert_equal "¶hello", result
     assert_equal utf8, result.encoding
 
-    assert_raise Encoding::UndefinedConversionError do
+    assert_raises Encoding::UndefinedConversionError do
       binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
       context.eval(binary)
     end
@@ -147,13 +153,13 @@ class TestExecJS < Test::Unit::TestCase
   end
 
   def test_syntax_error
-    assert_raise ExecJS::RuntimeError do
+    assert_raises ExecJS::RuntimeError do
       ExecJS.exec(")")
     end
   end
 
   def test_thrown_exception
-    assert_raise ExecJS::ProgramError do
+    assert_raises ExecJS::ProgramError do
       ExecJS.exec("throw 'hello'")
     end
   end
