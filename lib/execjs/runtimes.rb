@@ -19,30 +19,30 @@ module ExecJS
     Mustang = MustangRuntime.new
 
     Node = ExternalRuntime.new(
-      :name        => "Node.js (V8)",
-      :command     => ["nodejs", "node"],
-      :runner_path => ExecJS.root + "/support/node_runner.js",
-      :encoding    => 'UTF-8'
+      name:        "Node.js (V8)",
+      command:     ["nodejs", "node"],
+      runner_path: ExecJS.root + "/support/node_runner.js",
+      encoding:    'UTF-8'
     )
 
     JavaScriptCore = ExternalRuntime.new(
-      :name        => "JavaScriptCore",
-      :command     => "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc",
-      :runner_path => ExecJS.root + "/support/jsc_runner.js"
+      name:        "JavaScriptCore",
+      command:     "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc",
+      runner_path: ExecJS.root + "/support/jsc_runner.js"
     )
 
     SpiderMonkey = Spidermonkey = ExternalRuntime.new(
-      :name        => "SpiderMonkey",
-      :command     => "js",
-      :runner_path => ExecJS.root + "/support/spidermonkey_runner.js",
-      :deprecated  => true
+      name:        "SpiderMonkey",
+      command:     "js",
+      runner_path: ExecJS.root + "/support/spidermonkey_runner.js",
+      deprecated:  true
     )
 
     JScript = ExternalRuntime.new(
-      :name        => "JScript",
-      :command     => "cscript //E:jscript //Nologo //U",
-      :runner_path => ExecJS.root + "/support/jscript_runner.js",
-      :encoding    => 'UTF-16LE' # CScript with //U returns UTF-16LE
+      name:        "JScript",
+      command:     "cscript //E:jscript //Nologo //U",
+      runner_path: ExecJS.root + "/support/jscript_runner.js",
+      encoding:    'UTF-16LE' # CScript with //U returns UTF-16LE
     )
 
 

@@ -31,7 +31,7 @@ require "open-uri"
 source = open("http://coffeescript.org/extras/coffee-script.js").read
 
 context = ExecJS.compile(source)
-context.call("CoffeeScript.compile", "square = (x) -> x * x", :bare => true)
+context.call("CoffeeScript.compile", "square = (x) -> x * x", bare: true)
 # => "var square;\nsquare = function(x) {\n  return x * x;\n};"
 ```
 
