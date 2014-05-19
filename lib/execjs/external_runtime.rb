@@ -82,8 +82,6 @@ module ExecJS
       @name        = options[:name]
       @command     = options[:command]
       @runner_path = options[:runner_path]
-      @test_args   = options[:test_args]
-      @test_match  = options[:test_match]
       @encoding    = options[:encoding]
       @deprecated  = !!options[:deprecated]
       @binary      = nil
@@ -100,7 +98,7 @@ module ExecJS
 
     private
       def binary
-        @binary ||= locate_binary
+        @binary ||= which(@command)
       end
 
       def locate_executable(cmd)
@@ -130,17 +128,6 @@ module ExecJS
           output
         else
           raise RuntimeError, output
-        end
-      end
-
-      def locate_binary
-        if binary = which(@command)
-          if @test_args
-            output = `#{shell_escape(binary, @test_args)} 2>&1`
-            binary if output.match(@test_match)
-          else
-            binary
-          end
         end
       end
 
