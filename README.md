@@ -44,7 +44,7 @@ $ gem install execjs
 
 # FAQ
 
-### Why can't I use CommonJS `require()` inside ExecJS?
+**Why can't I use CommonJS `require()` inside ExecJS?**
 
 ExecJS provides a lowest common denominator interface to any JavaScript runtime.
 Use ExecJS when it doesn't matter which JavaScript interpreter your code runs
