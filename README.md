@@ -55,6 +55,6 @@ consistent interface.
 
 # License
 
-Copyright (c) 2013 Sam Stephenson and Josh Peek.
+Copyright (c) 2014 Sam Stephenson and Josh Peek.
 
 Released under the MIT license. See `LICENSE` for details.
