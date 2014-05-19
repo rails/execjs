@@ -35,6 +35,18 @@ A longer example, demonstrating how to invoke the CoffeeScript compiler:
 
     $ gem install execjs
 
+
+# FAQ
+
+### Why can't I use CommonJS `require()` inside ExecJS?
+
+ExecJS provides a lowest common denominator interface to any JavaScript runtime.
+Use ExecJS when it doesn't matter which JavaScript interpreter your code runs
+in. If you want to access the Node API, you should check another library like
+[commonjs.rb](https://github.com/cowboyd/commonjs.rb) designed to provide a
+consistent interface.
+
+
 # License
 
 Copyright (c) 2013 Sam Stephenson and Josh Peek.
