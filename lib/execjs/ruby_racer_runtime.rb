@@ -64,9 +64,7 @@ module ExecJS
             vs
           end
         when String
-          value.respond_to?(:force_encoding) ?
-            value.force_encoding('UTF-8') :
-            value
+          value.force_encoding('UTF-8')
         else
           value
         end

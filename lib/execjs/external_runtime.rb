@@ -69,19 +69,9 @@ module ExecJS
           end
         end
 
-        if "".respond_to?(:codepoints)
-          def encode_unicode_codepoints(str)
-            str.gsub(/[\u0080-\uffff]/) do |ch|
-              "\\u%04x" % ch.codepoints.to_a
-            end
-          end
-        else
-          def encode_unicode_codepoints(str)
-            str.gsub(/([\xC0-\xDF][\x80-\xBF]|
-                       [\xE0-\xEF][\x80-\xBF]{2}|
-                       [\xF0-\xF7][\x80-\xBF]{3})+/nx) do |ch|
-              "\\u%04x" % ch.unpack("U*")
-            end
+        def encode_unicode_codepoints(str)
+          str.gsub(/[\u0080-\uffff]/) do |ch|
+            "\\u%04x" % ch.codepoints.to_a
           end
         end
     end
@@ -165,27 +155,12 @@ module ExecJS
         end
       end
 
-      if "".respond_to?(:force_encoding)
-        def sh(command)
-          output, options = nil, {}
-          options[:external_encoding] = @encoding if @encoding
-          options[:internal_encoding] = ::Encoding.default_internal || 'UTF-8'
-          IO.popen(command, options) { |f| output = f.read }
-          output
-        end
-      else
-        require "iconv"
-
-        def sh(command)
-          output = nil
-          IO.popen(command) { |f| output = f.read }
-
-          if @encoding
-            Iconv.new('UTF-8', @encoding).iconv(output)
-          else
-            output
-          end
-        end
+      def sh(command)
+        output, options = nil, {}
+        options[:external_encoding] = @encoding if @encoding
+        options[:internal_encoding] = ::Encoding.default_internal || 'UTF-8'
+        IO.popen(command, options) { |f| output = f.read }
+        output
       end
 
       if ExecJS.windows?

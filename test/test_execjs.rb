@@ -83,41 +83,39 @@ class TestExecJS < Test::Unit::TestCase
     assert_equal "\\", ExecJS.eval('"\\\\"')
   end
 
-  if defined? Encoding
-    def test_encoding
-      utf8 = Encoding.find('UTF-8')
+  def test_encoding
+    utf8 = Encoding.find('UTF-8')
 
-      assert_equal utf8, ExecJS.exec("return 'hello'").encoding
-      assert_equal utf8, ExecJS.eval("'☃'").encoding
+    assert_equal utf8, ExecJS.exec("return 'hello'").encoding
+    assert_equal utf8, ExecJS.eval("'☃'").encoding
 
-      ascii = "'hello'".encode('US-ASCII')
-      result = ExecJS.eval(ascii)
-      assert_equal "hello", result
-      assert_equal utf8, result.encoding
+    ascii = "'hello'".encode('US-ASCII')
+    result = ExecJS.eval(ascii)
+    assert_equal "hello", result
+    assert_equal utf8, result.encoding
 
-      assert_raise Encoding::UndefinedConversionError do
-        binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
-        ExecJS.eval(binary)
-      end
+    assert_raise Encoding::UndefinedConversionError do
+      binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
+      ExecJS.eval(binary)
     end
+  end
 
-    def test_encoding_compile
-      utf8 = Encoding.find('UTF-8')
+  def test_encoding_compile
+    utf8 = Encoding.find('UTF-8')
 
-      context = ExecJS.compile("foo = function(v) { return '¶' + v; }".encode("ISO8859-15"))
+    context = ExecJS.compile("foo = function(v) { return '¶' + v; }".encode("ISO8859-15"))
 
-      assert_equal utf8, context.exec("return foo('hello')").encoding
-      assert_equal utf8, context.eval("foo('☃')").encoding
+    assert_equal utf8, context.exec("return foo('hello')").encoding
+    assert_equal utf8, context.eval("foo('☃')").encoding
 
-      ascii = "foo('hello')".encode('US-ASCII')
-      result = context.eval(ascii)
-      assert_equal "¶hello", result
-      assert_equal utf8, result.encoding
+    ascii = "foo('hello')".encode('US-ASCII')
+    result = context.eval(ascii)
+    assert_equal "¶hello", result
+    assert_equal utf8, result.encoding
 
-      assert_raise Encoding::UndefinedConversionError do
-        binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
-        context.eval(binary)
-      end
+    assert_raise Encoding::UndefinedConversionError do
+      binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
+      context.eval(binary)
     end
   end
 
