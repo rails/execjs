@@ -1,4 +1,4 @@
-require "tempfile"
+require "tmpdir"
 require "execjs/runtime"
 
 module ExecJS
@@ -23,8 +23,11 @@ module ExecJS
         source = encode(source)
         source = "#{@source}\n#{source}" if @source
 
-        compile_to_tempfile(source) do |file|
-          extract_result(@runtime.send(:exec_runtime, file.path))
+        tmpfile = compile_to_tempfile(source)
+        begin
+          extract_result(@runtime.send(:exec_runtime, tmpfile.path))
+        ensure
+          File.unlink(tmpfile)
         end
       end
 
@@ -33,13 +36,27 @@ module ExecJS
       end
 
       protected
+        # See Tempfile.create on Ruby 2.1
+        def create_tempfile(basename)
+          tmpfile = nil
+          Dir::Tmpname.create(basename) do |tmpname|
+            mode    = File::WRONLY | File::CREAT | File::EXCL
+            tmpfile = File.open(tmpname, mode, 0600)
+          end
+          tmpfile
+        end
+
         def compile_to_tempfile(source)
-          tempfile = Tempfile.open(['execjs', '.js'])
-          tempfile.write compile(source)
-          tempfile.close
-          yield tempfile
-        ensure
-          tempfile.close!
+          tmpfile = create_tempfile(['execjs', 'js'])
+          begin
+            tmpfile.write compile(source)
+            tmpfile.close
+            tmpfile
+          rescue => e
+            tmpfile.close unless tmpfile.closed?
+            File.unlink(tmpfile)
+            raise e
+          end
         end
 
         def compile(source)
