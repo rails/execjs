@@ -43,18 +43,18 @@ module ExecJS
         end
 
         def compile(source)
-          @runtime.send(:runner_source).dup.tap do |output|
-            output.sub!('#{source}') do
-              source
-            end
-            output.sub!('#{encoded_source}') do
-              encoded_source = encode_unicode_codepoints(source)
-              ::JSON.generate("(function(){ #{encoded_source} })()", quirks_mode: true)
-            end
-            output.sub!('#{json2_source}') do
-              IO.read(ExecJS.root + "/support/json2.js")
-            end
+          output = @runtime.send(:runner_source).dup
+          output.sub!('#{source}') do
+            source
           end
+          output.sub!('#{encoded_source}') do
+            encoded_source = encode_unicode_codepoints(source)
+            ::JSON.generate("(function(){ #{encoded_source} })()", quirks_mode: true)
+          end
+          output.sub!('#{json2_source}') do
+            IO.read(ExecJS.root + "/support/json2.js")
+          end
+          output
         end
 
         def extract_result(output)
