@@ -22,10 +22,11 @@ module ExecJS
       def exec(source, options = {})
         source = encode(source)
         source = "#{@source}\n#{source}" if @source
+        source = @runtime.compile_source(source)
 
-        tmpfile = compile_to_tempfile(source)
+        tmpfile = write_to_tempfile(source)
         begin
-          extract_result(@runtime.send(:exec_runtime, tmpfile.path))
+          extract_result(@runtime.exec_runtime(tmpfile.path))
         ensure
           File.unlink(tmpfile)
         end
@@ -46,32 +47,11 @@ module ExecJS
           tmpfile
         end
 
-        def compile_to_tempfile(source)
+        def write_to_tempfile(contents)
           tmpfile = create_tempfile(['execjs', 'js'])
-          begin
-            tmpfile.write compile(source)
-            tmpfile.close
-            tmpfile
-          rescue => e
-            tmpfile.close unless tmpfile.closed?
-            File.unlink(tmpfile)
-            raise e
-          end
-        end
-
-        def compile(source)
-          @runtime.send(:runner_source).dup.tap do |output|
-            output.sub!('#{source}') do
-              source
-            end
-            output.sub!('#{encoded_source}') do
-              encoded_source = encode_unicode_codepoints(source)
-              ::JSON.generate("(function(){ #{encoded_source} })()", quirks_mode: true)
-            end
-            output.sub!('#{json2_source}') do
-              IO.read(ExecJS.root + "/support/json2.js")
-            end
-          end
+          tmpfile.write(contents)
+          tmpfile.close
+          tmpfile
         end
 
         def extract_result(output)
@@ -82,12 +62,6 @@ module ExecJS
             raise RuntimeError, value
           else
             raise ProgramError, value
-          end
-        end
-
-        def encode_unicode_codepoints(str)
-          str.gsub(/[\u0080-\uffff]/) do |ch|
-            "\\u%04x" % ch.codepoints.to_a
           end
         end
     end
@@ -101,6 +75,10 @@ module ExecJS
       @encoding    = options[:encoding]
       @deprecated  = !!options[:deprecated]
       @binary      = nil
+
+      if @runner_path
+        instance_eval generate_compile_method(@runner_path)
+      end
     end
 
     def available?
@@ -134,8 +112,29 @@ module ExecJS
       end
 
     protected
-      def runner_source
-        @runner_source ||= IO.read(@runner_path)
+      def generate_compile_method(path)
+        <<-RUBY
+        def compile_source(source)
+          <<-RUNNER
+          #{IO.read(path)}
+          RUNNER
+        end
+        RUBY
+      end
+
+      def json2_source
+        @json2_source ||= IO.read(ExecJS.root + "/support/json2.js")
+      end
+
+      def encode_source(source)
+        encoded_source = encode_unicode_codepoints(source)
+        ::JSON.generate("(function(){ #{encoded_source} })()", quirks_mode: true)
+      end
+
+      def encode_unicode_codepoints(str)
+        str.gsub(/[\u0080-\uffff]/) do |ch|
+          "\\u%04x" % ch.codepoints.to_a
+        end
       end
 
       def exec_runtime(filename)
@@ -146,6 +145,8 @@ module ExecJS
           raise RuntimeError, output
         end
       end
+      # Internally exposed for Context.
+      public :exec_runtime
 
       def which(command)
         Array(command).find do |name|
