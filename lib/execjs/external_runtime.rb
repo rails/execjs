@@ -76,6 +76,10 @@ module ExecJS
       @deprecated  = !!options[:deprecated]
       @binary      = nil
 
+      @popen_options = {}
+      @popen_options[:external_encoding] = @encoding if @encoding
+      @popen_options[:internal_encoding] = ::Encoding.default_internal || 'UTF-8'
+
       if @runner_path
         instance_eval generate_compile_method(@runner_path)
       end
@@ -138,7 +142,10 @@ module ExecJS
       end
 
       def exec_runtime(filename)
-        output = sh(binary.split(' ') + [filename, {err: [:child, :out]}])
+        io = IO.popen(binary.split(' ') + [filename, {err: [:child, :out]}], @popen_options)
+        output = io.read
+        io.close
+
         if $?.success?
           output
         else
@@ -157,14 +164,6 @@ module ExecJS
 
           args ? "#{path} #{args}" : path
         end
-      end
-
-      def sh(command)
-        output, options = nil, {}
-        options[:external_encoding] = @encoding if @encoding
-        options[:internal_encoding] = ::Encoding.default_internal || 'UTF-8'
-        IO.popen(command, options) { |f| output = f.read }
-        output
       end
   end
 end
