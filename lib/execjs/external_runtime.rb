@@ -142,7 +142,7 @@ module ExecJS
       end
 
       def exec_runtime(filename)
-        io = IO.popen(binary.split(' ') + [filename, {err: [:child, :out]}], @popen_options)
+        io = IO.popen(binary.split(' ') << filename, @popen_options.merge({err: [:child, :out]}))
         output = io.read
         io.close
 
