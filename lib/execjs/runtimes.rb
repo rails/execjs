@@ -69,14 +69,7 @@ module ExecJS
     end
 
     def self.runtimes
-      @runtimes ||= [
-        RubyRacer,
-        RubyRhino,
-        JavaScriptCore,
-        Node,
-        SpiderMonkey,
-        JScript
-      ]
+      @runtimes ||= constants.map { |const| const_get(const) }
     end
   end
 
