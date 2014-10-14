@@ -141,15 +141,50 @@ module ExecJS
         end
       end
 
-      def exec_runtime(filename)
-        io = IO.popen(binary.split(' ') << filename, @popen_options.merge({err: [:child, :out]}))
-        output = io.read
-        io.close
+      if ExecJS.windows?
+        def exec_runtime(filename)
+          command = binary.split(" ") << filename
 
-        if $?.success?
-          output
-        else
-          raise RuntimeError, output
+          Dir::Tmpname.create(['execjs', 'json']) do |output|
+            `#{shell_escape(*command)} 2>&1 > #{output}`
+            output = File.open(output, 'rb', @popen_options) { |f| f.read }
+
+            if $?.success?
+              return output
+            else
+              raise RuntimeError, output
+            end
+          end
+        end
+
+        def shell_escape(*args)
+          # see http://technet.microsoft.com/en-us/library/cc723564.aspx#XSLTsection123121120120
+          args.map { |arg|
+            arg = %Q("#{arg.gsub('"','""')}") if arg.match(/[&|()<>^ "]/)
+            arg
+          }.join(" ")
+        end
+
+        # See Tempfile.create on Ruby 2.1
+        def create_tempfile(basename)
+          tmpfile = nil
+          Dir::Tmpname.create(basename) do |tmpname|
+            mode    = File::WRONLY | File::CREAT | File::EXCL
+            tmpfile = File.open(tmpname, mode, 0600)
+          end
+          tmpfile
+        end
+      else
+        def exec_runtime(filename)
+          io = IO.popen(binary.split(' ') << filename, @popen_options.merge({err: [:child, :out]}))
+          output = io.read
+          io.close
+
+          if $?.success?
+            output
+          else
+            raise RuntimeError, output
+          end
         end
       end
       # Internally exposed for Context.
