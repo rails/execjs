@@ -143,17 +143,19 @@ module ExecJS
 
       if ExecJS.windows?
         def exec_runtime(filename)
-          command = binary.split(" ") << filename
+          path = Dir::Tmpname.create(['execjs', 'json']) {}
+          begin
+            command = binary.split(" ") << filename
+            `#{shell_escape(*command)} 2>&1 > #{path}`
+            output = File.open(path, 'rb', @popen_options) { |f| f.read }
+          ensure
+            File.unlink(path) if path
+          end
 
-          Dir::Tmpname.create(['execjs', 'json']) do |output|
-            `#{shell_escape(*command)} 2>&1 > #{output}`
-            output = File.open(output, 'rb', @popen_options) { |f| f.read }
-
-            if $?.success?
-              return output
-            else
-              raise RuntimeError, output
-            end
+          if $?.success?
+            output
+          else
+            raise RuntimeError, output
           end
         end
 
@@ -163,16 +165,6 @@ module ExecJS
             arg = %Q("#{arg.gsub('"','""')}") if arg.match(/[&|()<>^ "]/)
             arg
           }.join(" ")
-        end
-
-        # See Tempfile.create on Ruby 2.1
-        def create_tempfile(basename)
-          tmpfile = nil
-          Dir::Tmpname.create(basename) do |tmpname|
-            mode    = File::WRONLY | File::CREAT | File::EXCL
-            tmpfile = File.open(tmpname, mode, 0600)
-          end
-          tmpfile
         end
       else
         def exec_runtime(filename)
