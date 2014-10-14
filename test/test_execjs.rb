@@ -165,8 +165,7 @@ class TestExecJS < Test
   end
 
   def test_coffeescript
-    require "open-uri"
-    assert source = open("http://coffeescript.org/extras/coffee-script.js").read
+    assert source = File.read(File.expand_path("../fixtures/coffee-script.js", __FILE__))
     context = ExecJS.compile(source)
     assert_equal 64, context.call("CoffeeScript.eval", "((x) -> x * x)(8)")
   end
