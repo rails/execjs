@@ -134,12 +134,33 @@ module ExecJS
         @runner_source ||= IO.read(@runner_path)
       end
 
-      def exec_runtime(filename)
-        output = sh("#{shell_escape(*(binary.split(' ') << filename))} 2>&1")
-        if $?.success?
-          output
-        else
-          raise RuntimeError, output
+      if ExecJS.windows?
+        def exec_runtime(filename)
+          path = Dir::Tmpname.create(['execjs', 'json']) {}
+          begin
+            `#{shell_escape(*(binary.split(' ') << filename))} 2>&1 > #{path}`
+            options = {}
+            options[:external_encoding] = @encoding if @encoding
+            options[:internal_encoding] = ::Encoding.default_internal || 'UTF-8'
+            output = File.open(path, 'rb', options) { |f| f.read }
+          ensure
+            File.unlink(path) if path
+          end
+
+          if $?.success?
+            output
+          else
+            raise RuntimeError, output
+          end
+        end
+      else
+        def exec_runtime(filename)
+          output = sh("#{shell_escape(*(binary.split(' ') << filename))} 2>&1")
+          if $?.success?
+            output
+          else
+            raise RuntimeError, output
+          end
         end
       end
 
