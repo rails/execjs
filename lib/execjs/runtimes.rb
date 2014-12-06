@@ -1,5 +1,6 @@
 require "execjs/module"
 require "execjs/disabled_runtime"
+require "execjs/duktape_runtime"
 require "execjs/external_runtime"
 require "execjs/johnson_runtime"
 require "execjs/mustang_runtime"
@@ -9,6 +10,8 @@ require "execjs/ruby_rhino_runtime"
 module ExecJS
   module Runtimes
     Disabled = DisabledRuntime.new
+
+    Duktape = DuktapeRuntime.new
 
     RubyRacer = RubyRacerRuntime.new
 
@@ -78,6 +81,7 @@ module ExecJS
       @runtimes ||= [
         RubyRacer,
         RubyRhino,
+        Duktape,
         Johnson,
         Mustang,
         Node,
