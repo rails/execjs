@@ -152,9 +152,15 @@ class TestExecJS < Test
     assert ExecJS.exec("function foo() {\n#{body}\n};\nreturn true")
   end
 
-  def test_syntax_error
+  def test_exec_syntax_error
     assert_raises ExecJS::RuntimeError do
       ExecJS.exec(")")
+    end
+  end
+
+  def test_eval_syntax_error
+    assert_raises ExecJS::RuntimeError do
+      ExecJS.eval(")")
     end
   end
 
