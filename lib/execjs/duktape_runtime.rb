@@ -11,18 +11,30 @@ module ExecJS
 
       def exec(source, options = {})
         source = encode(source)
-
-        js = <<-JS
-          (function(program) { return JSON.stringify([program()]); })(function() { #{source} });
-        JS
-
-        if json = @ctx.eval_string(js, '(execjs)')
-          ::JSON.parse(json, create_additions: false)[0]
-        end
+        unwrap(@ctx.eval_string("(function() { #{source} })();", '(execjs)'))
       rescue Duktape::SyntaxError => e
         raise RuntimeError, e.message
       rescue Duktape::Error => e
         raise ProgramError, e.message
+      end
+
+      def unwrap(obj)
+        case obj
+        when ::Duktape::ComplexObject
+          nil
+        when Array
+          obj.map { |v| unwrap(v) }
+        when Hash
+          obj.inject({}) do |vs, (k, v)|
+            v = unwrap(v)
+            vs[k] = v if v
+            vs
+          end
+        when String
+          obj.force_encoding('UTF-8')
+        else
+          obj
+        end
       end
 
       def eval(source, options = {})
