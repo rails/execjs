@@ -10,12 +10,23 @@ module ExecJS
       end
 
       def exec(source, options = {})
+        eval "(function(){#{source}})()"
+      end
+
+      def eval(source, options = {})
         source = encode(source)
-        unwrap(@ctx.eval_string("(function() { #{source} })();", '(execjs)'))
+
+        if /\S/ =~ source
+          unwrap(@ctx.eval_string("(#{source})", '(execjs)'))
+        end
       rescue Duktape::SyntaxError => e
         raise RuntimeError, e.message
       rescue Duktape::Error => e
         raise ProgramError, e.message
+      end
+
+      def call(identifier, *args)
+        eval "#{identifier}.apply(this, #{::JSON.generate(args)})"
       end
 
       def unwrap(obj)
@@ -35,18 +46,6 @@ module ExecJS
         else
           obj
         end
-      end
-
-      def eval(source, options = {})
-        source = encode(source)
-
-        if /\S/ =~ source
-          exec("return eval(#{::JSON.generate("(#{source})", quirks_mode: true)})")
-        end
-      end
-
-      def call(identifier, *args)
-        eval "#{identifier}.apply(this, #{::JSON.generate(args)})"
       end
     end
 
