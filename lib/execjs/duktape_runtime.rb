@@ -6,9 +6,6 @@ module ExecJS
     class Context < Runtime::Context
       def initialize(runtime, source = "")
         @ctx = Duktape::Context.new
-
-        # Disable CJS
-        exec("module = exports = require = undefined")
         exec(source)
       end
 
