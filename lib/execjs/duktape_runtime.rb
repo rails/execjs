@@ -13,28 +13,16 @@ module ExecJS
         source = encode(source)
 
         js = <<-JS
-          (function(program, execJS) { return execJS(program); })(function() { #{source}
-          }, function(program) {
-            try {
-              return JSON.stringify(['ok', program()]);
-            } catch (err) {
-              return JSON.stringify(['err', '' + err]);
-            }
-          });
+          (function(program) { return JSON.stringify([program()]); })(function() { #{source} });
         JS
 
         if json = @ctx.eval_string(js, '(execjs)')
-          status, value = ::JSON.parse(json, create_additions: false)
-          if status == "ok"
-            value
-          elsif value =~ /SyntaxError:/
-            raise RuntimeError, value
-          else
-            raise ProgramError, value
-          end
+          ::JSON.parse(json, create_additions: false)[0]
         end
       rescue Duktape::SyntaxError => e
         raise RuntimeError, e.message
+      rescue Duktape::Error => e
+        raise ProgramError, e.message
       end
 
       def eval(source, options = {})
