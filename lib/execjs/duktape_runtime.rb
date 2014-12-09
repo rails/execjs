@@ -36,7 +36,7 @@ module ExecJS
             raise ProgramError, value
           end
         end
-      rescue Duktape::ContextError => e
+      rescue Duktape::SyntaxError => e
         raise RuntimeError, e.message
       end
 
