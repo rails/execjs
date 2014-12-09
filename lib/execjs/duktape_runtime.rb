@@ -23,6 +23,8 @@ module ExecJS
         raise RuntimeError, e.message
       rescue Duktape::Error => e
         raise ProgramError, e.message
+      rescue Duktape::InternalError => e
+        raise RuntimeError, e.message
       end
 
       def call(identifier, *args)
