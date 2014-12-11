@@ -101,8 +101,8 @@ class TestExecJS < Test
       "\\",
       "café",
       "☃",
-      "\u{1f604}".force_encoding("UTF-8"), # Smiling emoji
-      "\u{1f1fa}\u{1f1f8}".force_encoding("UTF-8"), # US flag
+      "\u{1f604}".encode("UTF-8"), # Smiling emoji
+      "\u{1f1fa}\u{1f1f8}".encode("UTF-8"), # US flag
       [1, 2, 3],
       [1, [2, 3]],
       [1, [2, [3]]],
@@ -168,7 +168,7 @@ class TestExecJS < Test
     assert_equal str, ExecJS.eval("'#{str}'")
 
     # US flag emoji
-    str = "\u{1f1fa}\u{1f1f8}".force_encoding("UTF-8")
+    str = "\u{1f1fa}\u{1f1f8}".encode("UTF-8")
     assert_equal 4, ExecJS.eval("'#{str}'.length")
     assert_equal str, ExecJS.eval("'#{str}'")
   end
