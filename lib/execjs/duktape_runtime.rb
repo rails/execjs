@@ -43,8 +43,6 @@ module ExecJS
             vs[k] = v if v
             vs
           end
-        when String
-          obj.force_encoding('UTF-8')
         else
           obj
         end
