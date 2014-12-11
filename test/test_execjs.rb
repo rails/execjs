@@ -71,6 +71,8 @@ class TestExecJS < Test
     "'café'" => "café",
     '"☃"' => "☃",
     '"\u2603"' => "☃",
+    "'\u{1f604}'".encode("UTF-8") => "\u{1f604}".encode("UTF-8"), # Smiling emoji
+    "'\u{1f1fa}\u{1f1f8}'".encode("UTF-8") => "\u{1f1fa}\u{1f1f8}".encode("UTF-8"), # US flag
     '"\\\\"' => "\\"
   }.each_with_index do |(input, output), index|
     define_method("test_exec_string_#{index}") do
