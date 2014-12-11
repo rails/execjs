@@ -101,7 +101,7 @@ class TestExecJS < Test
       "\\",
       "café",
       "☃",
-      ["0ff98948"].pack("h*").force_encoding("UTF-8"), # Smiling emoji
+      "\xf0\x9f\x98\x84".force_encoding("UTF-8"), # Smiling emoji
       [1, 2, 3],
       [1, [2, 3]],
       [1, [2, [3]]],
@@ -162,12 +162,12 @@ class TestExecJS < Test
 
   def test_surrogate_pairs
     # Smiling emoji
-    str = ["0ff98948"].pack("h*").force_encoding("UTF-8")
+    str = "\xf0\x9f\x98\x84".force_encoding("UTF-8")
     assert_equal 2, ExecJS.eval("'#{str}'.length")
     assert_equal str, ExecJS.eval("'#{str}'")
 
     # US flag emoji
-    str = ["0ff978ab0ff9788b"].pack("h*").force_encoding("UTF-8")
+    str = "\xf0\x9f\x87\xba\xf0\x9f\x87\xb8".force_encoding("UTF-8")
     assert_equal 4, ExecJS.eval("'#{str}'.length")
     assert_equal str, ExecJS.eval("'#{str}'")
   end
