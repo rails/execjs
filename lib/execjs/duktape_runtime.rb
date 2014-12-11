@@ -6,7 +6,9 @@ module ExecJS
     class Context < Runtime::Context
       def initialize(runtime, source = "")
         @ctx = Duktape::Context.new
-        exec(source)
+
+        source = encode(source)
+        @ctx.exec_string(source, '(execjs)')
       end
 
       def exec(source, options = {})
