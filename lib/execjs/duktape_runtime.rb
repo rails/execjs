@@ -9,6 +9,12 @@ module ExecJS
 
         source = encode(source)
         @ctx.exec_string(source, '(execjs)')
+      rescue Duktape::SyntaxError => e
+        raise RuntimeError, e.message
+      rescue Duktape::Error => e
+        raise ProgramError, e.message
+      rescue Duktape::InternalError => e
+        raise RuntimeError, e.message
       end
 
       def exec(source, options = {})
