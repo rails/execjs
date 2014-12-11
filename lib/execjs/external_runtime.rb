@@ -9,6 +9,9 @@ module ExecJS
 
         @runtime = runtime
         @source  = source
+
+        # Test compile context source
+        exec("")
       end
 
       def eval(source, options = {})

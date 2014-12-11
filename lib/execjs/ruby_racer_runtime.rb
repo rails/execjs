@@ -8,7 +8,16 @@ module ExecJS
 
         lock do
           @v8_context = ::V8::Context.new
-          @v8_context.eval(source)
+
+          begin
+            @v8_context.eval(source)
+          rescue ::V8::JSError => e
+            if e.value["name"] == "SyntaxError"
+              raise RuntimeError, e.value.to_s
+            else
+              raise ProgramError, e.value.to_s
+            end
+          end
         end
       end
 
