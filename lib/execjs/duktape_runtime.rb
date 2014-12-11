@@ -10,7 +10,7 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        eval "(function(){#{source}})()"
+        eval "(function(){#{encode(source)}})()"
       end
 
       def eval(source, options = {})
