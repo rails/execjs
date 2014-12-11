@@ -160,6 +160,18 @@ class TestExecJS < Test
     end
   end
 
+  def test_surrogate_pairs
+    # Smiling emoji
+    str = ["0ff98948"].pack("h*").force_encoding("UTF-8")
+    assert_equal 2, ExecJS.eval("'#{str}'.length")
+    assert_equal str, ExecJS.eval("'#{str}'")
+
+    # US flag emoji
+    str = ["0ff978ab0ff9788b"].pack("h*").force_encoding("UTF-8")
+    assert_equal 4, ExecJS.eval("'#{str}'.length")
+    assert_equal str, ExecJS.eval("'#{str}'")
+  end
+
   def test_compile_anonymous_function
     context = ExecJS.compile("foo = function() { return \"bar\"; }")
     assert_equal "bar", context.exec("return foo()")
