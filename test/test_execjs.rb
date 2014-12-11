@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 require "minitest/autorun"
 require "execjs/module"
+require "json"
 
 begin
   require "execjs"
@@ -87,6 +88,40 @@ class TestExecJS < Test
     assert_equal "☃", ExecJS.eval('"☃"')
     assert_equal "☃", ExecJS.eval('"\u2603"')
     assert_equal "\\", ExecJS.eval('"\\\\"')
+  end
+
+  def test_json_values
+    [
+      nil,
+      true,
+      false,
+      1,
+      3.14,
+      "hello",
+      "\\",
+      "café",
+      "☃",
+      ["0ff98948"].pack("h*").force_encoding("UTF-8"), # Smiling emoji
+      [1, 2, 3],
+      [1, [2, 3]],
+      [1, [2, [3]]],
+      ["red", "yellow", "blue"],
+      { "a" => 1, "b" => 2},
+      { "a" => 1, "b" => [2, 3]},
+      { "a" => true }
+    ].each do |value|
+      json_value = JSON.generate(value, quirks_mode: true)
+      assert_equal value, JSON.parse(json_value, quirks_mode: true)
+
+      assert_equal value, ExecJS.exec("return #{json_value}")
+      assert_equal value, ExecJS.eval("#{json_value}")
+
+      context = ExecJS.compile("function json(obj) { return JSON.stringify(obj); }")
+      assert_equal json_value, context.call("json", value)
+
+      context = ExecJS.compile("function id(obj) { return obj; }")
+      assert_equal value, context.call("id", value)
+    end
   end
 
   def test_encoding
