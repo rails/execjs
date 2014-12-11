@@ -30,7 +30,13 @@ module ExecJS
       end
 
       def call(identifier, *args)
-        eval "#{identifier}.apply(this, #{::JSON.generate(args)})"
+        unwrap(@ctx.call_prop(identifier.split("."), *args))
+      rescue Duktape::SyntaxError => e
+        raise RuntimeError, e.message
+      rescue Duktape::Error => e
+        raise ProgramError, e.message
+      rescue Duktape::InternalError => e
+        raise RuntimeError, e.message
       end
 
       def unwrap(obj)
