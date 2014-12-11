@@ -47,8 +47,7 @@ module ExecJS
           obj.map { |v| unwrap(v) }
         when Hash
           obj.inject({}) do |vs, (k, v)|
-            v = unwrap(v)
-            vs[k] = v if v
+            vs[k] = unwrap(v)
             vs
           end
         else
