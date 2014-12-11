@@ -55,74 +55,100 @@ class TestExecJS < Test
     end
   end
 
-  def test_exec
-    assert_nil ExecJS.exec("1")
-    assert_nil ExecJS.exec("return")
-    assert_nil ExecJS.exec("return null")
-    assert_nil ExecJS.exec("return function() {}")
-    assert_equal 0, ExecJS.exec("return 0")
-    assert_equal true, ExecJS.exec("return true")
-    assert_equal [1, 2], ExecJS.exec("return [1, 2]")
-    assert_equal "hello", ExecJS.exec("return 'hello'")
-    assert_equal({"a"=>1,"b"=>2}, ExecJS.exec("return {a:1,b:2}"))
-    assert_equal "café", ExecJS.exec("return 'café'")
-    assert_equal "☃", ExecJS.exec('return "☃"')
-    assert_equal "☃", ExecJS.exec('return "\u2603"')
-    assert_equal "\\", ExecJS.exec('return "\\\\"')
+  {
+    "function() {}" => nil,
+    "0" => 0,
+    "null" => nil,
+    "undefined" => nil,
+    "true" => true,
+    "false" => false,
+    "[1, 2]" => [1, 2],
+    "[1, function() {}]" => [1, nil],
+    "'hello'" => "hello",
+    "'red yellow blue'.split(' ')" => ["red", "yellow", "blue"],
+    "{a:1,b:2}" => {"a"=>1,"b"=>2},
+    "{a:true,b:function (){}}" => {"a"=>true},
+    "'café'" => "café",
+    '"☃"' => "☃",
+    '"\u2603"' => "☃",
+    '"\\\\"' => "\\"
+  }.each_with_index do |(input, output), index|
+    define_method("test_exec_string_#{index}") do
+      assert_equal output, ExecJS.exec("return #{input}")
+    end
+
+    define_method("test_eval_string_#{index}") do
+      assert_equal output, ExecJS.eval(input)
+    end
+
+    define_method("test_compile_return_string_#{index}") do
+      context = ExecJS.compile("var a = #{input};")
+      assert_equal output, context.eval("a")
+    end
+
+    define_method("test_compile_call_string_#{index}") do
+      context = ExecJS.compile("function a() { return #{input}; }")
+      assert_equal output, context.call("a")
+    end
   end
 
-  def test_eval
-    assert_nil ExecJS.eval("")
-    assert_nil ExecJS.eval(" ")
-    assert_nil ExecJS.eval("null")
-    assert_nil ExecJS.eval("function() {}")
-    assert_equal 0, ExecJS.eval("0")
-    assert_equal true, ExecJS.eval("true")
-    assert_equal [1, 2], ExecJS.eval("[1, 2]")
-    assert_equal [1, nil], ExecJS.eval("[1, function() {}]")
-    assert_equal "hello", ExecJS.eval("'hello'")
-    assert_equal ["red", "yellow", "blue"], ExecJS.eval("'red yellow blue'.split(' ')")
-    assert_equal({"a"=>1,"b"=>2}, ExecJS.eval("{a:1,b:2}"))
-    assert_equal({"a"=>true}, ExecJS.eval("{a:true,b:function (){}}"))
-    assert_equal "café", ExecJS.eval("'café'")
-    assert_equal "☃", ExecJS.eval('"☃"')
-    assert_equal "☃", ExecJS.eval('"\u2603"')
-    assert_equal "\\", ExecJS.eval('"\\\\"')
-  end
+  [
+    nil,
+    true,
+    false,
+    1,
+    3.14,
+    "hello",
+    "\\",
+    "café",
+    "☃",
+    "\u{1f604}".encode("UTF-8"), # Smiling emoji
+    "\u{1f1fa}\u{1f1f8}".encode("UTF-8"), # US flag
+    [1, 2, 3],
+    [1, [2, 3]],
+    [1, [2, [3]]],
+    ["red", "yellow", "blue"],
+    { "a" => 1, "b" => 2},
+    { "a" => 1, "b" => [2, 3]},
+    { "a" => true }
+  ].each_with_index do |value, index|
+    json_value = JSON.generate(value, quirks_mode: true)
 
-  def test_json_values
-    [
-      nil,
-      true,
-      false,
-      1,
-      3.14,
-      "hello",
-      "\\",
-      "café",
-      "☃",
-      "\u{1f604}".encode("UTF-8"), # Smiling emoji
-      "\u{1f1fa}\u{1f1f8}".encode("UTF-8"), # US flag
-      [1, 2, 3],
-      [1, [2, 3]],
-      [1, [2, [3]]],
-      ["red", "yellow", "blue"],
-      { "a" => 1, "b" => 2},
-      { "a" => 1, "b" => [2, 3]},
-      { "a" => true }
-    ].each do |value|
-      json_value = JSON.generate(value, quirks_mode: true)
+    define_method("test_json_value_#{index}") do
       assert_equal value, JSON.parse(json_value, quirks_mode: true)
+    end
 
+    define_method("test_exec_value_#{index}") do
       assert_equal value, ExecJS.exec("return #{json_value}")
-      assert_equal value, ExecJS.eval("#{json_value}")
+    end
 
+    define_method("test_eval_value_#{index}") do
+      assert_equal value, ExecJS.eval("#{json_value}")
+    end
+
+    define_method("test_strinigfy_value_#{index}") do
       context = ExecJS.compile("function json(obj) { return JSON.stringify(obj); }")
       assert_equal json_value, context.call("json", value)
+    end
 
+    define_method("test_call_value_#{index}") do
       context = ExecJS.compile("function id(obj) { return obj; }")
       assert_equal value, context.call("id", value)
     end
+  end
+
+  def test_eval_blank
+    assert_nil ExecJS.eval("")
+    assert_nil ExecJS.eval(" ")
+    assert_nil ExecJS.eval("  ")
+  end
+
+  def test_exec_return
+    assert_nil ExecJS.exec("return")
+  end
+
+  def test_exec_no_return
+    assert_nil ExecJS.exec("1")
   end
 
   def test_encoding
