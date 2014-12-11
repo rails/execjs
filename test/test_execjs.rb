@@ -206,7 +206,25 @@ class TestExecJS < Test
     end
   end
 
-  def test_thrown_exception
+  def test_compile_syntax_error
+    assert_raises ExecJS::RuntimeError do
+      ExecJS.compile(")")
+    end
+  end
+
+  def test_exec_thrown_exception
+    assert_raises ExecJS::ProgramError do
+      ExecJS.exec("throw 'hello'")
+    end
+  end
+
+  def test_eval_thrown_exception
+    assert_raises ExecJS::ProgramError do
+      ExecJS.exec("throw 'hello'")
+    end
+  end
+
+  def test_compile_thrown_exception
     assert_raises ExecJS::ProgramError do
       ExecJS.exec("throw 'hello'")
     end
