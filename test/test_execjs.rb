@@ -160,8 +160,15 @@ class TestExecJS < Test
     end
   end
 
-  def test_compile
+  def test_compile_anonymous_function
     context = ExecJS.compile("foo = function() { return \"bar\"; }")
+    assert_equal "bar", context.exec("return foo()")
+    assert_equal "bar", context.eval("foo()")
+    assert_equal "bar", context.call("foo")
+  end
+
+  def test_compile_named_function
+    context = ExecJS.compile("function foo() { return \"bar\"; }")
     assert_equal "bar", context.exec("return foo()")
     assert_equal "bar", context.eval("foo()")
     assert_equal "bar", context.call("foo")
