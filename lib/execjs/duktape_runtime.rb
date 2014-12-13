@@ -7,59 +7,59 @@ module ExecJS
       def initialize(runtime, source = "")
         @ctx = Duktape::Context.new
 
-        source = encode(source)
-        @ctx.exec_string(source, '(execjs)')
-      rescue Duktape::SyntaxError => e
-        raise RuntimeError, e.message
-      rescue Duktape::Error => e
-        raise ProgramError, e.message
-      rescue Duktape::InternalError => e
-        raise RuntimeError, e.message
+        normalize do
+          @ctx.exec_string(encode(source), '(execjs)')
+        end
       end
 
       def exec(source, options = {})
-        eval "(function(){#{encode(source)}})()"
+        return unless /\S/ =~ source
+
+        normalize do
+          @ctx.eval_string("(function(){#{encode(source)}})()", '(execjs)')
+        end
       end
 
       def eval(source, options = {})
-        source = encode(source)
+        return unless /\S/ =~ source
 
-        if /\S/ =~ source
-          unwrap(@ctx.eval_string("(#{source})", '(execjs)'))
+        normalize do
+          @ctx.eval_string("(#{encode(source)})", '(execjs)')
         end
-      rescue Duktape::SyntaxError => e
-        raise RuntimeError, e.message
-      rescue Duktape::Error => e
-        raise ProgramError, e.message
-      rescue Duktape::InternalError => e
-        raise RuntimeError, e.message
       end
 
       def call(identifier, *args)
-        unwrap(@ctx.call_prop(identifier.split("."), *args))
-      rescue Duktape::SyntaxError => e
-        raise RuntimeError, e.message
-      rescue Duktape::Error => e
-        raise ProgramError, e.message
-      rescue Duktape::InternalError => e
-        raise RuntimeError, e.message
-      end
-
-      def unwrap(obj)
-        case obj
-        when ::Duktape::ComplexObject
-          nil
-        when Array
-          obj.map { |v| unwrap(v) }
-        when Hash
-          obj.inject({}) do |vs, (k, v)|
-            vs[k] = unwrap(v)
-            vs
-          end
-        else
-          obj
+        normalize do
+          @ctx.call_prop(identifier.split("."), *args)
         end
       end
+
+      private
+        def normalize
+          unwrap yield
+        rescue Duktape::SyntaxError => e
+          raise RuntimeError, e.message
+        rescue Duktape::Error => e
+          raise ProgramError, e.message
+        rescue Duktape::InternalError => e
+          raise RuntimeError, e.message
+        end
+
+        def unwrap(obj)
+          case obj
+          when ::Duktape::ComplexObject
+            nil
+          when Array
+            obj.map { |v| unwrap(v) }
+          when Hash
+            obj.inject({}) do |vs, (k, v)|
+              vs[k] = unwrap(v)
+              vs
+            end
+          else
+            obj
+          end
+        end
     end
 
     def name
