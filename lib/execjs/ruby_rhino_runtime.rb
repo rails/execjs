@@ -9,6 +9,8 @@ module ExecJS
         @rhino_context = ::Rhino::Context.new
         fix_memory_limit! @rhino_context
         @rhino_context.eval(source)
+      rescue Exception => e
+        reraise_error(e)
       end
 
       def exec(source, options = {})
@@ -25,22 +27,14 @@ module ExecJS
         if /\S/ =~ source
           unbox @rhino_context.eval("(#{source})")
         end
-      rescue ::Rhino::JSError => e
-        if e.message =~ /^syntax error/
-          raise RuntimeError, e.message
-        else
-          raise ProgramError, e.message
-        end
+      rescue Exception => e
+        reraise_error(e)
       end
 
       def call(properties, *args)
         unbox @rhino_context.eval(properties).call(*args)
-      rescue ::Rhino::JSError => e
-        if e.message == "syntax error"
-          raise RuntimeError, e.message
-        else
-          raise ProgramError, e.message
-        end
+      rescue Exception => e
+        reraise_error(e)
       end
 
       def unbox(value)
@@ -61,6 +55,19 @@ module ExecJS
           value.map { |v| unbox(v) }
         else
           value
+        end
+      end
+
+      def reraise_error(e)
+        case e
+        when ::Rhino::JSError
+          if e.message == "syntax error"
+            raise RuntimeError, e.message
+          else
+            raise ProgramError, e.message
+          end
+        else
+          raise e
         end
       end
 

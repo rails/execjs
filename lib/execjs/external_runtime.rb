@@ -169,6 +169,21 @@ module ExecJS
             arg
           }.join(" ")
         end
+      elsif RUBY_ENGINE == 'jruby'
+        require 'shellwords'
+
+        def exec_runtime(filename)
+          command = "#{Shellwords.join(binary.split(' ') << filename)} 2>&1"
+          io = IO.popen(command, @popen_options)
+          output = io.read
+          io.close
+
+          if $?.success?
+            output
+          else
+            raise RuntimeError, output
+          end
+        end
       else
         def exec_runtime(filename)
           io = IO.popen(binary.split(' ') << filename, @popen_options.merge({err: [:child, :out]}))

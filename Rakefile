@@ -39,6 +39,12 @@ task :test do
 
     begin
       task.invoke
+    rescue SignalException => e
+      if e.message == "2"
+        skipped << task.name
+      else
+        failed << task.name
+      end
     rescue Exception => e
       if e.message[/Command failed with status \((\d+)\)/, 1] == "2"
         skipped << task.name
