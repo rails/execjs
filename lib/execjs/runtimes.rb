@@ -2,7 +2,6 @@ require "execjs/module"
 require "execjs/disabled_runtime"
 require "execjs/external_runtime"
 require "execjs/johnson_runtime"
-require "execjs/mustang_runtime"
 require "execjs/ruby_racer_runtime"
 require "execjs/ruby_rhino_runtime"
 
@@ -15,8 +14,6 @@ module ExecJS
     RubyRhino = RubyRhinoRuntime.new
 
     Johnson = JohnsonRuntime.new
-
-    Mustang = MustangRuntime.new
 
     Node = ExternalRuntime.new(
       name:        "Node.js (V8)",
@@ -79,7 +76,6 @@ module ExecJS
         RubyRacer,
         RubyRhino,
         Johnson,
-        Mustang,
         JavaScriptCore,
         Node,
         SpiderMonkey,
