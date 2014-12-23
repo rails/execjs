@@ -1,7 +1,6 @@
 require "execjs/module"
 require "execjs/disabled_runtime"
 require "execjs/external_runtime"
-require "execjs/johnson_runtime"
 require "execjs/ruby_racer_runtime"
 require "execjs/ruby_rhino_runtime"
 
@@ -12,8 +11,6 @@ module ExecJS
     RubyRacer = RubyRacerRuntime.new
 
     RubyRhino = RubyRhinoRuntime.new
-
-    Johnson = JohnsonRuntime.new
 
     Node = ExternalRuntime.new(
       name:        "Node.js (V8)",
@@ -75,7 +72,6 @@ module ExecJS
       @runtimes ||= [
         RubyRacer,
         RubyRhino,
-        Johnson,
         JavaScriptCore,
         Node,
         SpiderMonkey,
