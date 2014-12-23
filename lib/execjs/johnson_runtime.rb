@@ -98,7 +98,7 @@ module ExecJS
     end
 
     def deprecated?
-      true
+      false
     end
   end
 end
