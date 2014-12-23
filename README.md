@@ -52,6 +52,11 @@ in. If you want to access the Node API, you should check another library like
 [commonjs.rb](https://github.com/cowboyd/commonjs.rb) designed to provide a
 consistent interface.
 
+**Why can't I use `setTimeout`**
+
+For similar reasons as modules, not all runtimes guarantee a full JavaScript
+event loop. So `setTimeout`, `setInterval` and other timers are not defined.
+
 
 # License
 
