@@ -57,6 +57,13 @@ consistent interface.
 For similar reasons as modules, not all runtimes guarantee a full JavaScript
 event loop. So `setTimeout`, `setInterval` and other timers are not defined.
 
+**Why can't I use ES5 features?**
+
+Some runtimes like Node will implement many of the latest ES5 features. However
+older stock runtimes like JSC on OSX and JScript on Windows may not. You should
+only count on ES3 features being available. Prefer feature checking these APIs
+rather than hard coding support for specific runtimes.
+
 **Can I ExecJS be used to sandbox scripts?**
 
 No, ExecJS shouldn't be used for any security related sandboxing. Since runtimes
