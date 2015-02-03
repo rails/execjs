@@ -220,6 +220,10 @@ class TestExecJS < Test
     assert_equal true, ExecJS.exec("return this === (function() {return this})()")
   end
 
+  def test_browser_self_is_undefined
+    assert ExecJS.eval("typeof self == 'undefined'")
+  end
+
   def test_node_global_is_undefined
     assert ExecJS.eval("typeof global == 'undefined'")
   end
