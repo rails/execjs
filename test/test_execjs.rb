@@ -221,6 +221,7 @@ class TestExecJS < Test
   end
 
   def test_commonjs_vars_are_undefined
+    assert ExecJS.eval("typeof global == 'undefined'")
     assert ExecJS.eval("typeof module == 'undefined'")
     assert ExecJS.eval("typeof exports == 'undefined'")
     assert ExecJS.eval("typeof require == 'undefined'")
