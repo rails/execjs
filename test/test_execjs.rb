@@ -288,9 +288,39 @@ class TestExecJS < Test
     end
   end
 
+  def test_babel
+    assert source = File.read(File.expand_path("../fixtures/babel.js", __FILE__))
+    source = <<-JS
+      var self = this;
+      #{source}
+      babel.eval = function(code) {
+        return eval(babel.transform(code)["code"]);
+      }
+    JS
+    context = ExecJS.compile(source)
+    assert_equal 64, context.call("babel.eval", "((x) => x * x)(8)")
+  end
+
   def test_coffeescript
     assert source = File.read(File.expand_path("../fixtures/coffee-script.js", __FILE__))
     context = ExecJS.compile(source)
     assert_equal 64, context.call("CoffeeScript.eval", "((x) -> x * x)(8)")
+  end
+
+  def test_uglify
+    assert source = File.read(File.expand_path("../fixtures/uglify.js", __FILE__))
+    source = <<-JS
+      #{source}
+
+      function uglify(source) {
+        var ast = UglifyJS.parse(source);
+        var stream = UglifyJS.OutputStream();
+        ast.print(stream);
+        return stream.toString();
+      }
+    JS
+    context = ExecJS.compile(source)
+    assert_equal "function foo(bar){return bar}",
+      context.call("uglify", "function foo(bar) {\n  return bar;\n}")
   end
 end
