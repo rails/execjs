@@ -24,12 +24,12 @@ module ExecJS
 
       def exec(source, options = {})
         source = encode(source)
-        source = "#{@source}\n#{source}" if @source
+        source = "#{@source}\n#{source}" if @source != ""
         source = @runtime.compile_source(source)
 
         tmpfile = write_to_tempfile(source)
         begin
-          extract_result(@runtime.exec_runtime(tmpfile.path))
+          extract_result(@runtime.exec_runtime(tmpfile.path), tmpfile.path)
         ensure
           File.unlink(tmpfile)
         end
@@ -57,14 +57,25 @@ module ExecJS
           tmpfile
         end
 
-        def extract_result(output)
-          status, value = output.empty? ? [] : ::JSON.parse(output, create_additions: false)
+        def extract_result(output, filename)
+          status, value, stack = output.empty? ? [] : ::JSON.parse(output, create_additions: false)
           if status == "ok"
             value
-          elsif value =~ /SyntaxError:/
-            raise RuntimeError, value
           else
-            raise ProgramError, value
+            stack ||= ""
+            real_filename = File.realpath(filename)
+            stack = stack.split("\n").map do |line|
+              line.sub(" at ", "")
+                  .sub(real_filename, "(execjs)")
+                  .sub(filename, "(execjs)")
+                  .strip
+            end
+            stack.reject! { |line| ["eval code", "eval@[native code]"].include?(line) }
+            stack.shift unless stack[0].to_s.include?("(execjs)")
+            error_class = value =~ /SyntaxError:/ ? RuntimeError : ProgramError
+            error = error_class.new(value)
+            error.set_backtrace(stack + caller)
+            raise error
           end
         end
     end
@@ -158,7 +169,7 @@ module ExecJS
           if $?.success?
             output
           else
-            raise RuntimeError, output
+            raise exec_runtime_error(output)
           end
         end
 
@@ -181,7 +192,7 @@ module ExecJS
           if $?.success?
             output
           else
-            raise RuntimeError, output
+            raise exec_runtime_error(output)
           end
         end
       else
@@ -193,12 +204,19 @@ module ExecJS
           if $?.success?
             output
           else
-            raise RuntimeError, output
+            raise exec_runtime_error(output)
           end
         end
       end
       # Internally exposed for Context.
       public :exec_runtime
+
+      def exec_runtime_error(output)
+        error = RuntimeError.new(output)
+        lineno = output.split("\n")[0][/:(\d+)$/, 1] || 1
+        error.set_backtrace(["(execjs):#{lineno}"] + caller)
+        error
+      end
 
       def which(command)
         Array(command).find do |name|
