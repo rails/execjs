@@ -220,6 +220,14 @@ class TestExecJS < Test
     assert_equal true, ExecJS.exec("return this === (function() {return this})()")
   end
 
+  def test_browser_self_is_undefined
+    assert ExecJS.eval("typeof self == 'undefined'")
+  end
+
+  def test_node_global_is_undefined
+    assert ExecJS.eval("typeof global == 'undefined'")
+  end
+
   def test_commonjs_vars_are_undefined
     assert ExecJS.eval("typeof module == 'undefined'")
     assert ExecJS.eval("typeof exports == 'undefined'")
@@ -228,6 +236,15 @@ class TestExecJS < Test
 
   def test_console_is_undefined
     assert ExecJS.eval("typeof console == 'undefined'")
+  end
+
+  def test_timers_are_undefined
+    assert ExecJS.eval("typeof setTimeout == 'undefined'")
+    assert ExecJS.eval("typeof setInterval == 'undefined'")
+    assert ExecJS.eval("typeof clearTimeout == 'undefined'")
+    assert ExecJS.eval("typeof clearInterval == 'undefined'")
+    assert ExecJS.eval("typeof setImmediate == 'undefined'")
+    assert ExecJS.eval("typeof clearImmediate == 'undefined'")
   end
 
   def test_compile_large_scripts
