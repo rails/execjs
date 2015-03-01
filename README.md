@@ -64,7 +64,7 @@ older stock runtimes like JSC on OSX and JScript on Windows may not. You should
 only count on ES3 features being available. Prefer feature checking these APIs
 rather than hard coding support for specific runtimes.
 
-**Can I ExecJS be used to sandbox scripts?**
+**Can ExecJS be used to sandbox scripts?**
 
 No, ExecJS shouldn't be used for any security related sandboxing. Since runtimes
 are automatically detected, each runtime has different sandboxing properties.
