@@ -289,6 +289,8 @@ class TestExecJS < Test
   end
 
   def test_babel
+    skip if ExecJS.runtime.is_a?(ExecJS::RubyRhinoRuntime)
+
     assert source = File.read(File.expand_path("../fixtures/babel.js", __FILE__))
     source = <<-JS
       var self = this;
