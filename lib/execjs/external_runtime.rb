@@ -213,7 +213,9 @@ module ExecJS
 
       def exec_runtime_error(output)
         error = RuntimeError.new(output)
-        lineno = output.split("\n")[0][/:(\d+)$/, 1] || 1
+        lines = output.split("\n")
+        lineno = lines[0][/:(\d+)$/, 1] if lines[0]
+        lineno ||= 1
         error.set_backtrace(["(execjs):#{lineno}"] + caller)
         error
       end
