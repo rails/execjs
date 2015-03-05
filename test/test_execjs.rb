@@ -253,38 +253,80 @@ class TestExecJS < Test
   end
 
   def test_exec_syntax_error
-    assert_raises ExecJS::RuntimeError do
+    begin
       ExecJS.exec(")")
+      flunk
+    rescue ExecJS::RuntimeError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
     end
   end
 
   def test_eval_syntax_error
-    assert_raises ExecJS::RuntimeError do
+    begin
       ExecJS.eval(")")
+      flunk
+    rescue ExecJS::RuntimeError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
     end
   end
 
   def test_compile_syntax_error
-    assert_raises ExecJS::RuntimeError do
+    begin
       ExecJS.compile(")")
+      flunk
+    rescue ExecJS::RuntimeError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
     end
   end
 
-  def test_exec_thrown_exception
+  def test_exec_thrown_error
+    begin
+      ExecJS.exec("throw new Error('hello')")
+      flunk
+    rescue ExecJS::ProgramError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
+    end
+  end
+
+  def test_eval_thrown_error
+    begin
+      ExecJS.eval("(function(){ throw new Error('hello') })()")
+      flunk
+    rescue ExecJS::ProgramError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
+    end
+  end
+
+  def test_compile_thrown_error
+    begin
+      ExecJS.compile("throw new Error('hello')")
+      flunk
+    rescue ExecJS::ProgramError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
+    end
+  end
+
+  def test_exec_thrown_string
     assert_raises ExecJS::ProgramError do
       ExecJS.exec("throw 'hello'")
     end
   end
 
-  def test_eval_thrown_exception
+  def test_eval_thrown_string
     assert_raises ExecJS::ProgramError do
-      ExecJS.exec("throw 'hello'")
+      ExecJS.eval("(function(){ throw 'hello' })()")
     end
   end
 
-  def test_compile_thrown_exception
+  def test_compile_thrown_string
     assert_raises ExecJS::ProgramError do
-      ExecJS.exec("throw 'hello'")
+      ExecJS.compile("throw 'hello'")
     end
   end
 

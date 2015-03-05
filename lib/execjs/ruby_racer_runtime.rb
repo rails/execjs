@@ -12,11 +12,7 @@ module ExecJS
           begin
             @v8_context.eval(source)
           rescue ::V8::JSError => e
-            if e.value["name"] == "SyntaxError"
-              raise RuntimeError, e.value.to_s
-            else
-              raise ProgramError, e.value.to_s
-            end
+            raise wrap_error(e)
           end
         end
       end
@@ -37,11 +33,7 @@ module ExecJS
             begin
               unbox @v8_context.eval("(#{source})")
             rescue ::V8::JSError => e
-              if e.value["name"] == "SyntaxError"
-                raise RuntimeError, e.value.to_s
-              else
-                raise ProgramError, e.value.to_s
-              end
+              raise wrap_error(e)
             end
           end
         end
@@ -52,11 +44,7 @@ module ExecJS
           begin
             unbox @v8_context.eval(properties).call(*args)
           rescue ::V8::JSError => e
-            if e.value["name"] == "SyntaxError"
-              raise RuntimeError, e.value.to_s
-            else
-              raise ProgramError, e.value.to_s
-            end
+            raise wrap_error(e)
           end
         end
       end
@@ -95,6 +83,20 @@ module ExecJS
           else
             result
           end
+        end
+
+        def wrap_error(e)
+          error_class = e.value["name"] == "SyntaxError" ? RuntimeError : ProgramError
+
+          stack = e.value["stack"] || ""
+          stack = stack.split("\n")
+          stack.shift
+          stack = [e.message[/<eval>:\d+:\d+/, 0]].compact if stack.empty?
+          stack = stack.map { |line| line.sub(" at ", "").sub("<eval>", "(execjs)").strip }
+
+          error = error_class.new(e.value.to_s)
+          error.set_backtrace(stack + caller)
+          error
         end
     end
 
