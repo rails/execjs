@@ -186,7 +186,7 @@ module ExecJS
         end
       else
         def exec_runtime(filename)
-          env = {'TZ' => Time.zone.name}
+          env = {'TZ' => Time.zone ? Time.zone.name : 'UTC'}
           io = IO.popen(env, binary.split(' ') << filename, @popen_options.merge({err: [:child, :out]}))
           output = io.read
           io.close
