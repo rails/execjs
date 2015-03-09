@@ -8,40 +8,48 @@ module ExecJS
         @ctx = Duktape::Context.new(complex_object: nil)
         @ctx.exec_string(encode(source), '(execjs)')
       rescue Exception => e
-        reraise_error(e)
+        raise wrap_error(e)
       end
 
       def exec(source, options = {})
         return unless /\S/ =~ source
         @ctx.eval_string("(function(){#{encode(source)}})()", '(execjs)')
       rescue Exception => e
-        reraise_error(e)
+        raise wrap_error(e)
       end
 
       def eval(source, options = {})
         return unless /\S/ =~ source
         @ctx.eval_string("(#{encode(source)})", '(execjs)')
       rescue Exception => e
-        reraise_error(e)
+        raise wrap_error(e)
       end
 
       def call(identifier, *args)
         @ctx.call_prop(identifier.split("."), *args)
       rescue Exception => e
-        reraise_error(e)
+        raise wrap_error(e)
       end
 
       private
-        def reraise_error(e)
-          case e
+        def wrap_error(e)
+          klass = case e
           when Duktape::SyntaxError
-            raise RuntimeError, e.message
+            RuntimeError
           when Duktape::Error
-            raise ProgramError, e.message
+            ProgramError
           when Duktape::InternalError
-            raise RuntimeError, e.message
+            RuntimeError
+          end
+
+          if klass
+            re = / \(line (\d+)\)$/
+            lineno = e.message[re, 1] || 1
+            error = klass.new(e.message.sub(re, ""))
+            error.set_backtrace(["(execjs):#{lineno}"] + e.backtrace)
+            error
           else
-            raise e
+            e
           end
         end
     end
