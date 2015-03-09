@@ -253,39 +253,96 @@ class TestExecJS < Test
   end
 
   def test_exec_syntax_error
-    assert_raises ExecJS::RuntimeError do
+    begin
       ExecJS.exec(")")
+      flunk
+    rescue ExecJS::RuntimeError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
     end
   end
 
   def test_eval_syntax_error
-    assert_raises ExecJS::RuntimeError do
+    begin
       ExecJS.eval(")")
+      flunk
+    rescue ExecJS::RuntimeError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
     end
   end
 
   def test_compile_syntax_error
-    assert_raises ExecJS::RuntimeError do
+    begin
       ExecJS.compile(")")
+      flunk
+    rescue ExecJS::RuntimeError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
     end
   end
 
-  def test_exec_thrown_exception
+  def test_exec_thrown_error
+    begin
+      ExecJS.exec("throw new Error('hello')")
+      flunk
+    rescue ExecJS::ProgramError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
+    end
+  end
+
+  def test_eval_thrown_error
+    begin
+      ExecJS.eval("(function(){ throw new Error('hello') })()")
+      flunk
+    rescue ExecJS::ProgramError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
+    end
+  end
+
+  def test_compile_thrown_error
+    begin
+      ExecJS.compile("throw new Error('hello')")
+      flunk
+    rescue ExecJS::ProgramError => e
+      assert e
+      assert e.backtrace[0].include?("(execjs):1"), e.backtrace.join("\n")
+    end
+  end
+
+  def test_exec_thrown_string
     assert_raises ExecJS::ProgramError do
       ExecJS.exec("throw 'hello'")
     end
   end
 
-  def test_eval_thrown_exception
+  def test_eval_thrown_string
     assert_raises ExecJS::ProgramError do
-      ExecJS.exec("throw 'hello'")
+      ExecJS.eval("(function(){ throw 'hello' })()")
     end
   end
 
-  def test_compile_thrown_exception
+  def test_compile_thrown_string
     assert_raises ExecJS::ProgramError do
-      ExecJS.exec("throw 'hello'")
+      ExecJS.compile("throw 'hello'")
     end
+  end
+
+  def test_babel
+    skip if ExecJS.runtime.is_a?(ExecJS::RubyRhinoRuntime)
+
+    assert source = File.read(File.expand_path("../fixtures/babel.js", __FILE__))
+    source = <<-JS
+      var self = this;
+      #{source}
+      babel.eval = function(code) {
+        return eval(babel.transform(code)["code"]);
+      }
+    JS
+    context = ExecJS.compile(source)
+    assert_equal 64, context.call("babel.eval", "((x) => x * x)(8)")
   end
 
   def test_coffeescript
@@ -295,5 +352,22 @@ class TestExecJS < Test
     assert source = File.read(File.expand_path("../fixtures/coffee-script.js", __FILE__))
     context = ExecJS.compile(source)
     assert_equal 64, context.call("CoffeeScript.eval", "((x) -> x * x)(8)")
+  end
+
+  def test_uglify
+    assert source = File.read(File.expand_path("../fixtures/uglify.js", __FILE__))
+    source = <<-JS
+      #{source}
+
+      function uglify(source) {
+        var ast = UglifyJS.parse(source);
+        var stream = UglifyJS.OutputStream();
+        ast.print(stream);
+        return stream.toString();
+      }
+    JS
+    context = ExecJS.compile(source)
+    assert_equal "function foo(bar){return bar}",
+      context.call("uglify", "function foo(bar) {\n  return bar;\n}")
   end
 end

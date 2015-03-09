@@ -10,7 +10,7 @@ module ExecJS
         fix_memory_limit! @rhino_context
         @rhino_context.eval(source)
       rescue Exception => e
-        reraise_error(e)
+        raise wrap_error(e)
       end
 
       def exec(source, options = {})
@@ -28,13 +28,13 @@ module ExecJS
           unbox @rhino_context.eval("(#{source})")
         end
       rescue Exception => e
-        reraise_error(e)
+        raise wrap_error(e)
       end
 
       def call(properties, *args)
         unbox @rhino_context.eval(properties).call(*args)
       rescue Exception => e
-        reraise_error(e)
+        raise wrap_error(e)
       end
 
       def unbox(value)
@@ -58,17 +58,18 @@ module ExecJS
         end
       end
 
-      def reraise_error(e)
-        case e
-        when ::Rhino::JSError
-          if e.message == "syntax error"
-            raise RuntimeError, e.message
-          else
-            raise ProgramError, e.message
-          end
-        else
-          raise e
-        end
+      def wrap_error(e)
+        return e unless e.is_a?(::Rhino::JSError)
+
+        error_class = e.message == "syntax error" ? RuntimeError : ProgramError
+
+        stack = e.backtrace
+        stack = stack.map { |line| line.sub(" at ", "").sub("<eval>", "(execjs)").strip }
+        stack.unshift("(execjs):1") if e.javascript_backtrace.empty?
+
+        error = error_class.new(e.value.to_s)
+        error.set_backtrace(stack)
+        error
       end
 
       private
