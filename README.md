@@ -74,6 +74,6 @@ You shouldn't use `ExecJS.eval` on any inputs you wouldn't feel comfortable Ruby
 
 # License
 
-Copyright (c) 2014 Sam Stephenson and Josh Peek.
+Copyright (c) 2015 Sam Stephenson and Josh Peek.
 
 Released under the MIT license. See `LICENSE` for details.
