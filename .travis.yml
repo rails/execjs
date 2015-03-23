@@ -25,3 +25,7 @@ matrix:
       env: EXECJS_RUNTIME=Node
     - rvm: jruby-19mode
       env: EXECJS_RUNTIME=RubyRhino
+
+    - os: osx
+      rvm: 2.2
+      env: EXECJS_RUNTIME=Node
