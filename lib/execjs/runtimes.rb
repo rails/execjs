@@ -43,7 +43,7 @@ module ExecJS
     def self.autodetect
       from_environment || best_available ||
         raise(RuntimeUnavailable, "Could not find a JavaScript runtime. " +
-          "See https://github.com/sstephenson/execjs for a list of available runtimes.")
+          "See https://github.com/rails/execjs for a list of available runtimes.")
     end
 
     def self.best_available
