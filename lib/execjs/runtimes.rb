@@ -73,9 +73,9 @@ module ExecJS
 
     def self.runtimes
       @runtimes ||= [
-        Duktape,
         RubyRacer,
         RubyRhino,
+        Duktape,
         JavaScriptCore,
         Node,
         SpiderMonkey,
