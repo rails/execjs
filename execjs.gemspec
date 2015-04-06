@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name    = "execjs"
   s.version = ExecJS::VERSION
 
-  s.homepage    = "https://github.com/sstephenson/execjs"
+  s.homepage    = "https://github.com/rails/execjs"
   s.summary     = "Run JavaScript code from Ruby"
   s.description = "ExecJS lets you run JavaScript code from Ruby."
 
