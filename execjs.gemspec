@@ -17,4 +17,6 @@ Gem::Specification.new do |s|
 
   s.authors = ["Sam Stephenson", "Josh Peek"]
   s.email   = ["sstephenson@gmail.com", "josh@joshpeek.com"]
+
+  s.required_ruby_version = '>= 2.0.0'
 end
