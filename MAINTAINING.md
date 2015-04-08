@@ -18,7 +18,5 @@ $ git pull
 $ vim ./lib/execjs/version.rb
 $ git add ./lib/execjs/version.rb
 $ git ci -m "ExecJS 2.x.x"
-$ git tag v2.x.x
-$ git push
-$ git push --tags
+$ rake release
 ```
