@@ -18,5 +18,6 @@ Gem::Specification.new do |s|
   s.authors = ["Sam Stephenson", "Josh Peek"]
   s.email   = ["sstephenson@gmail.com", "josh@joshpeek.com"]
 
-  s.required_ruby_version = '>= 2.0.0'
+  # We only support MRI 2+ but this is needed to work with JRuby 1.7.
+  s.required_ruby_version = '>= 1.9.3'
 end
