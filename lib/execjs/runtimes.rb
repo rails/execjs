@@ -57,7 +57,7 @@ module ExecJS
       if name = ENV["EXECJS_RUNTIME"]
         raise RuntimeUnavailable, "#{name} runtime is not defined" unless const_defined?(name)
         runtime = const_get(name)
-        
+
         raise RuntimeUnavailable, "#{runtime.name} runtime is not available on this system" unless runtime.available?
         runtime
       end
@@ -72,8 +72,8 @@ module ExecJS
         RubyRacer,
         RubyRhino,
         Duktape,
-        JavaScriptCore,
         Node,
+        JavaScriptCore,
         SpiderMonkey,
         JScript
       ]
