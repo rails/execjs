@@ -42,7 +42,6 @@ context.call("CoffeeScript.compile", "square = (x) -> x * x", bare: true)
 $ gem install execjs
 ```
 
-
 # FAQ
 
 **Why can't I use CommonJS `require()` inside ExecJS?**
@@ -72,9 +71,12 @@ are automatically detected, each runtime has different sandboxing properties.
 You shouldn't use `ExecJS.eval` on any inputs you wouldn't feel comfortable Ruby
 `eval()`ing.
 
+## Contributing to ExecJS
 
-# License
+ExecJS is work of hundreds of contributors. You're encouraged to submit pull requests, propose
+features and discuss issues.
 
-Copyright (c) 2015 Sam Stephenson and Josh Peek.
+See [CONTRIBUTING](CONTRIBUTING.md).
 
-Released under the MIT license. See `LICENSE` for details.
+## License
+ExecJS is released under the [MIT License](MIT-LICENSE).
