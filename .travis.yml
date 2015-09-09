@@ -2,6 +2,9 @@ language: ruby
 cache: bundler
 sudo: false
 
+before_install:
+  - if [ "$EXECJS_RUNTIME" == "V8" ]; then brew update; fi
+  - if [ "$EXECJS_RUNTIME" == "V8" ]; then brew install v8; fi
 script: bundle exec ruby test/test_execjs.rb
 
 matrix:
@@ -40,3 +43,5 @@ matrix:
       env: EXECJS_RUNTIME=Duktape
     - os: osx
       env: EXECJS_RUNTIME=RubyRacer
+    - os: osx
+      env: EXECJS_RUNTIME=V8

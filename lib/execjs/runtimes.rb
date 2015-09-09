@@ -42,6 +42,13 @@ module ExecJS
       encoding:    'UTF-16LE' # CScript with //U returns UTF-16LE
     )
 
+    V8 = ExternalRuntime.new(
+      name:        "V8",
+      command:     "d8",
+      runner_path: ExecJS.root + "/support/v8_runner.js",
+      encoding:    'UTF-8'
+    )
+
 
     def self.autodetect
       from_environment || best_available ||
@@ -75,7 +82,8 @@ module ExecJS
         Node,
         JavaScriptCore,
         SpiderMonkey,
-        JScript
+        JScript,
+        V8
       ]
     end
   end
