@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.summary     = "Run JavaScript code from Ruby"
   s.description = "ExecJS lets you run JavaScript code from Ruby."
 
-  s.files = Dir["README.md", "LICENSE", "lib/**/*"]
+  s.files = Dir["README.md", "MIT-LICENSE", "lib/**/*"]
 
   s.add_development_dependency "rake"
 
