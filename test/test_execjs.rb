@@ -139,6 +139,15 @@ class TestExecJS < Test
     end
   end
 
+  def test_additional_options
+    assert ExecJS.eval("true", :foo => true)
+    assert ExecJS.exec("return true", :foo => true)
+
+    context = ExecJS.compile("foo = true", :foo => true)
+    assert context.eval("foo", :foo => true)
+    assert context.exec("return foo", :foo => true)
+  end
+
   def test_eval_blank
     assert_nil ExecJS.eval("")
     assert_nil ExecJS.eval(" ")

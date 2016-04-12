@@ -3,7 +3,7 @@ require "execjs/runtime"
 module ExecJS
   class RubyRacerRuntime < Runtime
     class Context < Runtime::Context
-      def initialize(runtime, source = "")
+      def initialize(runtime, source = "", options = {})
         source = encode(source)
 
         lock do
