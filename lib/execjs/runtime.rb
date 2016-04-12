@@ -6,7 +6,7 @@ module ExecJS
     class Context
       include Encoding
 
-      def initialize(runtime, source = "")
+      def initialize(runtime, source = "", options = {})
       end
 
       def exec(source, options = {})
@@ -30,18 +30,18 @@ module ExecJS
       self.class::Context
     end
 
-    def exec(source)
+    def exec(source, options = {})
       context = context_class.new(self)
-      context.exec(source)
+      context.exec(source, options)
     end
 
-    def eval(source)
+    def eval(source, options = {})
       context = context_class.new(self)
-      context.eval(source)
+      context.eval(source, options)
     end
 
-    def compile(source)
-      context_class.new(self, source)
+    def compile(source, options = {})
+      context_class.new(self, source, options)
     end
 
     def deprecated?

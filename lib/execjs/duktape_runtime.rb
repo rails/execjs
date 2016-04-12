@@ -4,7 +4,7 @@ require "json"
 module ExecJS
   class DuktapeRuntime < Runtime
     class Context < Runtime::Context
-      def initialize(runtime, source = "")
+      def initialize(runtime, source = "", options = {})
         @ctx = Duktape::Context.new(complex_object: nil)
         @ctx.exec_string(encode(source), '(execjs)')
       rescue Exception => e

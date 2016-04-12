@@ -4,7 +4,7 @@ require "execjs/runtime"
 module ExecJS
   class ExternalRuntime < Runtime
     class Context < Runtime::Context
-      def initialize(runtime, source = "")
+      def initialize(runtime, source = "", options = {})
         source = encode(source)
 
         @runtime = runtime
