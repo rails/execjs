@@ -3,8 +3,17 @@ require "rbconfig"
 
 module ExecJS
   class Error           < ::StandardError; end
-  class RuntimeError              < Error; end
-  class ProgramError              < Error; end
+  
+  class RuntimeError < Error
+    # Stores the unmarshaled JavaScript error information if it was available (type, message etc.)
+    attr_accessor :metadata
+  end
+  
+  class ProgramError < Error
+    # Stores the unmarshaled JavaScript error information if it was available (type, message etc.)
+    attr_accessor :metadata
+  end
+  
   class RuntimeUnavailable < RuntimeError; end
 
   class << self

@@ -271,6 +271,30 @@ class TestExecJS < Test
     end
   end
 
+  def test_exec_custom_js_error
+    begin
+      ExecJS.exec('CustomError = function(message, line, column) {
+          this.name = "CustomError";
+          this.message = message;
+          this.line = line;
+          this.column = column;
+          this.specialProperty = 123;
+        };
+        CustomError.prototype = Error.prototype;
+        throw new CustomError("this has failed", 10, 15)
+     ')
+      flunk
+    rescue ExecJS::ProgramError => e
+      assert e
+      assert_match /this has failed/, e.message
+      
+      meta = e.metadata
+      assert_equal 'object', meta['type']
+      assert_equal 'CustomError', meta['name']
+      assert_equal 123, meta['specialProperty']
+    end
+  end
+
   def test_eval_syntax_error
     begin
       ExecJS.eval(")")
