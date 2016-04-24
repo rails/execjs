@@ -65,11 +65,12 @@ module ExecJS
         end
 
         def extract_result(output, filename)
-          status, value, stack = output.empty? ? [] : ::JSON.parse(output, create_additions: false)
+          status, value= output.empty? ? [] : ::JSON.parse(output, create_additions: false)
           if status == "ok"
             value
           else
-            stack ||= ""
+            demarshaled_err = value
+            stack = demarshaled_err['stack'] || ""
             real_filename = File.realpath(filename)
             stack = stack.split("\n").map do |line|
               line.sub(" at ", "")
@@ -79,8 +80,11 @@ module ExecJS
             end
             stack.reject! { |line| ["eval code", "eval@[native code]"].include?(line) }
             stack.shift unless stack[0].to_s.include?("(execjs)")
-            error_class = value =~ /SyntaxError:/ ? RuntimeError : ProgramError
-            error = error_class.new(value)
+            
+            error_class = demarshaled_err['name'].to_s =~ /SyntaxError/ ? RuntimeError : ProgramError
+            
+            error = error_class.new(demarshaled_err.delete('message').to_s)
+            error.metadata = demarshaled_err
             error.set_backtrace(stack + caller)
             raise error
           end
@@ -154,6 +158,10 @@ module ExecJS
 
       def json2_source
         @json2_source ||= IO.read(ExecJS.root + "/support/json2.js")
+      end
+
+      def encode_error_source
+        @encode_error_source ||= IO.read(ExecJS.root + "/support/encode_error.js")
       end
 
       def encode_source(source)

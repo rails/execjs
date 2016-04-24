@@ -5,7 +5,9 @@ sudo: false
 before_install:
   - if [ "$EXECJS_RUNTIME" == "V8" ]; then brew update; fi
   - if [ "$EXECJS_RUNTIME" == "V8" ]; then brew install v8; fi
-script: bundle exec ruby test/test_execjs.rb
+script:
+  - node --version
+  - bundle exec ruby test/test_execjs.rb
 
 matrix:
   include:

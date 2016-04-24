@@ -46,6 +46,7 @@ module ExecJS
             re = / \(line (\d+)\)$/
             lineno = e.message[re, 1] || 1
             error = klass.new(e.message.sub(re, ""))
+            error.metadata = {} # FIXME: has to be available upstream
             error.set_backtrace(["(execjs):#{lineno}"] + e.backtrace)
             error
           else
