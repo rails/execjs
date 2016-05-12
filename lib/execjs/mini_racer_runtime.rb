@@ -3,7 +3,7 @@ require "execjs/runtime"
 module ExecJS
   class MiniRacerRuntime < Runtime
     class Context < Runtime::Context
-      def initialize(runtime, source = "")
+      def initialize(runtime, source = "", options={})
         source = encode(source)
         @context = ::MiniRacer::Context.new
         translate do
