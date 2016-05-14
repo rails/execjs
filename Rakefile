@@ -6,7 +6,7 @@ task :default => :test
 $:.unshift File.expand_path("../lib", __FILE__)
 require "execjs/runtimes"
 
-namespace :test do |tests|
+tests = namespace :test do |tests|
   ExecJS::Runtimes.names.each do |name|
     next if ExecJS::Runtimes.const_get(name).deprecated?
 
