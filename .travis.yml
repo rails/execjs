@@ -1,8 +1,7 @@
 language: ruby
 cache: bundler
-sudo: true
+sudo: false
 # we need trust so correct gcc runs for mini_racer, latest v8 requires gcc 4.8+
-dist: trusty
 
 before_install:
   - if [ "$EXECJS_RUNTIME" == "V8" ]; then brew update; fi
@@ -20,6 +19,8 @@ matrix:
       env: EXECJS_RUNTIME=RubyRacer
     - rvm: 2.0.0
       env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
 
     - rvm: 2.1
       env: EXECJS_RUNTIME=Node
@@ -29,6 +30,8 @@ matrix:
       env: EXECJS_RUNTIME=RubyRacer
     - rvm: 2.1
       env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
 
     - rvm: 2.2
       env: EXECJS_RUNTIME=Node
@@ -38,6 +41,8 @@ matrix:
       env: EXECJS_RUNTIME=RubyRacer
     - rvm: 2.2
       env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
 
     - rvm: 2.3.1
       env: EXECJS_RUNTIME=Node
@@ -47,6 +52,8 @@ matrix:
       env: EXECJS_RUNTIME=RubyRacer
     - rvm: 2.3.1
       env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
 
     - rvm: jruby-19mode
       env: EXECJS_RUNTIME=Node
@@ -65,3 +72,4 @@ matrix:
       env: EXECJS_RUNTIME=V8
     - os: osx
       env: EXECJS_RUNTIME=MiniRacer
+      osx_image: xcode7.3
