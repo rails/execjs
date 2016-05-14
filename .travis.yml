@@ -1,11 +1,13 @@
 language: ruby
 cache: bundler
 sudo: false
+# we need trust so correct gcc runs for mini_racer, latest v8 requires gcc 4.8+
 
 before_install:
   - if [ "$EXECJS_RUNTIME" == "V8" ]; then brew update; fi
   - if [ "$EXECJS_RUNTIME" == "V8" ]; then brew install v8; fi
-script: bundle exec ruby test/test_execjs.rb
+  - if [ "$EXECJS_RUNTIME" == "MiniRacer" ]; then gem install bundler -v 1.12.0; fi
+script: bundle && bundle exec ruby test/test_execjs.rb
 
 matrix:
   include:
@@ -15,6 +17,10 @@ matrix:
       env: EXECJS_RUNTIME=Duktape
     - rvm: 2.0.0
       env: EXECJS_RUNTIME=RubyRacer
+    - rvm: 2.0.0
+      env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
 
     - rvm: 2.1
       env: EXECJS_RUNTIME=Node
@@ -22,6 +28,10 @@ matrix:
       env: EXECJS_RUNTIME=Duktape
     - rvm: 2.1
       env: EXECJS_RUNTIME=RubyRacer
+    - rvm: 2.1
+      env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
 
     - rvm: 2.2
       env: EXECJS_RUNTIME=Node
@@ -29,13 +39,21 @@ matrix:
       env: EXECJS_RUNTIME=Duktape
     - rvm: 2.2
       env: EXECJS_RUNTIME=RubyRacer
+    - rvm: 2.2
+      env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
 
-    - rvm: 2.3.0
+    - rvm: 2.3.1
       env: EXECJS_RUNTIME=Node
-    - rvm: 2.3.0
+    - rvm: 2.3.1
       env: EXECJS_RUNTIME=Duktape
-    - rvm: 2.3.0
+    - rvm: 2.3.1
       env: EXECJS_RUNTIME=RubyRacer
+    - rvm: 2.3.1
+      env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
 
     - rvm: jruby-19mode
       env: EXECJS_RUNTIME=Node
@@ -52,3 +70,6 @@ matrix:
       env: EXECJS_RUNTIME=RubyRacer
     - os: osx
       env: EXECJS_RUNTIME=V8
+    - os: osx
+      env: EXECJS_RUNTIME=MiniRacer
+      osx_image: xcode7.3
