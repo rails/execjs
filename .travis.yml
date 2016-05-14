@@ -1,6 +1,6 @@
 language: ruby
 cache: bundler
-sudo: false
+sudo: true
 # we need trust so correct gcc runs for mini_racer, latest v8 requires gcc 4.8+
 dist: trusty
 
