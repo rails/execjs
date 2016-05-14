@@ -60,3 +60,5 @@ matrix:
       env: EXECJS_RUNTIME=RubyRacer
     - os: osx
       env: EXECJS_RUNTIME=V8
+    - os: osx
+      env: EXECJS_RUNTIME=MiniRacer
