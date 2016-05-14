@@ -1,6 +1,8 @@
 language: ruby
 cache: bundler
 sudo: false
+# we need trust so correct gcc runs for mini_racer, latest v8 requires gcc 4.8+
+dist: trusty
 
 before_install:
   - if [ "$EXECJS_RUNTIME" == "V8" ]; then brew update; fi
