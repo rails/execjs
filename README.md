@@ -16,6 +16,8 @@ ExecJS supports these runtimes:
 * Apple JavaScriptCore - Included with Mac OS X
 * [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
 * [Google V8](http://code.google.com/p/v8/)
+* [mini_racer](https://github.com/discourse/mini_racer) - Google V8
+  embedded within Ruby
 
 A short example:
 
