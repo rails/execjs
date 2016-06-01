@@ -376,4 +376,20 @@ class TestExecJS < Test
     assert_equal "function foo(bar){return bar}",
       context.call("uglify", "function foo(bar) {\n  return bar;\n}")
   end
+
+  def test_node_runtime_with_compiler_writing_to_stdio
+    skip if not ExecJS.runtime.name =~ /Node/
+
+    source = <<-JS
+      process.stdout.write('WARNING');
+      process.stderr.write('ERROR');
+
+      function compile(code) {
+        return code;
+      }
+    JS
+
+    context = ExecJS.compile(source)
+    assert_equal "foo()", context.call("compile", "foo()")
+  end
 end
