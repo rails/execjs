@@ -237,6 +237,10 @@ class TestExecJS < Test
     assert ExecJS.eval("typeof global == 'undefined'")
   end
 
+  def test_node_process_is_undefined
+    assert ExecJS.eval("typeof process == 'undefined'")
+  end
+
   def test_commonjs_vars_are_undefined
     assert ExecJS.eval("typeof module == 'undefined'")
     assert ExecJS.eval("typeof exports == 'undefined'")
