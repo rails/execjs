@@ -237,14 +237,24 @@ class TestExecJS < Test
     assert ExecJS.eval("typeof global == 'undefined'")
   end
 
+  def test_node_process_is_undefined
+    assert ExecJS.eval("typeof process == 'undefined'")
+    refute ExecJS.eval("'process' in this")
+  end
+
   def test_commonjs_vars_are_undefined
     assert ExecJS.eval("typeof module == 'undefined'")
     assert ExecJS.eval("typeof exports == 'undefined'")
     assert ExecJS.eval("typeof require == 'undefined'")
+
+    refute ExecJS.eval("'module' in this")
+    refute ExecJS.eval("'exports' in this")
+    refute ExecJS.eval("'require' in this")
   end
 
   def test_console_is_undefined
     assert ExecJS.eval("typeof console == 'undefined'")
+    refute ExecJS.eval("'console' in this")
   end
 
   def test_timers_are_undefined
@@ -254,6 +264,13 @@ class TestExecJS < Test
     assert ExecJS.eval("typeof clearInterval == 'undefined'")
     assert ExecJS.eval("typeof setImmediate == 'undefined'")
     assert ExecJS.eval("typeof clearImmediate == 'undefined'")
+
+    refute ExecJS.eval("'setTimeout' in this")
+    refute ExecJS.eval("'setInterval' in this")
+    refute ExecJS.eval("'clearTimeout' in this")
+    refute ExecJS.eval("'clearInterval' in this")
+    refute ExecJS.eval("'setImmediate' in this")
+    refute ExecJS.eval("'clearImmediate' in this")
   end
 
   def test_compile_large_scripts
