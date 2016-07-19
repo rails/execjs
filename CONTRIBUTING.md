@@ -34,6 +34,15 @@ bundle install
 bundle exec rake
 ```
 
+Note that test:miniracer is failed in the tests, because mini_racer is not installed, and it is mutually exclusive with therubyracer.
+
+To run test:miniracer
+
+```
+EXECJS_RUNTIME=MiniRacer bundle install --path=<path>
+EXECJS_RUNTIME=MiniRacer bundle exec rake test:miniracer
+```
+
 #### Write Tests
 
 Try to write a test that reproduces the problem you're trying to fix or describes a feature that you want to build. Add to [test](test).
