@@ -76,7 +76,7 @@ You shouldn't use `ExecJS.eval` on any inputs you wouldn't feel comfortable Ruby
 
 ## Contributing to ExecJS
 
-ExecJS is work of hundreds of contributors. You're encouraged to submit pull requests, propose
+ExecJS is work of dozens of contributors. You're encouraged to submit pull requests, propose
 features and discuss issues.
 
 See [CONTRIBUTING](CONTRIBUTING.md).
