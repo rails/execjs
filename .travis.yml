@@ -23,35 +23,46 @@ matrix:
       dist: trusty
       sudo: true
 
-    - rvm: 2.1
+    - rvm: 2.1.10
       env: EXECJS_RUNTIME=Node
-    - rvm: 2.1
+    - rvm: 2.1.10
       env: EXECJS_RUNTIME=Duktape
-    - rvm: 2.1
+    - rvm: 2.1.10
       env: EXECJS_RUNTIME=RubyRacer
-    - rvm: 2.1
+    - rvm: 2.1.10
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
       sudo: true
 
-    - rvm: 2.2
+    - rvm: 2.2.6
       env: EXECJS_RUNTIME=Node
-    - rvm: 2.2
+    - rvm: 2.2.6
       env: EXECJS_RUNTIME=Duktape
-    - rvm: 2.2
+    - rvm: 2.2.6
       env: EXECJS_RUNTIME=RubyRacer
-    - rvm: 2.2
+    - rvm: 2.2.6
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
       sudo: true
 
-    - rvm: 2.3.1
+    - rvm: 2.3.3
       env: EXECJS_RUNTIME=Node
-    - rvm: 2.3.1
+    - rvm: 2.3.3
       env: EXECJS_RUNTIME=Duktape
-    - rvm: 2.3.1
+    - rvm: 2.3.3
       env: EXECJS_RUNTIME=RubyRacer
-    - rvm: 2.3.1
+    - rvm: 2.3.3
+      env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
+
+    - rvm: 2.4.1
+      env: EXECJS_RUNTIME=Node
+    - rvm: 2.4.1
+      env: EXECJS_RUNTIME=Duktape
+    - rvm: 2.4.1
+      env: EXECJS_RUNTIME=RubyRacer
+    - rvm: 2.4.1
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
       sudo: true
