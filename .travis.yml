@@ -34,24 +34,24 @@ matrix:
       dist: trusty
       sudo: true
 
-    - rvm: 2.2.6
+    - rvm: 2.2.7
       env: EXECJS_RUNTIME=Node
-    - rvm: 2.2.6
+    - rvm: 2.2.7
       env: EXECJS_RUNTIME=Duktape
-    - rvm: 2.2.6
+    - rvm: 2.2.7
       env: EXECJS_RUNTIME=RubyRacer
-    - rvm: 2.2.6
+    - rvm: 2.2.7
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
       sudo: true
 
-    - rvm: 2.3.3
+    - rvm: 2.3.4
       env: EXECJS_RUNTIME=Node
-    - rvm: 2.3.3
+    - rvm: 2.3.4
       env: EXECJS_RUNTIME=Duktape
-    - rvm: 2.3.3
+    - rvm: 2.3.4
       env: EXECJS_RUNTIME=RubyRacer
-    - rvm: 2.3.3
+    - rvm: 2.3.4
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
       sudo: true
@@ -63,6 +63,17 @@ matrix:
     - rvm: 2.4.1
       env: EXECJS_RUNTIME=RubyRacer
     - rvm: 2.4.1
+      env: EXECJS_RUNTIME=MiniRacer
+      dist: trusty
+      sudo: true
+
+    - rvm: ruby-head
+      env: EXECJS_RUNTIME=Node
+    - rvm: ruby-head
+      env: EXECJS_RUNTIME=Duktape
+    - rvm: ruby-head
+      env: EXECJS_RUNTIME=RubyRacer
+    - rvm: ruby-head
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
       sudo: true
@@ -85,3 +96,6 @@ matrix:
     - os: osx
       env: EXECJS_RUNTIME=MiniRacer
       osx_image: xcode7.3
+  allow_failures:
+    - rvm: ruby-head
+  fast_finish: true
