@@ -74,7 +74,7 @@ module ExecJS
     end
 
     def self.names
-      @names ||= constants.inject({}) { |h, name| h.merge(const_get(name) => name) }.values
+      @names ||= constants
     end
 
     def self.runtimes
