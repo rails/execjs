@@ -64,7 +64,9 @@ module ExecJS
     end
 
     def self.from_environment
-      if name = ENV["EXECJS_RUNTIME"]
+      env = ENV["EXECJS_RUNTIME"]
+      if env && !env.empty?
+        name = env
         raise RuntimeUnavailable, "#{name} runtime is not defined" unless const_defined?(name)
         runtime = const_get(name)
 
