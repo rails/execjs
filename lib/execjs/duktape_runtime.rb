@@ -26,9 +26,7 @@ module ExecJS
       end
 
       def call(identifier, *args)
-        @ctx.call_prop(identifier.split("."), *args)
-      rescue Exception => e
-        raise wrap_error(e)
+        eval "#{identifier}.apply(this, #{::JSON.generate(args)})"
       end
 
       private
