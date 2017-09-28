@@ -78,10 +78,16 @@ matrix:
       dist: trusty
       sudo: true
 
-    - rvm: jruby-19mode
+    - rvm: jruby-1.7.24
       env: EXECJS_RUNTIME=Node
-    - rvm: jruby-19mode
+    - rvm: jruby-1.7.24
       env: EXECJS_RUNTIME=RubyRhino
+    - rvm: jruby-9.0.4.0
+      env: EXECJS_RUNTIME=RubyRhino
+      jdk: oraclejdk8
+    - rvm: jruby-9.0.4.0
+      env: EXECJS_RUNTIME=JJS
+      jdk: oraclejdk8
 
     - os: osx
       env: EXECJS_RUNTIME=JavaScriptCore

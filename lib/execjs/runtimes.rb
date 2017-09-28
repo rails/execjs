@@ -52,6 +52,12 @@ module ExecJS
       encoding:    'UTF-8'
     )
 
+    JJS = ExternalRuntime.new(
+      name:        "Nashorn (Java)",
+      command:     ["jjs"] + ( ENV['JAVA_HOME'] ? [ "#{ENV['JAVA_HOME']}/bin/jjs" ] : [] ),
+      runner_path: ExecJS.root + "/support/jjs_runner.js",
+      encoding:    'UTF-8'
+    )
 
     def self.autodetect
       from_environment || best_available ||
@@ -89,7 +95,8 @@ module ExecJS
         JavaScriptCore,
         SpiderMonkey,
         JScript,
-        V8
+        V8,
+        JJS
       ]
     end
   end
