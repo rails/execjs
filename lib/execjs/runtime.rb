@@ -9,15 +9,30 @@ module ExecJS
       def initialize(runtime, source = "", options = {})
       end
 
+      # Evaluates the +source+ in the context of a function body and returns the
+      # returned value.
+      #
+      #   context.exec("return 1") # => 1
+      #   context.exec("1")        # => nil (nothing was returned)
       def exec(source, options = {})
         raise NotImplementedError
       end
 
+      # Evaluates the +source+ as an expression and returns the result.
+      #
+      #   context.eval("1")        # => 1
+      #   context.eval("return 1") # => Raises SyntaxError
       def eval(source, options = {})
         raise NotImplementedError
       end
 
-      def call(properties, *args)
+      # Evaluates +source+ as an expression (which should be of type
+      # +function+), and calls the function with the given arguments.
+      # The function will be evaluated with the global object as +this+.
+      #
+      #   context.call("function(a, b) { return a + b }", 1, 1) # => 2
+      #   context.call("CoffeeScript.compile", "1 + 1")
+      def call(source, *args)
         raise NotImplementedError
       end
     end
