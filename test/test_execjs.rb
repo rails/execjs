@@ -57,6 +57,9 @@ class TestExecJS < Test
   end
 
   def test_call_with_this
+    # Known bug: https://github.com/cowboyd/therubyrhino/issues/39
+    skip if ExecJS.runtime.is_a?(ExecJS::RubyRhinoRuntime)
+
     # Make sure that `this` is indeed the global scope
     context = ExecJS.compile(<<-EOF)
       name = 123;
