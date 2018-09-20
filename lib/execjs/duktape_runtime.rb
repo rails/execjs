@@ -26,7 +26,8 @@ module ExecJS
       end
 
       def call(identifier, *args)
-        @ctx.call_prop(identifier.split("."), *args)
+        @ctx.exec_string("__execjs_duktape_call = #{identifier}", '(execjs)')
+        @ctx.call_prop("__execjs_duktape_call", *args)
       rescue Exception => e
         raise wrap_error(e)
       end

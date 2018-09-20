@@ -48,6 +48,34 @@ class TestExecJS < Test
     assert_equal "bar", context.call("a.b.id", "bar")
   end
 
+  def test_call_with_complex_properties
+    context = ExecJS.compile("")
+    assert_equal 2, context.call("function(a, b) { return a + b }", 1, 1)
+
+    context = ExecJS.compile("foo = 1")
+    assert_equal 2, context.call("(function(bar) { return foo + bar })", 1)
+  end
+
+  def test_call_with_this
+    # Known bug: https://github.com/cowboyd/therubyrhino/issues/39
+    skip if ExecJS.runtime.is_a?(ExecJS::RubyRhinoRuntime)
+
+    # Make sure that `this` is indeed the global scope
+    context = ExecJS.compile(<<-EOF)
+      name = 123;
+
+      function Person(name) {
+        this.name = name;
+      }
+
+      Person.prototype.getThis = function() {
+        return this.name;
+      }
+    EOF
+
+    assert_equal 123, context.call("(new Person('Bob')).getThis")
+  end
+
   def test_context_call_missing_function
     context = ExecJS.compile("")
     assert_raises ExecJS::ProgramError do

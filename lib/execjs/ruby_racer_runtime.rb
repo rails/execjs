@@ -42,7 +42,7 @@ module ExecJS
       def call(properties, *args)
         lock do
           begin
-            unbox @v8_context.eval(properties).call(*args)
+            unbox @v8_context.eval("(#{properties})").call(*args)
           rescue ::V8::JSError => e
             raise wrap_error(e)
           end
