@@ -2,7 +2,8 @@ ExecJS
 ======
 
 ExecJS lets you run JavaScript code from Ruby. It automatically picks
-the best runtime available to evaluate your JavaScript program, then
+the best runtime, unless you specified a preference using a environment
+variable (`EXECJS_RUNTIME`), available to evaluate your JavaScript program, then
 returns the result to you as a Ruby object.
 
 ExecJS supports these runtimes:
