@@ -173,7 +173,7 @@ module ExecJS
           begin
             command = binary.split(" ") << filename
             `#{shell_escape(*command)} 2>&1 > #{path}`
-            output = File.open(path, 'rb', @popen_options) { |f| f.read }
+            output = File.open(path, 'rb', **@popen_options) { |f| f.read }
           ensure
             File.unlink(path) if path
           end
@@ -197,7 +197,7 @@ module ExecJS
 
         def exec_runtime(filename)
           command = "#{Shellwords.join(binary.split(' ') << filename)} 2>&1"
-          io = IO.popen(command, @popen_options)
+          io = IO.popen(command, **@popen_options)
           output = io.read
           io.close
 
@@ -209,7 +209,7 @@ module ExecJS
         end
       else
         def exec_runtime(filename)
-          io = IO.popen(binary.split(' ') << filename, @popen_options.merge({err: [:child, :out]}))
+          io = IO.popen(binary.split(' ') << filename, **(@popen_options.merge({err: [:child, :out]})))
           output = io.read
           io.close
 
