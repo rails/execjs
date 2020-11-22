@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [ '3.0', '2.7', '2.6', '2.5', 'jruby', 'truffleruby' ]
+        ruby: [ '3.0', '2.7', '2.6', '2.5', 'jruby', 'truffleruby', 'truffleruby+graalvm-head' ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,12 +18,17 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+
       - name: Update Rubygems
         run: gem update --system
       - name: Install bundler
         run: gem install bundler -v '2.2.16'
       - name: Install dependencies
         run: bundle install
+
+      - name: Set TRUFFLERUBYOPT
+        run: echo "TRUFFLERUBYOPT=--jvm --polyglot" >> $GITHUB_ENV
+        if: matrix.ruby == 'truffleruby+graalvm-head'
       - name: Run test
         run: rake
       - name: Install gem
