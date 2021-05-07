@@ -1,0 +1,53 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  ubuntu:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: [ '3.0', '2.7', '2.6', '2.5', 'jruby', 'truffleruby' ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node
+        run: sudo apt-get install -y nodejs
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Update Rubygems
+        run: gem update --system
+      - name: Install bundler
+        run: gem install bundler -v '2.2.16'
+      - name: Install dependencies
+        run: bundle install
+      - name: Run test
+        run: rake
+      - name: Install gem
+        run: rake install
+  macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: [ '3.0', '2.7', '2.6', '2.5' ]
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: Update Rubygems
+        run: gem update --system
+      - name: Install bundler
+        run: gem install bundler -v '2.2.16'
+      - name: Install dependencies
+        run: bundle install
+      - name: Run test
+        run: rake
+      - name: Install gem
+        run: rake install
