@@ -6,6 +6,7 @@ module ExecJS
       def initialize(runtime, source = "", options={})
         source = encode(source)
         @context = ::MiniRacer::Context.new
+        @context.eval("delete this.console");
         translate do
           @context.eval(source)
         end
