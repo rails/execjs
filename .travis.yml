@@ -17,8 +17,6 @@ matrix:
     - rvm: 2.0.0
       env: EXECJS_RUNTIME=Duktape
     - rvm: 2.0.0
-      env: EXECJS_RUNTIME=RubyRacer
-    - rvm: 2.0.0
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
       sudo: true
@@ -27,8 +25,6 @@ matrix:
       env: EXECJS_RUNTIME=Node
     - rvm: 2.1.10
       env: EXECJS_RUNTIME=Duktape
-    - rvm: 2.1.10
-      env: EXECJS_RUNTIME=RubyRacer
     - rvm: 2.1.10
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
@@ -39,8 +35,6 @@ matrix:
     - rvm: 2.2.7
       env: EXECJS_RUNTIME=Duktape
     - rvm: 2.2.7
-      env: EXECJS_RUNTIME=RubyRacer
-    - rvm: 2.2.7
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
       sudo: true
@@ -49,8 +43,6 @@ matrix:
       env: EXECJS_RUNTIME=Node
     - rvm: 2.3.4
       env: EXECJS_RUNTIME=Duktape
-    - rvm: 2.3.4
-      env: EXECJS_RUNTIME=RubyRacer
     - rvm: 2.3.4
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
@@ -60,8 +52,6 @@ matrix:
       env: EXECJS_RUNTIME=Node
     - rvm: 2.4.1
       env: EXECJS_RUNTIME=Duktape
-    - rvm: 2.4.1
-      env: EXECJS_RUNTIME=RubyRacer
     - rvm: 2.4.1
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
@@ -71,8 +61,6 @@ matrix:
       env: EXECJS_RUNTIME=Node
     - rvm: ruby-head
       env: EXECJS_RUNTIME=Duktape
-    - rvm: ruby-head
-      env: EXECJS_RUNTIME=RubyRacer
     - rvm: ruby-head
       env: EXECJS_RUNTIME=MiniRacer
       dist: trusty
@@ -89,8 +77,6 @@ matrix:
       env: EXECJS_RUNTIME=Node
     - os: osx
       env: EXECJS_RUNTIME=Duktape
-    - os: osx
-      env: EXECJS_RUNTIME=RubyRacer
     - os: osx
       env: EXECJS_RUNTIME=V8
     - os: osx

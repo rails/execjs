@@ -7,8 +7,6 @@ returns the result to you as a Ruby object.
 
 ExecJS supports these runtimes:
 
-* [therubyracer](https://github.com/cowboyd/therubyracer) - Google V8
-  embedded within Ruby
 * [therubyrhino](https://github.com/cowboyd/therubyrhino) - Mozilla
   Rhino embedded within JRuby
 * [Duktape.rb](https://github.com/judofyr/duktape.rb) - Duktape JavaScript interpreter

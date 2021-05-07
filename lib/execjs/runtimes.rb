@@ -2,7 +2,6 @@ require "execjs/module"
 require "execjs/disabled_runtime"
 require "execjs/duktape_runtime"
 require "execjs/external_runtime"
-require "execjs/ruby_racer_runtime"
 require "execjs/ruby_rhino_runtime"
 require "execjs/mini_racer_runtime"
 
@@ -11,8 +10,6 @@ module ExecJS
     Disabled = DisabledRuntime.new
 
     Duktape = DuktapeRuntime.new
-
-    RubyRacer = RubyRacerRuntime.new
 
     RubyRhino = RubyRhinoRuntime.new
 
@@ -81,7 +78,6 @@ module ExecJS
 
     def self.runtimes
       @runtimes ||= [
-        RubyRacer,
         RubyRhino,
         Duktape,
         MiniRacer,
