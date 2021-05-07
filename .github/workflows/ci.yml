@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [ '3.0', '2.7', '2.6', '2.5' ]
+        ruby: [ '3.0', '2.7', '2.6', '2.5', 'jruby', 'truffleruby' ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
