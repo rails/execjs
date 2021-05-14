@@ -306,6 +306,11 @@ class TestExecJS < Test
     assert ExecJS.exec("function foo() {\n#{body}\n};\nreturn true")
   end
 
+  def test_large_return_value
+    string = ExecJS.eval('(new Array(100001)).join("abcdef")')
+    assert_equal 600_000, string.size
+  end
+
   def test_exec_syntax_error
     begin
       ExecJS.exec(")")
