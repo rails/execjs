@@ -19,7 +19,7 @@ module ExecJS
       end
     else
       def encode(string)
-        string.encode('UTF-8')
+        string.encode(::Encoding::UTF_8)
       end
     end
   end
