@@ -47,18 +47,16 @@ module ExecJS
       private
 
       def translate
-        begin
-          convert_js_to_ruby yield
-        rescue ::RuntimeError => e
-          if e.message.start_with?('SyntaxError:')
-            error_class = ExecJS::RuntimeError
-          else
-            error_class = ExecJS::ProgramError
-          end
-
-          backtrace = e.backtrace.map { |line| line.sub('(eval)', '(execjs)') }
-          raise error_class, e.message, backtrace
+        convert_js_to_ruby yield
+      rescue ::RuntimeError => e
+        if e.message.start_with?('SyntaxError:')
+          error_class = ExecJS::RuntimeError
+        else
+          error_class = ExecJS::ProgramError
         end
+
+        backtrace = e.backtrace.map { |line| line.sub('(eval)', '(execjs)') }
+        raise error_class, e.message, backtrace
       end
 
       def convert_js_to_ruby(value)
