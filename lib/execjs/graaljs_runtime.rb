@@ -126,13 +126,13 @@ module ExecJS
       end
 
       unless defined?(Polyglot::InnerContext)
-        warn "TruffleRuby #{RUBY_ENGINE_VERSION} does not have support for inner contexts, use a more recent version", uplevel: 0
+        warn "TruffleRuby #{RUBY_ENGINE_VERSION} does not have support for inner contexts, use a more recent version", uplevel: 0 if $VERBOSE
         return @available = false
       end
 
       unless Polyglot.languages.include? "js"
-        warn "The language 'js' is not available, you likely need to `export TRUFFLERUBYOPT='--jvm --polyglot'`", uplevel: 0
-        warn "Note that you need TruffleRuby+GraalVM and not just the TruffleRuby standalone to use #{self.class}", uplevel: 0
+        warn "The language 'js' is not available, you likely need to `export TRUFFLERUBYOPT='--jvm --polyglot'`", uplevel: 0 if $VERBOSE
+        warn "Note that you need TruffleRuby+GraalVM and not just the TruffleRuby standalone to use #{self.class}", uplevel: 0 if $VERBOSE
         return @available = false
       end
 
