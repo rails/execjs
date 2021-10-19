@@ -156,7 +156,7 @@ class TestExecJS < Test
       assert_output value, ExecJS.eval("#{json_value}")
     end
 
-    define_method("test_strinigfy_value_#{index}") do
+    define_method("test_stringify_value_#{index}") do
       context = ExecJS.compile("function json(obj) { return JSON.stringify(obj); }")
       assert_output json_value, context.call("json", value)
     end
