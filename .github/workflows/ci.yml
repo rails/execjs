@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [ '3.0', '2.7', '2.6', '2.5', 'jruby', 'truffleruby', 'truffleruby+graalvm-head' ]
+        ruby: [ '3.0', '2.7', '2.6', '2.5', 'jruby', 'truffleruby', 'truffleruby+graalvm' ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,7 +28,7 @@ jobs:
 
       - name: Set TRUFFLERUBYOPT
         run: echo "TRUFFLERUBYOPT=--jvm --polyglot" >> $GITHUB_ENV
-        if: matrix.ruby == 'truffleruby+graalvm-head'
+        if: startsWith(matrix.ruby, 'truffleruby+graalvm')
       - name: Run test
         run: rake
       - name: Install gem
