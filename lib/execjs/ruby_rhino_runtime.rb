@@ -1,4 +1,5 @@
 require "execjs/runtime"
+require "json"
 
 module ExecJS
   class RubyRhinoRuntime < Runtime
@@ -32,7 +33,11 @@ module ExecJS
       end
 
       def call(properties, *args)
-        unbox @rhino_context.eval(properties).call(*args)
+        # Might no longer be necessary if therubyrhino handles Symbols directly:
+        # https://github.com/rubyjs/therubyrhino/issues/43
+        converted_args = JSON.parse(JSON.generate(args), create_additions: false)
+
+        unbox @rhino_context.eval(properties).call(*converted_args)
       rescue Exception => e
         raise wrap_error(e)
       end

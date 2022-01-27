@@ -1,5 +1,6 @@
-require "tmpdir"
 require "execjs/runtime"
+require "tmpdir"
+require "json"
 
 module ExecJS
   class ExternalRuntime < Runtime

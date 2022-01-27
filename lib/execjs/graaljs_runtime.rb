@@ -96,6 +96,8 @@ module ExecJS
         case value
         when nil, true, false, Integer, Float, String
           value
+        when Symbol
+          value.to_s
         when Array
           value.map { |e| convert_ruby_to_js(e) }
         when Hash
