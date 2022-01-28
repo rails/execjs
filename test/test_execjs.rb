@@ -167,6 +167,13 @@ class TestExecJS < Test
     end
   end
 
+  def test_symbol
+    context = ExecJS.compile("function echo(test) { return test; }")
+    assert_equal "symbol", context.call("echo", :symbol)
+    assert_equal ["symbol"], context.call("echo", [:symbol])
+    assert_equal({"key" => "value"}, context.call("echo", {key: :value}))
+  end
+
   def test_additional_options
     assert ExecJS.eval("true", :foo => true)
     assert ExecJS.exec("return true", :foo => true)
