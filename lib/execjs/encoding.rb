@@ -5,15 +5,15 @@ module ExecJS
       # workaround for jruby bug http://jira.codehaus.org/browse/JRUBY-6588
       # workaround for rbx bug https://github.com/rubinius/rubinius/issues/1729
       def encode(string)
-        if string.encoding.name == 'ASCII-8BIT'
+        if string.encoding == ::Encoding::BINARY
           data = string.dup
-          data.force_encoding('UTF-8')
+          data.force_encoding(::Encoding::UTF_8)
 
           unless data.valid_encoding?
-            raise ::Encoding::UndefinedConversionError, "Could not encode ASCII-8BIT data #{string.dump} as UTF-8"
+            raise ::Encoding::UndefinedConversionError, "Could not encode binary data #{string.dump} as UTF-8"
           end
         else
-          data = string.encode('UTF-8')
+          data = string.encode(::Encoding::UTF_8)
         end
         data
       end
