@@ -4,7 +4,7 @@ module ExecJS
   class MiniRacerRuntime < Runtime
     class Context < Runtime::Context
       def initialize(runtime, source = "", options={})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
         @context = ::MiniRacer::Context.new
         @context.eval("delete this.console");
         translate do
@@ -13,7 +13,7 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
 
         if /\S/ =~ source
           eval "(function(){#{source}})()"
@@ -21,7 +21,7 @@ module ExecJS
       end
 
       def eval(source, options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
 
         if /\S/ =~ source
           translate do

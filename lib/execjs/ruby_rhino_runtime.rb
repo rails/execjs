@@ -5,7 +5,7 @@ module ExecJS
   class RubyRhinoRuntime < Runtime
     class Context < Runtime::Context
       def initialize(runtime, source = "", options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
 
         @rhino_context = ::Rhino::Context.new
         fix_memory_limit! @rhino_context
@@ -15,7 +15,7 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
 
         if /\S/ =~ source
           eval "(function(){#{source}})()", options
@@ -23,7 +23,7 @@ module ExecJS
       end
 
       def eval(source, options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
 
         if /\S/ =~ source
           unbox @rhino_context.eval("(#{source})")
