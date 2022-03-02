@@ -6,21 +6,21 @@ module ExecJS
     class Context < Runtime::Context
       def initialize(runtime, source = "", options = {})
         @ctx = Duktape::Context.new(complex_object: nil)
-        @ctx.exec_string(encode(source), '(execjs)')
+        @ctx.exec_string(source.encode(Encoding::UTF_8), '(execjs)')
       rescue Exception => e
         raise wrap_error(e)
       end
 
       def exec(source, options = {})
         return unless /\S/ =~ source
-        @ctx.eval_string("(function(){#{encode(source)}})()", '(execjs)')
+        @ctx.eval_string("(function(){#{source.encode(Encoding::UTF_8)}})()", '(execjs)')
       rescue Exception => e
         raise wrap_error(e)
       end
 
       def eval(source, options = {})
         return unless /\S/ =~ source
-        @ctx.eval_string("(#{encode(source)})", '(execjs)')
+        @ctx.eval_string("(#{source.encode(Encoding::UTF_8)})", '(execjs)')
       rescue Exception => e
         raise wrap_error(e)
       end

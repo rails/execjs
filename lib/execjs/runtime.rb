@@ -1,11 +1,7 @@
-require "execjs/encoding"
-
 module ExecJS
   # Abstract base class for runtimes
   class Runtime
     class Context
-      include Encoding
-
       def initialize(runtime, source = "", options = {})
       end
 

@@ -6,7 +6,7 @@ module ExecJS
   class ExternalRuntime < Runtime
     class Context < Runtime::Context
       def initialize(runtime, source = "", options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
 
         @runtime = runtime
         @source  = source
@@ -16,7 +16,7 @@ module ExecJS
       end
 
       def eval(source, options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
 
         if /\S/ =~ source
           exec("return eval(#{::JSON.generate("(#{source})", quirks_mode: true)})")
@@ -24,7 +24,7 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
         source = "#{@source}\n#{source}" if @source != ""
         source = @runtime.compile_source(source)
 

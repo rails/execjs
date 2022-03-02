@@ -8,7 +8,7 @@ module ExecJS
         @context.eval('js', 'delete this.console')
         @js_object = @context.eval('js', 'Object')
 
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
         unless source.empty?
           translate do
             eval_in_context(source)
@@ -17,7 +17,7 @@ module ExecJS
       end
 
       def exec(source, options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
         source = "(function(){#{source}})()" if /\S/.match?(source)
 
         translate do
@@ -26,7 +26,7 @@ module ExecJS
       end
 
       def eval(source, options = {})
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
         source = "(#{source})" if /\S/.match?(source)
 
         translate do
@@ -35,7 +35,7 @@ module ExecJS
       end
 
       def call(source, *args)
-        source = encode(source)
+        source = source.encode(Encoding::UTF_8)
         source = "(#{source})" if /\S/.match?(source)
 
         translate do
