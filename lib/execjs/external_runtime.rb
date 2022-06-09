@@ -59,7 +59,7 @@ module ExecJS
         end
 
         def write_to_tempfile(contents)
-          tmpfile = create_tempfile(['execjs', 'js'])
+          tmpfile = create_tempfile(['execjs', '.cjs'])
           tmpfile.write(contents)
           tmpfile.close
           tmpfile
