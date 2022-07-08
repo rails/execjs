@@ -136,6 +136,7 @@ module ExecJS
 
       unless Polyglot.languages.include? "js"
         warn "The language 'js' is not available, you likely need to `export TRUFFLERUBYOPT='--jvm --polyglot'`", uplevel: 0 if $VERBOSE
+        warn "You also need to install the 'js' component with 'gu install js' on GraalVM 22.2+", uplevel: 0 if $VERBOSE
         warn "Note that you need TruffleRuby+GraalVM and not just the TruffleRuby standalone to use #{self.class}", uplevel: 0 if $VERBOSE
         return @available = false
       end

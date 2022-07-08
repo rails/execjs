@@ -29,6 +29,10 @@ jobs:
       - name: Set TRUFFLERUBYOPT
         run: echo "TRUFFLERUBYOPT=--jvm --polyglot" >> $GITHUB_ENV
         if: startsWith(matrix.ruby, 'truffleruby+graalvm')
+      - name: Install GraalVM js component
+        run: if ! gu list | grep '^js '; then gu install js; fi
+        if: startsWith(matrix.ruby, 'truffleruby+graalvm')
+
       - name: Run test
         run: rake
       - name: Install gem
