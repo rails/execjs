@@ -51,7 +51,7 @@ module ExecJS
       def translate
         convert_js_to_ruby yield
       rescue ForeignException => e
-        if e.message.start_with?('SyntaxError:')
+        if e.message && e.message.start_with?('SyntaxError:')
           error_class = ExecJS::RuntimeError
         else
           error_class = ExecJS::ProgramError
@@ -96,8 +96,10 @@ module ExecJS
 
       def convert_ruby_to_js(value)
         case value
-        when nil, true, false, Integer, Float, String
+        when nil, true, false, Integer, Float
           value
+        when String
+          Truffle::Interop.as_truffle_string value
         when Symbol
           value.to_s
         when Array
@@ -136,6 +138,7 @@ module ExecJS
 
       unless Polyglot.languages.include? "js"
         warn "The language 'js' is not available, you likely need to `export TRUFFLERUBYOPT='--jvm --polyglot'`", uplevel: 0 if $VERBOSE
+        warn "You also need to install the 'js' component with 'gu install js' on GraalVM 22.2+", uplevel: 0 if $VERBOSE
         warn "Note that you need TruffleRuby+GraalVM and not just the TruffleRuby standalone to use #{self.class}", uplevel: 0 if $VERBOSE
         return @available = false
       end
