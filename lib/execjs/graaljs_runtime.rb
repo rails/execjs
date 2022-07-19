@@ -98,10 +98,8 @@ module ExecJS
         case value
         when nil, true, false, Integer, Float
           value
-        when String
+        when String, Symbol
           Truffle::Interop.as_truffle_string value
-        when Symbol
-          value.to_s
         when Array
           value.map { |e| convert_ruby_to_js(e) }
         when Hash
