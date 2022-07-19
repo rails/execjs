@@ -172,6 +172,9 @@ class TestExecJS < Test
     assert_equal "symbol", context.call("echo", :symbol)
     assert_equal ["symbol"], context.call("echo", [:symbol])
     assert_equal({"key" => "value"}, context.call("echo", {key: :value}))
+
+    context = ExecJS.compile("function myslice(str) { return str.slice(1); }")
+    assert_equal "ymbol", context.call("myslice", :symbol)
   end
 
   def test_additional_options
