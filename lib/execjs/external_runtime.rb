@@ -103,7 +103,13 @@ module ExecJS
       @popen_options[:internal_encoding] = ::Encoding.default_internal || 'UTF-8'
 
       if @runner_path
-        instance_eval generate_compile_method(@runner_path)
+        instance_eval <<~RUBY, __FILE__, __LINE__
+          def compile_source(source)
+            <<-RUNNER
+            #{IO.read(@runner_path)}
+            RUNNER
+          end
+        RUBY
       end
     end
 
@@ -143,15 +149,6 @@ module ExecJS
       end
 
     protected
-      def generate_compile_method(path)
-        <<-RUBY
-        def compile_source(source)
-          <<-RUNNER
-          #{IO.read(path)}
-          RUNNER
-        end
-        RUBY
-      end
 
       def json2_source
         @json2_source ||= IO.read(ExecJS.root + "/support/json2.js")
