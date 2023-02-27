@@ -16,6 +16,7 @@ ExecJS supports these runtimes:
 * [Google V8](http://code.google.com/p/v8/)
 * [mini_racer](https://github.com/discourse/mini_racer) - Google V8
   embedded within Ruby
+* [GraalVM JavaScript](https://www.graalvm.org/javascript/) - used on TruffleRuby
 
 A short example:
 
