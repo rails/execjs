@@ -78,7 +78,7 @@ module ExecJS
                   .sub(filename, "(execjs)")
                   .strip
             end
-            stack.reject! { |line| ["eval code", "eval@[native code]"].include?(line) }
+            stack.reject! { |line| ["eval code", "eval code@", "eval@[native code]"].include?(line) }
             stack.shift unless stack[0].to_s.include?("(execjs)")
             error_class = value =~ /SyntaxError:/ ? RuntimeError : ProgramError
             error = error_class.new(value)
