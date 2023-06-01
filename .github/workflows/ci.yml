@@ -18,9 +18,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          rubygems: ${{ (matrix.ruby_version < '2.6' && '3.2.3') || 'latest' }}
 
-      - name: Update Rubygems
-        run: gem update --system
       - name: Install bundler
         run: gem install bundler -v '2.2.16'
       - name: Install dependencies
@@ -54,8 +53,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - name: Update Rubygems
-        run: gem update --system
+          rubygems: ${{ (matrix.ruby_version < '2.6' && '3.2.3') || 'latest' }}
       - name: Install bundler
         run: gem install bundler -v '2.2.16'
       - name: Install dependencies
