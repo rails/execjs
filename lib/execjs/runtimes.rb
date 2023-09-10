@@ -25,6 +25,13 @@ module ExecJS
       encoding:    'UTF-8'
     )
 
+    Bun = ExternalRuntime.new(
+      name:        "Bun.sh",
+      command:     ["bun"],
+      runner_path: ExecJS.root + "/support/bun_runner.js",
+      encoding:    'UTF-8'
+    )
+
     JavaScriptCore = ExternalRuntime.new(
       name:        "JavaScriptCore",
       command:     [
@@ -89,6 +96,7 @@ module ExecJS
         Duktape,
         MiniRacer,
         Node,
+        Bun,
         JavaScriptCore,
         SpiderMonkey,
         JScript,
