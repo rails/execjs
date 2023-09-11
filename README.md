@@ -11,6 +11,7 @@ ExecJS supports these runtimes:
   Rhino embedded within JRuby
 * [Duktape.rb](https://github.com/judofyr/duktape.rb) - Duktape JavaScript interpreter
 * [Node.js](http://nodejs.org/)
+* [Bun.sh](https://bun.sh) - JavaScript runtime & toolkit designed for speed
 * Apple JavaScriptCore - Included with Mac OS X
 * [Microsoft Windows Script Host](http://msdn.microsoft.com/en-us/library/9bbdkx3k.aspx) (JScript)
 * [Google V8](http://code.google.com/p/v8/)
