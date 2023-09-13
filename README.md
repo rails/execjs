@@ -39,6 +39,22 @@ context.call("CoffeeScript.compile", "square = (x) -> x * x", bare: true)
 # => "var square;\nsquare = function(x) {\n  return x * x;\n};"
 ```
 
+# Forcing a specific runtime
+
+If you'd like to use a specific runtime rather than the autodected one, you can assign `ExecJS.runtime`:
+
+```ruby
+ExecJS.runtime = ExecJS::Runtimes::Node
+```
+
+Alternatively, you can define it via the `EXECJS_RUNTIME` environment variable:
+
+```bash
+EXECJS_RUNTIME=Node ruby ...
+```
+
+You can find the list of possible runtimes in [`lib/execjs/runtimes.rb`](https://github.com/rails/execjs/blob/master/lib/execjs/runtimes.rb).
+
 # Installation
 
 ```
