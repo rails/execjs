@@ -194,7 +194,7 @@ module ExecJS
         require 'shellwords'
 
         def exec_runtime(filename)
-          command = "#{Shellwords.join(binary.split(' ') << filename)} 2>&1"
+          command = "#{Shellwords.join(binary.split(' ') << filename)}"
           io = IO.popen(command, **@popen_options)
           output = io.read
           io.close
@@ -207,7 +207,7 @@ module ExecJS
         end
       else
         def exec_runtime(filename)
-          io = IO.popen(binary.split(' ') << filename, **(@popen_options.merge({err: [:child, :out]})))
+          io = IO.popen(binary.split(' ') << filename, **@popen_options)
           output = io.read
           io.close
 
