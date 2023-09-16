@@ -56,6 +56,16 @@ class TestExecJS < Test
     assert_equal 2, context.call("(function(bar) { return foo + bar })", 1)
   end
 
+  def test_call_with_env_file
+    Dir.mktmpdir do |dir|
+      Dir.chdir(dir) do
+        # Bun prints on STDOUT when loading .env files
+        File.write(".env", "FOO=BAR")
+        assert_equal 2, ExecJS.eval("1 + 1")
+      end
+    end
+  end
+
   def test_call_with_this
     # Known bug: https://github.com/cowboyd/therubyrhino/issues/39
     skip if ExecJS.runtime.is_a?(ExecJS::RubyRhinoRuntime)
