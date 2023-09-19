@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [ '3.2', '3.1', '3.0', '2.7', '2.6', '2.5', 'jruby', 'truffleruby', 'truffleruby+graalvm-22.3.1' ]
+        ruby: [ '3.2', '3.1', '3.0', '2.7', '2.6', '2.5', 'jruby', 'truffleruby', 'truffleruby+graalvm' ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,8 +32,8 @@ jobs:
       - name: Set TRUFFLERUBYOPT
         run: echo "TRUFFLERUBYOPT=--jvm --polyglot" >> $GITHUB_ENV
         if: startsWith(matrix.ruby, 'truffleruby+graalvm')
-      - name: Install GraalVM js component
-        run: if ! gu list | grep '^js '; then gu install js; fi
+      - name: Install GraalJS
+        run: truffleruby-polyglot-get js
         if: startsWith(matrix.ruby, 'truffleruby+graalvm')
 
       - name: Run test
