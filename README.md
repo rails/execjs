@@ -41,7 +41,7 @@ context.call("CoffeeScript.compile", "square = (x) -> x * x", bare: true)
 
 # Forcing a specific runtime
 
-If you'd like to use a specific runtime rather than the autodected one, you can assign `ExecJS.runtime`:
+If you'd like to use a specific runtime rather than the autodetected one, you can assign `ExecJS.runtime`:
 
 ```ruby
 ExecJS.runtime = ExecJS::Runtimes::Node
@@ -65,7 +65,7 @@ $ gem install execjs
 
 **Why can't I use CommonJS `require()` inside ExecJS?**
 
-ExecJS provides a lowest common denominator interface to any JavaScript runtime.
+ExecJS provides the lowest common denominator interface to any JavaScript runtime.
 Use ExecJS when it doesn't matter which JavaScript interpreter your code runs
 in. If you want to access the Node API, you should check another library like
 [commonjs.rb](https://github.com/cowboyd/commonjs.rb) designed to provide a
@@ -92,7 +92,7 @@ You shouldn't use `ExecJS.eval` on any inputs you wouldn't feel comfortable Ruby
 
 ## Contributing to ExecJS
 
-ExecJS is work of dozens of contributors. You're encouraged to submit pull requests, propose
+ExecJS is the work of dozens of contributors. You're encouraged to submit pull requests, propose
 features and discuss issues.
 
 See [CONTRIBUTING](CONTRIBUTING.md).
