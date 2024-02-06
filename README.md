@@ -31,8 +31,8 @@ A longer example, demonstrating how to invoke the CoffeeScript compiler:
 
 ``` ruby
 require "execjs"
-require "open-uri"
-source = open("http://coffeescript.org/extras/coffee-script.js").read
+require "net/http"
+source = Net::HTTP.get(URI("https://coffeescript.org/browser-compiler-legacy/coffeescript.js"))
 
 context = ExecJS.compile(source)
 context.call("CoffeeScript.compile", "square = (x) -> x * x", bare: true)
