@@ -450,6 +450,15 @@ class TestExecJS < Test
       context.call("uglify", "function foo(bar) {\n  return bar;\n}")
   end
 
+  def test_async_bun
+    skip unless ENV["EXECJS_RUNTIME"] == "Bun"
+    source = <<-JS
+      async function testAsync() { return (await new Promise((resolve) => { resolve("it works!") } )) }
+    JS
+    context = ExecJS.compile(source)
+    assert_equal "it works!", context.call("testAsync")
+  end
+
   private
 
     def assert_output(expected, actual)
