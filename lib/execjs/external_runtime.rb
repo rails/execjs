@@ -131,7 +131,7 @@ module ExecJS
         commands = Array(command)
         if ExecJS.windows? && File.extname(command) == ""
           ENV['PATHEXT'].split(File::PATH_SEPARATOR).each { |p|
-            commands << (command + p)
+            commands << (command + p.strip)
           }
         end
 
@@ -140,7 +140,7 @@ module ExecJS
             cmd
           else
             path = ENV['PATH'].split(File::PATH_SEPARATOR).find { |p|
-              full_path = File.join(p, cmd)
+              full_path = File.join(p.strip, cmd)
               File.executable?(full_path) && File.file?(full_path)
             }
             path && File.expand_path(cmd, path)
