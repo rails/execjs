@@ -1,5 +1,7 @@
 require "rake/testtask"
 require "bundler/gem_tasks"
+require 'fileutils'
+require 'shellwords'
 
 task :default => :test
 
@@ -64,4 +66,16 @@ task :test do
 
   raise "test failures" if failed.any?
   raise "all tests skipped" if !passed.any?
+end
+
+desc "Rebuild lib/execjs/support/json2.js"
+task :js do
+  src = File.join('vendor', 'JSON-js', 'json2.js')
+  dest = File.join('lib', 'execjs', 'support', 'json2.js')
+  FileUtils.cp(src, dest)
+  patches = `#{['git', 'ls-files', 'patches', 'JSON-js'].shelljoin}`.split("\n")
+  patches.each do |patch|
+    `#{['patch', '-p1', '-i', patch].shelljoin}`
+  end
+  FileUtils.chmod(0644, dest)
 end
