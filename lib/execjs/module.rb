@@ -8,8 +8,6 @@ module ExecJS
   class RuntimeUnavailable < RuntimeError; end
 
   class << self
-    attr_reader :runtime
-
     def runtime=(runtime)
       raise RuntimeUnavailable, "#{runtime.name} is unavailable on this system" unless runtime.available?
       @runtime = runtime
