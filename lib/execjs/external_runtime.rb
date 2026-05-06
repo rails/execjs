@@ -151,7 +151,7 @@ module ExecJS
     protected
 
       def json2_source
-        @json2_source ||= IO.read(ExecJS.root + "/support/json2.js")
+        @json2_source ||= IO.read(File.join(ExecJS.root, "support", "json2.js"))
       end
 
       def encode_source(source)
