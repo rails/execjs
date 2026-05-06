@@ -4,7 +4,7 @@ require "bundler/gem_tasks"
 task :default => :test
 
 $:.unshift File.expand_path("../lib", __FILE__)
-require "execjs/runtimes"
+require "execjs"
 
 tests = namespace :test do |tests|
   ExecJS::Runtimes.names.each do |name|

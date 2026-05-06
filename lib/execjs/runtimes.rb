@@ -1,4 +1,3 @@
-require "execjs/module"
 require "execjs/disabled_runtime"
 require "execjs/duktape_runtime"
 require "execjs/external_runtime"
