@@ -194,36 +194,56 @@ module ExecJS
         require 'shellwords'
 
         def exec_runtime(filename)
-          command = "#{Shellwords.join(binary.split(' ') << filename)}"
-          io = IO.popen(command, **@popen_options)
-          output = io.read
-          io.close
+          stderr_path = Dir::Tmpname.create(['execjs', 'stderr']) {}
+          begin
+            command = "#{Shellwords.join(binary.split(' ') << filename)}"
+            io = IO.popen(command, err: stderr_path, **@popen_options)
+            output = io.read
+            io.close
+            status = $?
+            stderr = File.file?(stderr_path) ? File.read(stderr_path) : ""
+          ensure
+            File.unlink(stderr_path) if stderr_path && File.exist?(stderr_path)
+          end
 
-          if $?.success?
+          if status.success?
             output
           else
-            raise exec_runtime_error(output)
+            raise exec_runtime_error(output, stderr)
           end
         end
       else
         def exec_runtime(filename)
-          io = IO.popen(binary.split(' ') << filename, **@popen_options)
-          output = io.read
-          io.close
+          stderr_path = Dir::Tmpname.create(['execjs', 'stderr']) {}
+          begin
+            io = IO.popen(binary.split(' ') << filename, err: stderr_path, **@popen_options)
+            output = io.read
+            io.close
+            status = $?
+            stderr = File.file?(stderr_path) ? File.read(stderr_path) : ""
+          ensure
+            File.unlink(stderr_path) if stderr_path && File.exist?(stderr_path)
+          end
 
-          if $?.success?
+          if status.success?
             output
           else
-            raise exec_runtime_error(output)
+            raise exec_runtime_error(output, stderr)
           end
         end
       end
       # Internally exposed for Context.
       public :exec_runtime
 
-      def exec_runtime_error(output)
-        error = RuntimeError.new(output)
-        lines = output.split("\n")
+      def exec_runtime_error(output, stderr = nil)
+        message = output.to_s
+        unless stderr.nil? || stderr.empty?
+          extra = stderr.dup.force_encoding(message.encoding)
+          extra = extra.scrub if extra.respond_to?(:scrub) && !extra.valid_encoding?
+          message = message.empty? ? extra : "#{message}\n#{extra}"
+        end
+        error = RuntimeError.new(message)
+        lines = message.split("\n")
         lineno = lines[0][/:(\d+)$/, 1] if lines[0]
         lineno ||= 1
         error.set_backtrace(["(execjs):#{lineno}"] + caller)

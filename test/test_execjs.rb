@@ -67,6 +67,18 @@ class TestExecJS < Test
     end
   end
 
+  def test_runtime_error_includes_stderr
+    # Regression for #142: when the runtime exits non-zero it writes its
+    # diagnostic to stderr (here, a parse error). 5cce03a stopped capturing
+    # stderr, so the raised error lost that trace; it should be surfaced again.
+    # The diagnostic text is Node-style, so guard to Node-family runtimes.
+    skip unless ExecJS.runtime.name.to_s =~ /Node|Bun|Deno/i
+    err = assert_raises(ExecJS::RuntimeError) do
+      ExecJS.exec("?? not valid javascript ??")
+    end
+    assert err.message =~ /SyntaxError/, err.message
+  end
+
   def test_call_with_this
     # Known bug: https://github.com/cowboyd/therubyrhino/issues/39
     skip if ExecJS.runtime.is_a?(ExecJS::RubyRhinoRuntime)
