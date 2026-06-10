@@ -71,8 +71,10 @@ class TestExecJS < Test
     # Regression for #142: when the runtime exits non-zero it writes its
     # diagnostic to stderr (here, a parse error). 5cce03a stopped capturing
     # stderr, so the raised error lost that trace; it should be surfaced again.
-    # The diagnostic text is Node-style, so guard to Node-family runtimes.
-    skip unless ExecJS.runtime.name.to_s =~ /Node|Bun|Deno/i
+    # The stderr-capture fix is runtime-agnostic, but the diagnostic wording
+    # varies per engine (Node says "SyntaxError", Bun differs), so this asserts
+    # on Node where the format is stable.
+    skip unless ExecJS.runtime.name.to_s =~ /Node/i
     err = assert_raises(ExecJS::RuntimeError) do
       ExecJS.exec("?? not valid javascript ??")
     end
