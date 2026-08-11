@@ -19,7 +19,7 @@ module ExecJS
         source = source.encode(Encoding::UTF_8)
 
         if /\S/ =~ source
-          exec("return eval(#{::JSON.generate("(#{source})", quirks_mode: true)})")
+          exec("return eval(#{::JSON.generate("(#{source})")})")
         end
       end
 
@@ -66,7 +66,7 @@ module ExecJS
         end
 
         def extract_result(output, filename)
-          status, value, stack = output.empty? ? [] : ::JSON.parse(output, create_additions: false)
+          status, value, stack = output.empty? ? [] : ::JSON.parse(output)
           if status == "ok"
             value
           else
@@ -156,7 +156,7 @@ module ExecJS
 
       def encode_source(source)
         encoded_source = encode_unicode_codepoints(source)
-        ::JSON.generate("(function(){ #{encoded_source} })()", quirks_mode: true)
+        ::JSON.generate("(function(){ #{encoded_source} })()")
       end
 
       def encode_unicode_codepoints(str)

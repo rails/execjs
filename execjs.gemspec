@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
   s.email   = ["sstephenson@gmail.com", "josh@joshpeek.com"]
 
   s.required_ruby_version = '>= 2.5.0'
+  s.add_dependency 'json', '>= 2'
 end
