@@ -223,7 +223,7 @@ class TestExecJS < Test
     assert_equal utf8, result.encoding
 
     assert_raises Encoding::UndefinedConversionError do
-      binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
+      binary = "\xde\xad\xbe\xef".b
       ExecJS.eval(binary)
     end
   end
@@ -242,7 +242,7 @@ class TestExecJS < Test
     assert_equal utf8, result.encoding
 
     assert_raises Encoding::UndefinedConversionError do
-      binary = "\xde\xad\xbe\xef".force_encoding("BINARY")
+      binary = "\xde\xad\xbe\xef".b
       context.eval(binary)
     end
   end
