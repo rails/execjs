@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 require "minitest/autorun"
-require "execjs/module"
 require "json"
 
 begin

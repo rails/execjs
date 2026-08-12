@@ -1,4 +1,3 @@
-require "execjs/module"
 require "execjs/disabled_runtime"
 require "execjs/duktape_runtime"
 require "execjs/external_runtime"
@@ -21,14 +20,14 @@ module ExecJS
     Node = ExternalRuntime.new(
       name:        "Node.js (V8)",
       command:     ["node", "nodejs"],
-      runner_path: ExecJS.root + "/support/node_runner.js",
+      runner_path: File.join(ExecJS.root, "support", "node_runner.js"),
       encoding:    'UTF-8'
     )
 
     Bun = ExternalRuntime.new(
       name:        "Bun.sh",
       command:     ["bun"],
-      runner_path: ExecJS.root + "/support/bun_runner.js",
+      runner_path: File.join(ExecJS.root, "support", "bun_runner.js"),
       encoding:    'UTF-8'
     )
 
@@ -38,27 +37,27 @@ module ExecJS
         "/System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc",
         "/System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc",
       ],
-      runner_path: ExecJS.root + "/support/jsc_runner.js"
+      runner_path: File.join(ExecJS.root, "support", "jsc_runner.js")
     )
 
     SpiderMonkey = Spidermonkey = ExternalRuntime.new(
       name:        "SpiderMonkey",
       command:     "js",
-      runner_path: ExecJS.root + "/support/spidermonkey_runner.js",
+      runner_path: File.join(ExecJS.root, "support", "spidermonkey_runner.js"),
       deprecated:  true
     )
 
     JScript = ExternalRuntime.new(
       name:        "JScript",
       command:     "cscript //E:jscript //Nologo //U",
-      runner_path: ExecJS.root + "/support/jscript_runner.js",
+      runner_path: File.join(ExecJS.root, "support", "jscript_runner.js"),
       encoding:    'UTF-16LE' # CScript with //U returns UTF-16LE
     )
 
     V8 = ExternalRuntime.new(
       name:        "V8",
       command:     "d8",
-      runner_path: ExecJS.root + "/support/v8_runner.js",
+      runner_path: File.join(ExecJS.root, "support", "v8_runner.js"),
       encoding:    'UTF-8'
     )
 
