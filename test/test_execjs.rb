@@ -152,10 +152,10 @@ class TestExecJS < Test
     { "a" => 1, "b" => [2, 3]},
     { "a" => true }
   ].each_with_index do |value, index|
-    json_value = JSON.generate(value, quirks_mode: true)
+    json_value = JSON.generate(value)
 
     define_method("test_json_value_#{index}") do
-      assert_output value, JSON.parse(json_value, quirks_mode: true)
+      assert_output value, JSON.parse(json_value)
     end
 
     define_method("test_exec_value_#{index}") do
