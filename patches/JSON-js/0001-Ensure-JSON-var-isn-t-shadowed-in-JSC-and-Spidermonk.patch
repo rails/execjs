@@ -1,0 +1,41 @@
+From f47c02c8536ce7cf0850b6a511fcecad6539eeaf Mon Sep 17 00:00:00 2001
+From: Joshua Peek <josh@joshpeek.com>
+Date: Thu, 12 May 2011 10:24:07 -0500
+Subject: [PATCH] Ensure JSON var isn't shadowed in JSC and Spidermonkey
+
+---
+ lib/execjs/support/json2.js | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/lib/execjs/support/json2.js b/lib/execjs/support/json2.js
+index 36d3dc3..fb8fe0a 100644
+--- a/lib/execjs/support/json2.js
++++ b/lib/execjs/support/json2.js
+@@ -159,12 +159,13 @@
+ // Create a JSON object only if one does not already exist. We create the
+ // methods in a closure to avoid creating global variables.
+ 
+-var JSON;
+-if (!JSON) {
+-    JSON = {};
+-}
++(function (global) {
++    if (!global.JSON) {
++        global.JSON = {};
++    }
++
++    var JSON = global.JSON;
+ 
+-(function () {
+     "use strict";
+ 
+     function f(n) {
+@@ -477,4 +478,4 @@ if (!JSON) {
+             throw new SyntaxError('JSON.parse');
+         };
+     }
+-}());
++}(this));
+-- 
+2.5.5
+
