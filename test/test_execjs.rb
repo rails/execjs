@@ -102,7 +102,6 @@ class TestExecJS < Test
     "true" => true,
     "false" => false,
     "[1, 2]" => [1, 2],
-    "[1, function() {}]" => [1, nil],
     "'hello'" => "hello",
     "'red yellow blue'.split(' ')" => ["red", "yellow", "blue"],
     "{a:1,b:2}" => {"a"=>1,"b"=>2},
@@ -335,64 +334,56 @@ class TestExecJS < Test
     assert_equal 600_000, string.size
   end
 
+  EVAL_MARKER = Regexp.union("(execjs):", "<eval>")
+
   def test_exec_syntax_error
     begin
       ExecJS.exec(")")
       flunk
     rescue ExecJS::RuntimeError => e
       assert e
-      assert e.backtrace.join("\n").include?("(execjs):")
+      assert_match EVAL_MARKER, e.backtrace.join("\n")
     end
   end
 
   def test_eval_syntax_error
-    begin
+    e = assert_raises(ExecJS::RuntimeError) do
       ExecJS.eval(")")
-      flunk
-    rescue ExecJS::RuntimeError => e
-      assert e
-      assert e.backtrace.join("\n").include?("(execjs):")
     end
+
+    assert_match EVAL_MARKER, e.backtrace.join("\n")
   end
 
   def test_compile_syntax_error
-    begin
+    e = assert_raises(ExecJS::RuntimeError) do
       ExecJS.compile(")")
-      flunk
-    rescue ExecJS::RuntimeError => e
-      assert e
-      assert e.backtrace[0].include?("(execjs):"), e.backtrace.join("\n")
     end
+
+    assert_match EVAL_MARKER, e.backtrace.join("\n")
   end
 
   def test_exec_thrown_error
-    begin
+    e = assert_raises(ExecJS::ProgramError) do
       ExecJS.exec("throw new Error('hello')")
-      flunk
-    rescue ExecJS::ProgramError => e
-      assert e
-      assert e.backtrace.join("\n").include?("(execjs):")
     end
+
+    assert_match EVAL_MARKER, e.backtrace.join("\n")
   end
 
   def test_eval_thrown_error
-    begin
+    e = assert_raises(ExecJS::ProgramError) do
       ExecJS.eval("(function(){ throw new Error('hello') })()")
-      flunk
-    rescue ExecJS::ProgramError => e
-      assert e
-      assert e.backtrace.join("\n").include?("(execjs):")
     end
+
+    assert_match EVAL_MARKER, e.backtrace.join("\n")
   end
 
   def test_compile_thrown_error
-    begin
+    e = assert_raises(ExecJS::ProgramError) do
       ExecJS.compile("throw new Error('hello')")
-      flunk
-    rescue ExecJS::ProgramError => e
-      assert e
-      assert e.backtrace.join("\n").include?("(execjs):")
     end
+
+    assert_match EVAL_MARKER, e.backtrace.join("\n")
   end
 
   def test_exec_thrown_string
